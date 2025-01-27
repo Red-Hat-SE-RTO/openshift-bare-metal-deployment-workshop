@@ -1,0 +1,64 @@
+= Module 4: Storage Configuration
+:page-layout: module
+
+== OpenShift Data Foundation Setup [[odf]]
+
+=== Architecture Overview
+* Local storage devices
+* Distributed storage cluster
+* Storage classes and policies
+
+=== Installation Steps
+* Install ODF Operator
+* Configure storage devices
+* Create storage cluster
+* Verify deployment
+
+== External Storage Integration [[external]]
+
+=== Supported Storage Types
+* *Block Storage*
+** iSCSI
+** Fibre Channel
+** Local devices
+
+* *File Storage*
+** NFS
+** CephFS
+** GlusterFS
+
+* *Object Storage*
+** S3-compatible storage
+** Swift
+** Ceph RADOS
+
+=== Storage Configuration
+* Storage class creation
+* PV/PVC management
+* Storage quotas
+
+== Dynamic Provisioning Configuration [[dynamic]]
+
+=== Storage Classes
+* Configure default storage class
+* Set up storage parameters
+* Define volume binding mode
+
+=== Volume Snapshots
+* Configure snapshot classes
+* Implement backup policies
+* Restore procedures
+
+=== Storage Monitoring
+* Capacity monitoring
+* Performance metrics
+* Health checks
+
+== Best Practices
+* Implement redundancy
+* Configure backup solutions
+* Monitor storage usage
+* Plan for scaling
+
+== Next Steps
+Ready to deploy OpenShift? Continue to xref:module-05-deployment.adoc[Module 5: Deploying OpenShift 4.16+].

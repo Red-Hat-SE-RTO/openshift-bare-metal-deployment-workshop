@@ -1,0 +1,66 @@
+= Module 3: Networking Configuration
+:page-layout: module
+
+== VLAN Configuration [[vlans]]
+
+=== Required VLANs
+* *Provisioning Network*
+** Used for PXE boot and node provisioning
+** Requires DHCP and TFTP services
+
+* *External Network*
+** Provides external access to the cluster
+** Used for user workload access
+
+* *Internal Network*
+** Used for cluster internal communication
+** Requires proper isolation
+
+=== Network Segmentation
+* Configure switch ports
+* Set up VLAN trunking
+* Implement network policies
+
+== DNS Setup [[dns]]
+
+=== Required DNS Records
+* API endpoints
+* Ingress endpoints
+* Node hostnames
+* Service records
+
+=== DNS Configuration
+* Forward zones
+* Reverse zones
+* Wildcard records
+
+== Load Balancer Configuration [[loadbalancer]]
+
+=== Load Balancer Requirements
+* *API Load Balancer*
+** Port 6443 for Kubernetes API
+** Port 22623 for Machine Config Server
+
+* *Application Load Balancer*
+** Port 80 for HTTP traffic
+** Port 443 for HTTPS traffic
+
+=== High Availability Setup
+* Configure health checks
+* Set up SSL termination
+* Implement failover mechanisms
+
+== Routing and Ingress Setup [[routing]]
+
+=== OpenShift Router Configuration
+* Default ingress controller setup
+* Custom routes configuration
+* Certificate management
+
+=== Network Policies
+* Implementing security policies
+* Traffic flow control
+* Network isolation
+
+== Next Steps
+Ready to configure storage? Continue to xref:module-04-storage.adoc[Module 4: Storage Configuration].

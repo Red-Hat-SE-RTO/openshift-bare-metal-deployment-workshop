@@ -1,78 +1,61 @@
-= Welcome to the {lab_name} !
+= OpenShift 4.16+ Bare Metal Deployment Workshop
+:page-layout: home
+:!sectids:
 
-[%hardbreaks]
-== Introduction
-{product_description}
+[.text-center.strong]
+== Welcome to the OpenShift 4.16+ Bare Metal Deployment Workshop!
 
-{event_overview}
+This comprehensive workshop is designed to provide you with hands-on experience in deploying OpenShift 4.16+ on bare metal infrastructure. Whether you're an infrastructure administrator or a platform engineer, this workshop will equip you with the knowledge and skills needed to successfully deploy and manage OpenShift in your environment.
 
-== Who Will Benefit Most from Attending?
+[.text-center]
+image::redhat-logo.png[Red Hat Logo,400,400]
 
-*Target Audience 1* -- Description of first target audience and their key responsibilities.
+[.text-center]
+*Ready to begin? Select a module below to get started!*
 
-*Target Audience 2* -- Description of second target audience and their key responsibilities.
+[.card-section]
+== Workshop Modules
 
-== What Content Is Covered?
+[.card.card-1]
+=== Module 1: Introduction to OpenShift 4.16+
+* Overview of OpenShift features for bare metal deployments
+* Key benefits for modern workloads
+xref:module-01-introduction.adoc[Start Module 1 →]
 
-These are the *key sections* that will be covered:
+[.card.card-2]
+=== Module 2: Preparing Bare Metal Infrastructure
+* Hardware prerequisites and requirements
+* BIOS/firmware setup and node provisioning
+xref:module-02-infrastructure.adoc[Start Module 2 →]
 
-* _Section 1_: Detailed description of first section's focus and learning objectives.
+[.card.card-3]
+=== Module 3: Networking Configuration
+* VLAN and DNS configuration
+* Load balancer setup and routing
+xref:module-03-networking.adoc[Start Module 3 →]
 
-* _Section 2_: Detailed description of second section's focus and learning objectives.
+[.card.card-4]
+=== Module 4: Storage Configuration
+* OpenShift Data Foundation setup
+* External storage integration
+xref:module-04-storage.adoc[Start Module 4 →]
 
-* _Section 3_: Detailed description of third section's focus and learning objectives.
+[.card.card-5]
+=== Module 5: Deploying OpenShift 4.16+
+* Assisted Installer method
+* Agent-based Installer method
+xref:module-05-deployment.adoc[Start Module 5 →]
 
-* _Section 4_: Detailed description of fourth section's focus and learning objectives.
+[.card.card-6]
+=== Module 6: Optional Features
+* OpenShift Virtualization
+* OpenShift AI
+xref:module-06-optional.adoc[Start Module 6 →]
 
-== What is {product_name}?
+[.text-center.strong]
+== Additional Resources
 
-* Key product characteristics and unique selling points
-* Licensing and entitlement information
-* Technical foundation and underlying technologies
-* Supported deployment scenarios
-* Integration capabilities
-
-== Why Switch to This Solution?
-
-**Strategic Benefit 1:**
-Detailed explanation of first strategic benefit
-
-**Strategic Benefit 2:**
-Detailed explanation of second strategic benefit
-
-**Strategic Benefit 3:**
-Detailed explanation of third strategic benefit
-
-== Next Steps
-
-Resources for further learning:
-* Documentation link
-* Product landing page
-* Video resources
-* Community forums
-
-== Requirements for the Lab Environment
-
-* Participant hardware and software requirements
-* Recommended browser/access specifications
-
-=== Credentials for the Console
-
-Your console is available {web_console}[here^].
-
-Administrator login:
-* *User:* {admin_user} 
-* *Password:* {admin_password}
-
-=== Additional Access Details
-
-*Bastion Host Access*
-[source,sh,role=execute,subs="attributes"]
-----
-ssh root@{bastion_ip}
-----
-
-*Additional Environment Access*
-* *Environment:* {additional_env}
-* *User:* {additional_user}
-* *Password:* {additional_password}
+* link:https://docs.openshift.com/container-platform/4.16/[OpenShift 4.16 Documentation]
+* link:https://docs.openshift.com/container-platform/4.17/[OpenShift 4.17 Documentation]
+* link:https://rhdp.redhat.com/[Red Hat Demo Platform (RHDP)]
+* link:https://www.openshift.com/solutions/data-foundation[OpenShift Data Foundation]

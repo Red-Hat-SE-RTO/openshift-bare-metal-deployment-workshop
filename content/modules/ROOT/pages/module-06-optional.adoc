@@ -1,0 +1,72 @@
+= Module 6: Optional Features
+:page-layout: module
+
+== OpenShift Virtualization [[virtualization]]
+
+=== Overview
+OpenShift Virtualization enables you to run and manage virtual machines alongside containers in OpenShift.
+
+=== Installation
+* Install OpenShift Virtualization Operator
+* Configure storage
+* Enable virtualization features
+* Verify installation
+
+=== Features
+* VM lifecycle management
+* Live migration
+* Storage management
+* Network configuration
+* Template management
+
+=== Use Cases
+* Legacy workload migration
+* Mixed workload environments
+* Development and testing
+* Application modernization
+
+== OpenShift AI [[ai]]
+
+=== Overview
+OpenShift AI provides tools and services for running AI/ML workloads on OpenShift.
+
+=== Installation
+* Install OpenShift AI Operator
+* Configure storage
+* Set up model serving
+* Configure pipelines
+
+=== Features
+* Model training
+* Model serving
+* Pipeline automation
+* Experiment tracking
+* Resource optimization
+
+=== Use Cases
+* Machine learning workflows
+* Deep learning applications
+* Model deployment
+* AI infrastructure
+
+== Best Practices
+* Resource allocation
+* Performance optimization
+* Security considerations
+* Monitoring and logging
+* Backup and recovery
+
+== Conclusion
+Congratulations! You've completed the OpenShift 4.16+ Bare Metal Deployment Workshop. You now have the knowledge to:
+
+* Deploy OpenShift on bare metal infrastructure
+* Configure networking and storage
+* Manage cluster operations
+* Implement advanced features
+
+For more information, refer to the following resources:
+
+* link:https://docs.openshift.com/container-platform/4.16/[OpenShift 4.16 Documentation]
+* link:https://docs.openshift.com/container-platform/4.17/[OpenShift 4.17 Documentation]
+* link:https://www.openshift.com/solutions/data-foundation[OpenShift Data Foundation]
+* link:https://www.redhat.com/en/technologies/cloud-computing/openshift/virtualization[OpenShift Virtualization]

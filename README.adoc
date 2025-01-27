@@ -1,38 +1,83 @@
-Welcome to the [Roadshow Name]!
+= OpenShift 4.16+ Bare Metal Deployment Workshop
 
 == Introduction
-This repository hosts the lab guide for the [Roadshow Name], which can be delivered by Red Hat Associates to customers and interested parties all over the world.
 
-It is designed to work with the Showroom lab environment provided by the Red Hat Demo Platform (RHDP) team.
+This guide is designed to help you deploy *OpenShift on bare metal* for a variety of workloads, providing flexibility, scalability, and advanced configurations tailored to diverse use cases.
 
-This roadshow event is organized to allow you to have a hands-on experience with [Key Technology].
+For your convenience, you may optionally *fork this repository* and use it as a *reference guide* when implementing your own bare metal deployments using OpenShift.
 
-[Key Technology] enables you to [briefly describe the technology and its benefits].
+This workshop provides a *hands-on experience* with deploying OpenShift 4.16+ on bare metal, enabling participants to configure storage, networking, and optionally integrate advanced features such as *OpenShift Virtualization* or *OpenShift AI*.
 
-In this event, we will explore many common management activities that [target audience] often encounter in their day-to-day workflows.
+*OpenShift 4.16+* empowers users to deploy and manage containerized workloads with enterprise-grade scalability, robust security, and flexibility across diverse infrastructures.
 
-== Who Will Benefit Most from attending a Roadshow?
+During this workshop, we will explore common deployment and management activities that platform administrators and infrastructure engineers encounter in their day-to-day workflows.
 
-[Target Audience 1] -- Those responsible for day-to-day management of [specific tasks or areas] in [Key Technology]. These users will often find themselves responsible for [specific tasks or activities].
-[Target Audience 2] -- Those responsible for [specific areas or tasks] hosting the [Key Technology] solution. These users will be responsible for [specific tasks or activities].
-== What Content Is Covered In The Roadshow?
+== Who Will Benefit Most from Attending This Workshop?
 
-These are the * [number] * main sections that will be covered:
+=== Infrastructure Administrators
+Those responsible for the day-to-day management of *bare metal infrastructure* and supporting environments for OpenShift.
 
-[Section 1 Title]: In this section, we will [briefly describe the content].
-[Section 2 Title]: In this section, we will [briefly describe the content]. *...
-[Section 8 Title]: In this section, we will [briefly describe the content].
+*Key Responsibilities Include*:
+
+* Provisioning hardware and configuring BIOS, firmware, and network settings
+* Ensuring the stability and performance of the underlying infrastructure
+
+=== Platform Engineers
+Those responsible for deploying, managing, and scaling OpenShift clusters.
+
+*Key Responsibilities Include*:
+
+* Setting up and configuring OpenShift components like networking, storage, and advanced features
+* Integrating OpenShift with existing IT environments and workloads
+
+== What Content Is Covered in This Workshop?
+
+This workshop is organized into *6 main sections*:
+
+=== 1. Introduction to OpenShift 4.16+
+* Overview of OpenShift and its features for bare metal deployments
+* Key benefits of OpenShift for modern workloads
+
+=== 2. Preparing Bare Metal Infrastructure
+* Hardware prerequisites: Control plane, worker nodes, and network requirements
+* Setting up BIOS/firmware, PXE boot, and provisioning nodes
+
+=== 3. Networking Configuration
+* Configuring VLANs, DNS, and load balancers for high availability
+* Ensuring proper routing and ingress for applications
+
+=== 4. Storage Configuration
+* Setting up OpenShift Data Foundation (ODF) or external storage systems
+* Configuring dynamic provisioning for persistent storage
+
+=== 5. Deploying OpenShift 4.16+
+* Step-by-step guide using the *Assisted Installer* or *Agent-based Installer*:
+** *Assisted Installer*: Simplifies cluster installation with an intuitive web interface
+** *Agent-based Installer*: Provides flexibility for disconnected or custom bare metal environments
+* Setting up control plane and worker nodes
+
+=== 6. Optional Features
+* *OpenShift Virtualization*: Managing virtual machines within OpenShift
+* *OpenShift AI*: Enabling AI/ML workloads with OpenShift's AI capabilities
+
 == Version Information
 
-This edition of the [Roadshow Name] has been developed using the following software versions:
+This edition of the *OpenShift 4.16+ Bare Metal Deployment Workshop* has been developed using the following software versions:
 
-[Technology 1] [version number]
-[Technology 2] [version number] *...
-[Technology N] [version number]
-Replace the placeholders with the actual content:
+* link:https://docs.openshift.com/container-platform/4.16/[OpenShift 4.16 Documentation]
+* link:https://docs.openshift.com/container-platform/4.17/[OpenShift 4.17 Documentation]
+* OpenShift Data Foundation: [Version Number]
+* OpenShift Virtualization: [Version Number] (Optional)
+* OpenShift AI: [Version Number] (Optional)
 
-[Roadshow Name]: the name of the roadshow
-[Key Technology]: the key technology being covered (e.g. OpenShift Virtualization)
-[Target Audience 1] and [Target Audience 2]: the target audiences for the roadshow
-[Section 1 Title] to [Section 8 Title]: the titles of the sections
-[Technology 1] to [Technology N]: the technologies being used in the roadshow
+== About
+This lab guide is based on the *East Region RTO Workshop Template*.
+
+For more details, visit:
+link:https://red-hat-se-rto.github.io/se-redhat-rto-workshop-template/[red-hat-se-rto.github.io/se-redhat-rto-workshop-template/]
+
+== Resources
+* link:https://docs.openshift.com/container-platform/4.16/[OpenShift 4.16 Documentation]
+* link:https://docs.openshift.com/container-platform/4.17/[OpenShift 4.17 Documentation]
+* link:https://rhdp.redhat.com/[Red Hat Demo Platform (RHDP)]
+* link:https://www.openshift.com/solutions/data-foundation[OpenShift Data Foundation]

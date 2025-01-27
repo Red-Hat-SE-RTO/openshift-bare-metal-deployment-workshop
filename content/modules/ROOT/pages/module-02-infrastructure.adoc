@@ -1,0 +1,67 @@
+= Module 2: Preparing Bare Metal Infrastructure
+:page-layout: module
+
+== Hardware Prerequisites [[prerequisites]]
+
+=== Minimum Requirements
+* *Control Plane Nodes*:
+** CPU: 4 cores
+** RAM: 16 GB
+** Storage: 120 GB
+* *Worker Nodes*:
+** CPU: 2 cores
+** RAM: 8 GB
+** Storage: 120 GB
+* *Network*:
+** 1 Gbps NIC (minimum)
+** 10 Gbps recommended for production
+
+=== Recommended Production Specifications
+* *Control Plane Nodes*:
+** CPU: 8+ cores
+** RAM: 32+ GB
+** Storage: 240+ GB
+* *Worker Nodes*:
+** CPU: 4+ cores
+** RAM: 16+ GB
+** Storage: 240+ GB
+
+== BIOS and Firmware Setup [[setup]]
+
+=== BIOS Configuration
+* Enable virtualization support (Intel VT-x/AMD-V)
+* Enable IOMMU support
+* Disable Secure Boot (initially)
+* Configure boot order for PXE
+
+=== Firmware Updates
+* Update system BIOS to latest version
+* Update NIC firmware
+* Update storage controller firmware
+
+== PXE Boot Configuration [[pxe]]
+
+=== Network Requirements
+* DHCP server configuration
+* DNS server setup
+* TFTP server setup
+
+=== Boot Process
+* Configure DHCP for PXE boot
+* Set up TFTP server
+* Configure boot images
+
+== Node Provisioning [[provisioning]]
+
+=== Provisioning Methods
+* Assisted Installer
+* Agent-based Installer
+* User-provisioned infrastructure
+
+=== Network Configuration
+* Configure network bridges
+* Set up VLANs
+* Configure load balancers
+
+== Next Steps
+Ready to configure networking? Continue to xref:module-03-networking.adoc[Module 3: Networking Configuration].

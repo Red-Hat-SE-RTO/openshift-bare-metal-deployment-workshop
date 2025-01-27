@@ -1,0 +1,62 @@
+= Module 5: Deploying OpenShift 4.16+
+:page-layout: module
+
+== Assisted Installer Method [[assisted]]
+
+=== Overview
+The Assisted Installer provides a user-friendly web interface for deploying OpenShift clusters.
+
+=== Installation Steps
+* Access Red Hat Hybrid Cloud Console
+* Create new cluster
+* Configure cluster settings
+* Generate discovery ISO
+* Boot nodes with ISO
+* Complete installation
+
+=== Advantages
+* User-friendly interface
+* Automated validation
+* Real-time monitoring
+* Guided workflow
+
+== Agent-based Installer Method [[agent]]
+
+=== Overview
+The Agent-based Installer provides more control and flexibility for disconnected or custom environments.
+
+=== Installation Steps
+* Generate agent ISO
+* Configure installation
+* Boot nodes
+* Monitor installation
+* Verify cluster
+
+=== Advanced Configuration
+* Custom networking
+* Storage configuration
+* Node roles
+* Security settings
+
+== Control Plane and Worker Setup [[nodes]]
+
+=== Control Plane Configuration
+* Master node setup
+* etcd configuration
+* API server settings
+* Controller manager
+
+=== Worker Node Setup
+* Node labels
+* Taints and tolerations
+* Resource management
+* Monitoring configuration
+
+=== Post-Installation Tasks
+* Verify cluster health
+* Configure authentication
+* Set up monitoring
+* Configure logging
+
+== Next Steps
+Want to explore optional features? Continue to xref:module-06-optional.adoc[Module 6: Optional Features].

@@ -1,0 +1,39 @@
+= Module 1: Introduction to OpenShift 4.16+
+:page-layout: module
+
+== Overview of OpenShift Features for Bare Metal [[overview]]
+
+=== What is OpenShift?
+OpenShift is Red Hat's enterprise-grade container platform built on Kubernetes. It provides a consistent foundation for building, deploying, and managing containerized applications across diverse infrastructures.
+
+=== Key Features for Bare Metal Deployments
+* *Full Stack Automation*: Automated installation, upgrades, and lifecycle management
+* *Integrated Container Registry*: Built-in registry for container image management
+* *Software-Defined Networking*: Advanced networking capabilities with OVN-Kubernetes
+* *Storage Integration*: Native integration with various storage solutions
+* *Security Features*: Built-in security with SELinux, RBAC, and SCCs
+
+== Key Benefits for Modern Workloads [[benefits]]
+
+=== Performance and Scalability
+* Direct hardware access for optimal performance
+* Scalable architecture supporting thousands of nodes
+* Native integration with hardware accelerators
+
+=== Cost Efficiency
+* Eliminate hypervisor licensing costs
+* Optimize hardware utilization
+* Reduce operational overhead
+
+=== Flexibility and Control
+* Custom hardware configurations
+* Direct access to hardware features
+* Complete control over infrastructure
+
+=== Enterprise-Grade Security
+* Platform-level security features
+* Network isolation capabilities
+* Integrated authentication and authorization
+
+== Next Steps
+Ready to start preparing your bare metal infrastructure? Continue to xref:module-02-infrastructure.adoc[Module 2: Preparing Bare Metal Infrastructure].
