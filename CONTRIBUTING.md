@@ -177,41 +177,6 @@ To use GitHub Actions in your fork:
 2. Configure the necessary permissions
 3. The workflow will automatically deploy changes pushed to your main branch
 
-## Building and Testing Locally
-
-1. Install dependencies:
-   ```bash
-   # Using Docker (recommended)
-   docker pull ghcr.io/rhpds/showroom-content:latest
-   ```
-
-2. Build the documentation:
-   ```bash
-   # Using Docker
-   docker run --rm -v $(pwd):/showroom/repo \
-     --mount 'type=tmpfs,dst=/showroom/repo/.cache' \
-     --entrypoint antora \
-     -w /showroom/repo \
-     ghcr.io/rhpds/showroom-content:latest \
-     --to-dir=output default-site.yml
-   ```
-
-   Alternatively, use the Makefile:
-   ```bash
-   make build
-   ```
-
-3. View the built documentation:
-   ```bash
-   # Using Python's built-in HTTP server
-   cd output
-   python -m http.server 8080
-   ```
-
-   Alternatively, use the Makefile:
-   ```bash
-   make serve
-   ```
 
 ## Submitting Changes
 
