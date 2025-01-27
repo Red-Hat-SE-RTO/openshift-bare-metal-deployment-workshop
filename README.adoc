@@ -60,6 +60,20 @@ This workshop is organized into *6 main sections*:
 * *OpenShift Virtualization*: Managing virtual machines within OpenShift
 * *OpenShift AI*: Enabling AI/ML workloads with OpenShift's AI capabilities
 
+== For Developers
+
+Interested in contributing to this workshop? We welcome contributions from the community! Please see our link:CONTRIBUTING.md[Contributing Guide] for detailed information on:
+
+* Setting up your development environment
+* Repository structure and organization
+* Using our utility scripts and Makefile
+* Content guidelines and best practices
+* Building and testing locally
+* Submitting changes
+* And more!
+
+We use GitHub Actions for automated deployments and provide several utility scripts to make development easier. Check out the link:CONTRIBUTING.md[Contributing Guide] to get started.
+
 == Version Information
 
 This edition of the *OpenShift 4.16+ Bare Metal Deployment Workshop* has been developed using the following software versions:
