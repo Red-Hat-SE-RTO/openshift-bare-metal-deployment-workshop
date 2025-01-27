@@ -1,0 +1,38 @@
+Welcome to the [Roadshow Name]!
+
+== Introduction
+This repository hosts the lab guide for the [Roadshow Name], which can be delivered by Red Hat Associates to customers and interested parties all over the world.
+
+It is designed to work with the Showroom lab environment provided by the Red Hat Demo Platform (RHDP) team.
+
+This roadshow event is organized to allow you to have a hands-on experience with [Key Technology].
+
+[Key Technology] enables you to [briefly describe the technology and its benefits].
+
+In this event, we will explore many common management activities that [target audience] often encounter in their day-to-day workflows.
+
+== Who Will Benefit Most from attending a Roadshow?
+
+[Target Audience 1] -- Those responsible for day-to-day management of [specific tasks or areas] in [Key Technology]. These users will often find themselves responsible for [specific tasks or activities].
+[Target Audience 2] -- Those responsible for [specific areas or tasks] hosting the [Key Technology] solution. These users will be responsible for [specific tasks or activities].
+== What Content Is Covered In The Roadshow?
+
+These are the * [number] * main sections that will be covered:
+
+[Section 1 Title]: In this section, we will [briefly describe the content].
+[Section 2 Title]: In this section, we will [briefly describe the content]. *...
+[Section 8 Title]: In this section, we will [briefly describe the content].
+== Version Information
+
+This edition of the [Roadshow Name] has been developed using the following software versions:
+
+[Technology 1] [version number]
+[Technology 2] [version number] *...
+[Technology N] [version number]
+Replace the placeholders with the actual content:
+
+[Roadshow Name]: the name of the roadshow
+[Key Technology]: the key technology being covered (e.g. OpenShift Virtualization)
+[Target Audience 1] and [Target Audience 2]: the target audiences for the roadshow
+[Section 1 Title] to [Section 8 Title]: the titles of the sections
+[Technology 1] to [Technology N]: the technologies being used in the roadshow

@@ -1,0 +1,190 @@
+= Module 3: Infrastructure Management
+
+[%hardbreaks]
+== Module Overview
+
+This module focuses on infrastructure management strategies, deployment models, and operational considerations for {product_name}. Participants will gain insights into infrastructure provisioning, scaling, and optimization techniques.
+
+== Key Learning Objectives
+
+* Understand infrastructure deployment models
+* Learn about scalability and resource management
+* Explore infrastructure-as-code principles
+* Develop skills in infrastructure provisioning
+* Understand monitoring and observability strategies
+
+== Infrastructure Deployment Models
+
+=== Deployment Topologies
+
+[cols="1,2,3"]
+|===
+| Deployment Type | Characteristics | Key Considerations
+
+| Single-Node
+| Minimal resource footprint
+| Development, small-scale testing
+
+| Clustered
+| Multiple nodes, distributed processing
+| Production, high availability
+
+| Hybrid
+| Mix of on-premises and cloud resources
+| Flexible scaling, cost optimization
+
+| Edge-Optimized
+| Lightweight, resource-constrained environments
+| IoT, remote locations
+|===
+
+== Resource Management
+
+=== Resource Allocation Strategies
+
+==== Compute Resources
+* CPU allocation models
+* Memory management
+* Performance optimization techniques
+
+==== Storage Provisioning
+* Storage class definitions
+* Dynamic vs. static provisioning
+* Performance and capacity planning
+
+==== Network Configuration
+* Network overlay models
+* Multi-network support
+* Network policy implementation
+
+== Infrastructure as Code (IaC)
+
+=== Core IaC Principles
+
+[cols="1,3"]
+|===
+| Principle | Description
+
+| Declarative Configuration
+| Define desired infrastructure state explicitly
+
+| Version Control
+| Treat infrastructure configurations like software code
+
+| Immutability
+| Create new infrastructure instead of modifying existing
+
+| Automated Validation
+| Implement continuous validation and testing
+|===
+
+=== IaC Tools and Frameworks
+
+* Terraform
+* Ansible
+* CloudFormation
+* Custom orchestration tools
+
+== Scaling Strategies
+
+=== Horizontal Scaling
+* Dynamic node addition
+* Automatic resource allocation
+* Load distribution mechanisms
+
+=== Vertical Scaling
+* Resource allocation adjustments
+* Performance tuning
+* Capacity planning
+
+== Monitoring and Observability
+
+=== Monitoring Components
+
+[cols="1,2"]
+|===
+| Monitoring Aspect | Key Metrics
+
+| Performance
+| CPU utilization, memory consumption, network throughput
+
+| Health
+| Service availability, error rates, response times
+
+| Resource Utilization
+| Capacity planning, workload distribution
+
+| Compliance
+| Security configurations, policy adherence
+|===
+
+=== Observability Tools
+
+* Prometheus
+* Grafana
+* ELK Stack
+* Native monitoring solutions
+
+== Hands-on Exercise: Infrastructure Provisioning
+
+=== Exercise Objectives
+* Demonstrate infrastructure deployment
+* Practice IaC techniques
+* Implement scaling configuration
+
+[source,bash]
+----
+# Example infrastructure provisioning command
+{infractl} deploy --config infrastructure.yaml \
+    --scale-mode automatic \
+    --monitoring-level comprehensive
+----
+
+== Security Considerations
+
+=== Infrastructure Security Principles
+
+* Least privilege access
+* Network segmentation
+* Encryption of infrastructure configurations
+* Continuous security scanning
+
+== Best Practices
+
+. Use declarative configuration
+. Implement comprehensive monitoring
+. Design for scalability
+. Automate repetitive tasks
+. Maintain configuration version control
+
+== Recommended Tools and Frameworks
+
+* Kubernetes
+* OpenShift
+* Cloud-native deployment tools
+* Infrastructure management platforms
+
+== Knowledge Check
+
+. Describe three infrastructure deployment models
+. Explain the principles of Infrastructure as Code
+. How do you implement horizontal scaling?
+
+== Advanced Topics
+
+* Multi-cluster management
+* Hybrid cloud strategies
+* Advanced resource optimization techniques
+
+== Module Summary
+
+This module explored comprehensive infrastructure management strategies, covering:
+* Deployment models
+* Resource management
+* Infrastructure as Code
+* Monitoring and observability
+* Security considerations
+
+== Next Steps
+
+Prepare to apply infrastructure management concepts in practical scenarios in the next module.

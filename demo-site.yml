@@ -1,0 +1,26 @@
+---
+site:
+  title: "Welcome to the [Roadshow Name]!"
+  # url: https://redhat-scholars.github.io/course-template
+  start_page: modules::index.adoc
+
+content:
+  sources:
+    - url: .
+      start_path: content
+
+ui:
+  bundle:
+    url: https://github.com/rhpds/showroom_theme_rhdp/releases/download/rhdp-v0.0.2/ui-bundle.zip
+
+runtime:
+  cache_dir: ./.cache/antora
+
+output:
+  dir: ./www
+
+antora:
+  extensions:
+    - id: dev-mode
+      require: ./content/lib/dev-mode.js
+      enabled: false

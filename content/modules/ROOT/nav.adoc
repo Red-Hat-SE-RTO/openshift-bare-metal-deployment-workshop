@@ -1,0 +1,22 @@
+* xref:index.adoc[Overview and Introduction]
+
+* xref:module-01-overview.adoc[1. Core Concepts and Fundamentals]
+** xref:module-01-overview.adoc#create_project[Project Initialization]
+** xref:module-01-overview.adoc#create_resource[Creating Primary Resources]
+** xref:module-01-overview.adoc#resource_management[Resource Administration]
+** xref:module-01-overview.adoc#resource_state[Resource State Management]
+** xref:module-01-overview.adoc#live_migration[Live Migration Techniques]
+
+* xref:module-02-core-concepts.adoc[2. Migration and Transformation]
+** xref:module-02-core-concepts.adoc#prerequisites[Migration Prerequisites]
+** xref:module-02-core-concepts.adoc#migration_strategies[Migration Methodologies]
+
+* xref:module-03-infrastructure.adoc[3. Infrastructure Management]
+** xref:module-03-infrastructure.adoc#review_topology[Infrastructure Topology Review]
+** xref:module-03-infrastructure.adoc#review_hosts[Host Management]
+** xref:module-03-infrastructure.adoc#scaling_infrastructure[Infrastructure Scaling Techniques]
+
+* xref:module-04-management.adoc[4. Operational Management]
+** xref:module-04-management.adoc#resource_examination[Resource Examination]
+** xref:module-04-management.adoc#data_protection[Data Protection Strategies]
+** xref:module-04-management.adoc#resource_cloning[Resource Cloning Techniques]

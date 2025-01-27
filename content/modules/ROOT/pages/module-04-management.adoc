@@ -1,0 +1,235 @@
+= Module 4: Operational Management and Day-2 Operations
+
+[%hardbreaks]
+== Module Overview
+
+This module focuses on the critical aspects of operational management, covering the essential skills and strategies required for maintaining, monitoring, and optimizing {product_name} in production environments.
+
+== Key Learning Objectives
+
+* Understand comprehensive operational management strategies
+* Learn advanced monitoring and troubleshooting techniques
+* Explore lifecycle management approaches
+* Develop skills in configuration management
+* Implement effective maintenance and optimization practices
+
+== Operational Management Framework
+
+=== Core Management Domains
+
+[cols="1,3"]
+|===
+| Management Domain | Key Responsibilities
+
+| Configuration Management
+| Maintain consistent system configurations
+| Lifecycle Management
+| Handle deployments, upgrades, and decommissioning
+
+| Performance Optimization
+| Tune system resources and application performance
+
+| Compliance and Governance
+| Ensure adherence to organizational policies and standards
+
+| Security Management
+| Implement and maintain security controls
+|===
+
+== Configuration Management
+
+=== Configuration Management Approaches
+
+==== Declarative Configuration
+* State-based configuration management
+* Version-controlled configurations
+* Automated reconciliation
+
+==== Configuration Patterns
+
+[cols="1,2,3"]
+|===
+| Pattern | Description | Use Cases
+
+| Immutable Infrastructure
+| Replace entire infrastructure instead of modifying
+| Consistent deployments, reduced configuration drift
+
+| Dynamic Configuration
+| Real-time configuration updates
+| Flexible, responsive environments
+
+| Template-Based Provisioning
+| Standardized configuration templates
+| Consistent environment creation
+|===
+
+== Monitoring and Observability
+
+=== Monitoring Strategies
+
+==== Comprehensive Monitoring Approach
+
+* *Performance Monitoring*
+** Resource utilization tracking
+** Response time analysis
+** Bottleneck identification
+
+* *Log Management*
+** Centralized logging
+** Log aggregation
+** Correlation and analysis
+
+* *Alerting Mechanisms*
+** Threshold-based alerts
+** Predictive monitoring
+** Automated incident response
+
+=== Observability Tools and Techniques
+
+[cols="1,2,3"]
+|===
+| Tool Category | Key Capabilities | Example Tools
+
+| Metrics Collection
+| Performance data gathering
+| Prometheus, Graphite
+
+| Log Management
+| Centralized log aggregation
+| ELK Stack, Splunk
+
+| Tracing
+| Distributed system tracking
+| Jaeger, Zipkin
+
+| Visualization
+| Dashboard and reporting
+| Grafana, Kibana
+|===
+
+== Lifecycle Management
+
+=== Deployment Strategies
+
+==== Deployment Patterns
+
+* Blue-Green Deployments
+* Canary Releases
+* Rolling Updates
+* A/B Testing
+
+=== Upgrade Management
+
+* Minimal downtime upgrades
+* Rollback capabilities
+* Automated validation
+* Incremental update approaches
+
+== Performance Optimization
+
+=== Resource Optimization Techniques
+
+* Dynamic resource allocation
+* Workload scheduling
+* Resource quotas and limits
+* Capacity planning
+
+=== Performance Tuning Strategies
+
+[cols="1,2"]
+|===
+| Optimization Area | Techniques
+
+| Compute
+| CPU pinning, resource reservation
+
+| Memory
+| Transparent huge pages, memory overcommitment
+
+| Network
+| Traffic shaping, network policy optimization
+
+| Storage
+| Caching strategies, I/O optimization
+|===
+
+== Hands-on Exercise: Operational Management
+
+=== Exercise Objectives
+* Implement advanced monitoring configuration
+* Demonstrate lifecycle management
+* Practice performance optimization techniques
+
+[source,bash]
+----
+# Example operational management command
+{management_cli} configure monitor \
+    --strategy comprehensive \
+    --alert-level advanced \
+    --log-retention 90d
+----
+
+== Compliance and Governance
+
+=== Governance Frameworks
+
+* Policy-driven management
+* Automated compliance checks
+* Audit trail maintenance
+* Role-based access control
+
+== Security Management
+
+=== Security Operations
+
+* Continuous security scanning
+* Vulnerability management
+* Automated security compliance
+* Incident response planning
+
+== Best Practices
+
+. Implement comprehensive monitoring
+. Use declarative configuration management
+. Automate repetitive tasks
+. Maintain detailed documentation
+. Regularly review and optimize configurations
+
+== Troubleshooting Techniques
+
+* Systematic problem isolation
+* Log-based diagnostics
+* Performance analysis
+* Root cause investigation
+
+== Knowledge Check
+
+. Describe three configuration management approaches
+. Explain the principles of observability
+. How do you implement a blue-green deployment?
+
+== Advanced Topics
+
+* Multi-cluster management
+* Advanced performance tuning
+* Complex incident response strategies
+
+== Module Summary
+
+Key takeaways from the operational management module:
+* Comprehensive monitoring strategies
+* Advanced configuration management
+* Lifecycle and performance optimization
+* Compliance and security considerations
+
+== Recommended Tools and Resources
+
+* Kubernetes management platforms
+* Monitoring and observability solutions
+* Configuration management tools
+* Performance optimization frameworks
+
+== Next Steps
+
+Prepare to apply operational management concepts in advanced scenarios in the next module.

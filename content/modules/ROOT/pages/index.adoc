@@ -1,0 +1,78 @@
+= Welcome to the {lab_name} !
+
+[%hardbreaks]
+== Introduction
+{product_description}
+
+{event_overview}
+
+== Who Will Benefit Most from Attending?
+
+*Target Audience 1* -- Description of first target audience and their key responsibilities.
+
+*Target Audience 2* -- Description of second target audience and their key responsibilities.
+
+== What Content Is Covered?
+
+These are the *key sections* that will be covered:
+
+* _Section 1_: Detailed description of first section's focus and learning objectives.
+
+* _Section 2_: Detailed description of second section's focus and learning objectives.
+
+* _Section 3_: Detailed description of third section's focus and learning objectives.
+
+* _Section 4_: Detailed description of fourth section's focus and learning objectives.
+
+== What is {product_name}?
+
+* Key product characteristics and unique selling points
+* Licensing and entitlement information
+* Technical foundation and underlying technologies
+* Supported deployment scenarios
+* Integration capabilities
+
+== Why Switch to This Solution?
+
+**Strategic Benefit 1:**
+Detailed explanation of first strategic benefit
+
+**Strategic Benefit 2:**
+Detailed explanation of second strategic benefit
+
+**Strategic Benefit 3:**
+Detailed explanation of third strategic benefit
+
+== Next Steps
+
+Resources for further learning:
+* Documentation link
+* Product landing page
+* Video resources
+* Community forums
+
+== Requirements for the Lab Environment
+
+* Participant hardware and software requirements
+* Recommended browser/access specifications
+
+=== Credentials for the Console
+
+Your console is available {web_console}[here^].
+
+Administrator login:
+* *User:* {admin_user} 
+* *Password:* {admin_password}
+
+=== Additional Access Details
+
+*Bastion Host Access*
+[source,sh,role=execute,subs="attributes"]
+----
+ssh root@{bastion_ip}
+----
+
+*Additional Environment Access*
+* *Environment:* {additional_env}
+* *User:* {additional_user}
+* *Password:* {additional_password}
