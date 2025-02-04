@@ -1,4 +1,4 @@
-= OpenShift 4.16+ Bare Metal Deployment Workshop
+= OpenShift Bare Metal Deployment Workshop
 
 == Introduction
 
@@ -8,7 +8,7 @@ For your convenience, you may optionally *fork this repository* and use it as a 
 
 This workshop provides a *hands-on experience* with deploying OpenShift 4.16+ on bare metal, enabling participants to configure storage, networking, and optionally integrate advanced features such as *OpenShift Virtualization* or *OpenShift AI*.
 
-*OpenShift 4.16+* empowers users to deploy and manage containerized workloads with enterprise-grade scalability, robust security, and flexibility across diverse infrastructures.
+*OpenShift* empowers users to deploy and manage containerized workloads with enterprise-grade scalability, robust security, and flexibility across diverse infrastructures.
 
 During this workshop, we will explore common deployment and management activities that platform administrators and infrastructure engineers encounter in their day-to-day workflows.
 
@@ -34,29 +34,35 @@ Those responsible for deploying, managing, and scaling OpenShift clusters.
 
 This workshop is organized into *6 main sections*:
 
-=== 1. Introduction to OpenShift 4.16+
+=== 1. Introduction to OpenShift
 * Overview of OpenShift and its features for bare metal deployments
 * Key benefits of OpenShift for modern workloads
 
-=== 2. Preparing Bare Metal Infrastructure
+=== 2. Prerequisites and the Pre-Flight Checklist
 * Hardware prerequisites: Control plane, worker nodes, and network requirements
-* Setting up BIOS/firmware, PXE boot, and provisioning nodes
+* Setting up BIOS/firmware, network and storage
 
-=== 3. Networking Configuration
-* Configuring VLANs, DNS, and load balancers for high availability
-* Ensuring proper routing and ingress for applications
+=== 3. OpenShift Installation and Configuration with the Assisted Installer
+* Step-by-step guide using the *Assisted Installer*:
+* *Assisted Installer*: Simplifies cluster installation with an intuitive web interface
 
-=== 4. Storage Configuration
-* Setting up OpenShift Data Foundation (ODF) or external storage systems
-* Configuring dynamic provisioning for persistent storage
-
-=== 5. Deploying OpenShift 4.16+
-* Step-by-step guide using the *Assisted Installer* or *Agent-based Installer*:
-** *Assisted Installer*: Simplifies cluster installation with an intuitive web interface
-** *Agent-based Installer*: Provides flexibility for disconnected or custom bare metal environments
+=== 4. OpenShift Installation and Configuration with the Agent-based Installer
+* Step-by-step guide using the *Assisted Installer*:
+* *Agent-based Installer*: Provides flexibility for disconnected or custom bare metal environments
 * Setting up control plane and worker nodes
 
-=== 6. Optional Features
+=== 5. Storage configuring using OpenShift Data Foundation
+* Prepare storage for ODF
+* Install and configure the Local Storage Operator
+* Install and configure OpenShift Data Foundation
+* Configure the OpenShift Image Registry for ODF
+
+=== 6. Network Configuration using Nmstate
+* Secondary networks overview
+* Configuring secondary networks using Nmstate
+* Exposing networks using NetworkAttachmentDefinitions
+
+=== 7. Optional Features
 * *OpenShift Virtualization*: Managing virtual machines within OpenShift
 * *OpenShift AI*: Enabling AI/ML workloads with OpenShift's AI capabilities
 

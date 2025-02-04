@@ -17,40 +17,50 @@ image::redhat-logo.png[Red Hat Logo,400,400]
 == Workshop Modules
 
 [.card.card-1]
-=== Module 1: Introduction to OpenShift 4.16+
+=== Module 1: Introduction to OpenShift
 * Overview of OpenShift features for bare metal deployments
 * Key benefits for modern workloads
 xref:module-01-introduction.adoc[Start Module 1 →]
 
 [.card.card-2]
-=== Module 2: Preparing Bare Metal Infrastructure
-* Hardware prerequisites and requirements
-* BIOS/firmware setup and node provisioning
+=== Module 2: Prerequisites and the Pre-Flight Checklist
+* Hardware prerequisites: Control plane, worker nodes, and network requirements
+* Setting up BIOS/firmware, network and storage
 xref:module-02-infrastructure.adoc[Start Module 2 →]
 
 [.card.card-3]
-=== Module 3: Networking Configuration
-* VLAN and DNS configuration
-* Load balancer setup and routing
-xref:module-03-networking.adoc[Start Module 3 →]
+=== 3. OpenShift Installation and Configuration with the Assisted Installer
+* Step-by-step guide using the *Assisted Installer*:
+* *Assisted Installer*: Simplifies cluster installation with an intuitive web interface
+xref:module-03-deployment.adoc[Start Module 3 →]
 
 [.card.card-4]
-=== Module 4: Storage Configuration
-* OpenShift Data Foundation setup
-* External storage integration
-xref:module-04-storage.adoc[Start Module 4 →]
+=== 4. OpenShift Installation and Configuration with the Agent-based Installer
+* Step-by-step guide using the *Assisted Installer*:
+* *Agent-based Installer*: Provides flexibility for disconnected or custom bare metal environments
+* Setting up control plane and worker nodes
+xref:module-04-deployment-assisted.adoc[Start Module 4 →]
 
 [.card.card-5]
-=== Module 5: Deploying OpenShift 4.16+
-* Assisted Installer method
-* Agent-based Installer method
-xref:module-05-deployment.adoc[Start Module 5 →]
+=== 5. Storage configuring using OpenShift Data Foundation
+* Prepare storage for ODF
+* Install and configure the Local Storage Operator
+* Install and configure OpenShift Data Foundation
+* Configure the OpenShift Image Registry for ODF
+xref:module-05-storage.adoc[Start Module 5 →]
 
 [.card.card-6]
-=== Module 6: Optional Features
+=== 6. Network Configuration using Nmstate
+* Secondary networks overview
+* Configuring secondary networks using Nmstate
+* Exposing networks using NetworkAttachmentDefinitions
+xref:module-06-network.adoc[Start Module 6 →]
+
+[.card.card-7]
+=== Module 7: Optional Features
 * OpenShift Virtualization
 * OpenShift AI
-xref:module-06-optional.adoc[Start Module 6 →]
+xref:module-07-optional.adoc[Start Module 7 →]
 
 [.text-center.strong]
 == Additional Resources
