@@ -1,10 +1,17 @@
 = Module 5: Deploying OpenShift 4.16+
 :page-layout: module
 
-== Assisted Installer Method [[assisted]]
+== Agent-based Installer Method [[agent-based]]
 
 === Overview
-The Assisted Installer provides a user-friendly web interface for deploying OpenShift clusters.
+The Agent-based installation method provides the flexibility to boot your on-premises servers in any way that you choose. It combines the ease of use of the Assisted Installation service with the ability to run offline, including in air-gapped environments.
+Agent-based installation is a subcommand of the OpenShift installer.
+It generates a bootable ISO image containing all of the information required to deploy an OpenShift cluster, with an available release image.
+
+The configuration is in the same format as for the installer-provisioned infrastructure and user-provisioned infrastructure installation methods.
+The Agent-based Installer can also optionally generate or accept Zero Touch Provisioning (ZTP) custom resources. ZTP allows you to provision new edge sites with declarative configurations of bare-metal equipment.
+
+For more information on the Agent-based Installer, see link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer[the OpenShift Documentation].
 
 === Installation Steps
 * Access Red Hat Hybrid Cloud Console
