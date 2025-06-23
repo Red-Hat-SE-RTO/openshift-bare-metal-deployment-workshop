@@ -96,7 +96,7 @@ NAME     TYPE     FROM     STATUS     STARTED          DURATION
 vddk-3   Docker   Binary   Complete   22 minutes ago   25s
 ----
 
-. Ensure that the image is accessible to your {VirtProductName} environment.
+. Ensure that the image is accessible to your migration namespace. Replace openshift-mtv with the destination namespace if different.
 +
 [source,terminal]
 ----
@@ -116,7 +116,7 @@ $ oc edit configmap v2v-vmware -n openshift-cnv
 ----
 ...
 data:
-  vddk-init-image: <registry_route_or_server_path>/vddk:<tag>
+  vddk-init-image: image-registry.openshift-image-registry.svc:5000/vddk/vddk
 ----
 
 == OpenShift AI [[ai]]
