@@ -25,6 +25,100 @@ OpenShift Virtualization enables you to run and manage virtual machines alongsid
 * Development and testing
 * Application modernization
 
+=== Creating and using a VDDK image
+
+You can download the VMware Virtual Disk Development Kit (VDDK), build a VDDK image, and push the VDDK image to your image registry. You then add the VDDK image to the `v2v-vmware` ConfigMap.
+
+.Prerequisites
+
+* You must have access to an OpenShift internal image registry or a secure external registry.
+
+.Procedure
+
+. Create and navigate to a temporary directory:
++
+[source,terminal]
+----
+$ mkdir /tmp/<dir_name> && cd /tmp/<dir_name>
+----
+
+. In a browser, navigate to link:https://code.vmware.com/home[VMware code] and click *SDKs*.
+. Under *Compute Virtualization*, click *Virtual Disk Development Kit (VDDK)*.
+. Select the VDDK version that corresponds to your VMware vSphere version, for example, VDDK 7.0 for vSphere 7.0, click *Download*, and then save the VDDK archive in the temporary directory.
+
+. Extract the VDDK archive:
++
+[source,terminal]
+----
+$ tar -xzf VMware-vix-disklib-<version>.x86_64.tar.gz
+----
+
+. Create a `Dockerfile`:
++
+[source,terminal]
+----
+$ cat > Dockerfile <<EOF
+FROM registry.access.redhat.com/ubi8/ubi-minimal
+USER 1001
+COPY vmware-vix-disklib-distrib /vmware-vix-disklib-distrib
+RUN mkdir -p /opt
+ENTRYPOINT ["cp", "-r", "/vmware-vix-disklib-distrib", "/opt"]
+EOF
+----
+
+. Create a new project for the image
++
+[source,terminal]
+----
+$ oc new-project vddk
+----
+
+. Create a new image stream for the image
++ 
+[source,terminal]
+----
+$ oc new-build . --name vddk
+----
+
+. Start the build
++
+[source,terminal]
+----
+$ oc start-build vddk --from-dir .
+----
+
+. Verify the build
++
+[source,terminal]
+----
+$ oc get build
+NAME     TYPE     FROM     STATUS     STARTED          DURATION
+vddk-3   Docker   Binary   Complete   22 minutes ago   25s
+----
+
+. Ensure that the image is accessible to your {VirtProductName} environment.
++
+[source,terminal]
+----
+$ oc policy add-role-to-user system:image-puller system:serviceaccount:openshift-mtv:default --namespace vddk
+----
+
+. Edit the `v2v-vmware` ConfigMap in the *openshift-cnv* project:
++
+[source,terminal]
+----
+$ oc edit configmap v2v-vmware -n openshift-cnv
+----
+
+. Add the `vddk-init-image` parameter to the `data` stanza:
++
+[source,yaml]
+----
+...
+data:
+  vddk-init-image: <registry_route_or_server_path>/vddk:<tag>
+----
+
 == OpenShift AI [[ai]]
 
 === Overview
