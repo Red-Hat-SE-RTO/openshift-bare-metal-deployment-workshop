@@ -1,62 +1,535 @@
-= Module 5: Deploying OpenShift 4.16+
+= Module 3: Deploying OpenShift 4.18/4.19 using Assisted Installer
 :page-layout: module
 
-== Assisted Installer Method [[assisted]]
+== Learning Objectives [[objectives]]
 
-=== Overview
-The Assisted Installer provides a user-friendly web interface for deploying OpenShift clusters.
+By the end of this module, you will:
 
-=== Installation Steps
-* Access Red Hat Hybrid Cloud Console
-* Create new cluster
-* Configure cluster settings
-* Generate discovery ISO
-* Boot nodes with ISO
-* Complete installation
+* Successfully deploy an OpenShift 4.18/4.19 cluster using the Assisted Installer
+* Configure cluster networking and node roles through the web interface
+* Monitor the installation process in real-time
+* Verify cluster health and access the OpenShift console
+* Have a fully functional OpenShift cluster ready for workloads
 
-=== Advantages
-* User-friendly interface
-* Automated validation
-* Real-time monitoring
-* Guided workflow
+== Prerequisites Check [[prerequisites]]
 
-== Agent-based Installer Method [[agent]]
+Before starting the Assisted Installer deployment, verify you have completed:
 
-=== Overview
-The Agent-based Installer provides more control and flexibility for disconnected or custom environments.
+```bash
+# Check prerequisites from previous modules
+echo "=== Prerequisites Verification ==="
 
-=== Installation Steps
-* Generate agent ISO
-* Configure installation
-* Boot nodes
-* Monitor installation
-* Verify cluster
+# 1. Verify network plan exists
+if [ -f "network-plan.txt" ]; then
+    echo "✅ Network plan found"
+    source network-plan.txt
+else
+    echo "❌ Network plan missing - complete Module 2 first"
+    exit 1
+fi
 
-=== Advanced Configuration
-* Custom networking
-* Storage configuration
-* Node roles
-* Security settings
+# 2. Verify hardware inventory
+if [ -f "hardware-inventory.txt" ]; then
+    echo "✅ Hardware inventory found"
+else
+    echo "❌ Hardware inventory missing - complete Module 2 first"
+    exit 1
+fi
 
-== Control Plane and Worker Setup [[nodes]]
+# 3. Test DNS resolution
+echo "Testing DNS resolution..."
+if nslookup api.${CLUSTER_NAME}.${BASE_DOMAIN} > /dev/null 2>&1; then
+    echo "✅ DNS resolution working"
+else
+    echo "❌ DNS resolution failed - configure DNS first"
+    exit 1
+fi
 
-=== Control Plane Configuration
-* Master node setup
-* etcd configuration
-* API server settings
-* Controller manager
+# 4. Verify Red Hat pull secret
+if [ -f "pull-secret.txt" ]; then
+    echo "✅ Pull secret found"
+else
+    echo "❌ Pull secret missing - download from Red Hat console"
+    exit 1
+fi
 
-=== Worker Node Setup
-* Node labels
-* Taints and tolerations
-* Resource management
-* Monitoring configuration
+echo "All prerequisites met - ready to proceed!"
+```
 
-=== Post-Installation Tasks
-* Verify cluster health
-* Configure authentication
-* Set up monitoring
-* Configure logging
+== Step 1: Access the Assisted Installer [[access-installer]]
+
+=== Log into Red Hat Hybrid Cloud Console
+Follow these steps to access the link:https://console.redhat.com/openshift/assisted-installer/clusters[Assisted Installer]:
+
+```bash
+# Open your web browser and navigate to:
+echo "Navigate to: https://console.redhat.com/openshift/assisted-installer/clusters"
+
+# Create a bookmark for easy access
+echo "Bookmark this URL for future reference"
+
+# Verify you can access the console
+echo "✅ Verification: You should see the 'Create cluster' button"
+```
+
+=== Create New Cluster Configuration
+```bash
+# Before starting in the web interface, prepare your configuration
+cat > assisted-installer-config.txt << EOF
+# Assisted Installer Configuration
+# Use these values when creating your cluster
+
+Cluster Name: ${CLUSTER_NAME}
+Base Domain: ${BASE_DOMAIN}
+OpenShift Version: 4.18 (or 4.19)
+CPU Architecture: x86_64
+
+# Network Configuration
+Machine Network CIDR: ${MACHINE_NETWORK}
+Service Network CIDR: ${SERVICE_NETWORK}
+Pod Network CIDR: ${POD_NETWORK}
+API VIP: ${API_VIP}
+Ingress VIP: ${INGRESS_VIP}
+
+# Additional Settings
+Network Type: OVN-Kubernetes
+Enable Dual Stack: No (unless required)
+Enable Encryption: Yes (recommended)
+EOF
+
+echo "Configuration prepared - use these values in the web interface"
+cat assisted-installer-config.txt
+```
+
+== Assisted Installer Overview [[overview]]
+
+=== What is the Assisted Installer?
+The link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on-premise_with_assisted_installer/installing-on-prem-assisted[Assisted Installer] is Red Hat's recommended method for deploying OpenShift Container Platform 4.18/4.19 on bare metal infrastructure. It provides a user-friendly web interface with automated validation, smart defaults, and real-time monitoring throughout the installation process.
+
+=== Key Features and Benefits
+* *Web-based Interface*: link:https://console.redhat.com/openshift/assisted-installer/clusters[Intuitive web console] accessible from any browser
+* *Automated Validation*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on-premise_with_assisted_installer/installing-on-prem-assisted#assisted-installer-installing_installing-on-prem-assisted[Pre-flight checks] and hardware validation
+* *Smart Defaults*: Intelligent configuration recommendations based on detected hardware
+* *Real-time Monitoring*: Live progress tracking and detailed logging
+* *RESTful API*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on-premise_with_assisted_installer/installing-on-prem-assisted#assisted-installer-api_installing-on-prem-assisted[Automation support] for advanced scenarios
+* *Multi-Architecture Support*: Support for x86_64, ARM64, IBM Power, and IBM Z architectures
+
+=== Prerequisites for Assisted Installer
+Before using the Assisted Installer, ensure you have:
+
+* *Red Hat Account*: link:https://console.redhat.com/[Red Hat Hybrid Cloud Console access]
+* *OpenShift Subscription*: Valid OpenShift Container Platform subscription
+* *Network Connectivity*: Internet access for the installation host
+* *Hardware Requirements*: Nodes meeting link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on_bare_metal/user-provisioned-infrastructure#minimum-resource-requirements_installing-bare-metal[minimum specifications]
+* *Network Configuration*: Properly configured DNS, DHCP, and load balancers
+
+== Step 2: Create Cluster in Web Interface [[create-cluster]]
+
+=== Configure Basic Cluster Information
+In the Assisted Installer web interface, configure your cluster using the values from your configuration file:
+
+```bash
+# Reference your configuration while filling the web form
+echo "=== Cluster Configuration Reference ==="
+cat assisted-installer-config.txt
+
+echo ""
+echo "=== Web Interface Steps ==="
+echo "1. Click 'Create cluster'"
+echo "2. Select 'Datacenter' for infrastructure type"
+echo "3. Fill in the following fields:"
+echo "   - Cluster name: ${CLUSTER_NAME}"
+echo "   - Base domain: ${BASE_DOMAIN}"
+echo "   - OpenShift version: 4.18 or 4.19"
+echo "   - CPU architecture: x86_64"
+```
+
+=== Configure Network Settings
+```bash
+echo "=== Network Configuration in Web Interface ==="
+echo "In the 'Networking' section, configure:"
+echo "   - Machine network CIDR: ${MACHINE_NETWORK}"
+echo "   - Service network CIDR: ${SERVICE_NETWORK}"
+echo "   - Pod network CIDR: ${POD_NETWORK}"
+echo "   - API VIP: ${API_VIP}"
+echo "   - Ingress VIP: ${INGRESS_VIP}"
+echo ""
+echo "Advanced networking options:"
+echo "   - Network type: OVN-Kubernetes"
+echo "   - Enable dual stack: No (unless IPv6 required)"
+echo "   - Enable IPsec: Yes (for enhanced security)"
+```
+
+=== Add SSH Public Key
+```bash
+# Generate SSH key if you don't have one
+if [ ! -f ~/.ssh/id_rsa.pub ]; then
+    echo "Generating SSH key pair..."
+    ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ""
+fi
+
+# Display public key for web interface
+echo "=== SSH Public Key ==="
+echo "Copy this key into the 'SSH public key' field:"
+echo ""
+cat ~/.ssh/id_rsa.pub
+echo ""
+echo "This key will allow SSH access to cluster nodes"
+```
+
+== Step 3: Generate and Download Discovery ISO [[discovery-iso]]
+
+=== Configure Optional Operators
+```bash
+echo "=== Optional Operators Selection ==="
+echo "In the web interface, you can select additional operators:"
+echo ""
+echo "Recommended for this workshop:"
+echo "   ☐ OpenShift Data Foundation (for storage)"
+echo "   ☐ Local Storage Operator (for local storage)"
+echo "   ☐ OpenShift Virtualization (if planning to use VMs)"
+echo ""
+echo "Advanced networking (if needed):"
+echo "   ☐ SR-IOV Network Operator"
+echo "   ☐ Kubernetes NMState Operator"
+```
+
+=== Generate Discovery ISO
+```bash
+# After configuring all settings in the web interface
+echo "=== Discovery ISO Generation ==="
+echo "1. Review all configuration settings"
+echo "2. Click 'Generate Discovery ISO'"
+echo "3. Wait for ISO generation to complete"
+echo "4. Download the discovery ISO file"
+
+# Prepare for ISO download
+mkdir -p ~/openshift-install
+cd ~/openshift-install
+
+echo ""
+echo "Save the downloaded ISO as: discovery-${CLUSTER_NAME}.iso"
+echo "ISO location: $(pwd)/discovery-${CLUSTER_NAME}.iso"
+```
+
+=== Verify ISO Download
+```bash
+# After downloading the ISO
+cat > verify-iso.sh << 'EOF'
+#!/bin/bash
+ISO_FILE="discovery-${CLUSTER_NAME}.iso"
+
+if [ -f "$ISO_FILE" ]; then
+    echo "✅ Discovery ISO downloaded successfully"
+    echo "File: $ISO_FILE"
+    echo "Size: $(ls -lh $ISO_FILE | awk '{print $5}')"
+
+    # Verify ISO integrity
+    if file "$ISO_FILE" | grep -q "ISO 9660"; then
+        echo "✅ ISO file format verified"
+    else
+        echo "❌ ISO file may be corrupted"
+    fi
+else
+    echo "❌ Discovery ISO not found"
+    echo "Please download the ISO from the Assisted Installer web interface"
+fi
+EOF
+
+chmod +x verify-iso.sh
+./verify-iso.sh
+```
+
+**✅ Verification Checkpoint**: Discovery ISO should be downloaded and verified before proceeding.
+
+== Step-by-Step Installation Process [[installation]]
+
+=== Boot Methods for Discovery ISO
+Choose the appropriate method to boot your servers with the discovery ISO:
+
+==== Method A: Physical Media (USB/DVD)
+```bash
+# Create bootable USB drive (Linux)
+echo "=== Creating Bootable USB Drive ==="
+echo "1. Insert USB drive (minimum 2GB)"
+echo "2. Identify USB device:"
+lsblk
+
+echo ""
+echo "3. Create bootable USB (replace /dev/sdX with your USB device):"
+echo "   sudo dd if=discovery-${CLUSTER_NAME}.iso of=/dev/sdX bs=4M status=progress"
+echo "   sudo sync"
+echo ""
+echo "⚠️  WARNING: This will erase all data on the USB drive!"
+```
+
+==== Method B: BMC Virtual Media
+```bash
+# Mount ISO via BMC (example for Dell iDRAC)
+cat > mount-iso-idrac.sh << 'EOF'
+#!/bin/bash
+# Mount discovery ISO via iDRAC virtual media
+
+IDRAC_IP="<idrac-ip>"
+IDRAC_USER="<username>"
+IDRAC_PASS="<password>"
+ISO_PATH="$(pwd)/discovery-${CLUSTER_NAME}.iso"
+
+echo "Mounting ISO via iDRAC virtual media..."
+echo "iDRAC IP: $IDRAC_IP"
+echo "ISO Path: $ISO_PATH"
+
+# Note: Actual implementation depends on your BMC type
+# This is a template - adjust for your specific BMC
+echo "1. Access iDRAC web interface: https://$IDRAC_IP"
+echo "2. Navigate to Virtual Console > Virtual Media"
+echo "3. Map CD/DVD to local ISO file: $ISO_PATH"
+echo "4. Boot from virtual CD/DVD"
+EOF
+
+chmod +x mount-iso-idrac.sh
+echo "Edit mount-iso-idrac.sh with your BMC details"
+```
+
+==== Method C: PXE Boot (Advanced)
+```bash
+# Set up PXE boot for discovery ISO
+cat > setup-pxe.sh << 'EOF'
+#!/bin/bash
+# PXE boot setup for discovery ISO
+
+echo "=== PXE Boot Setup ==="
+echo "This requires a PXE server configuration"
+echo "Refer to: https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on-premise_with_assisted_installer/installing-on-prem-assisted"
+
+# Extract ISO contents for PXE
+mkdir -p pxe-boot
+sudo mount -o loop discovery-${CLUSTER_NAME}.iso pxe-boot/
+echo "ISO mounted at: $(pwd)/pxe-boot/"
+echo "Configure your PXE server to serve these files"
+EOF
+
+chmod +x setup-pxe.sh
+```
+
+=== Boot Each Node
+```bash
+# Create node boot tracking
+cat > boot-tracking.txt << 'EOF'
+# Node Boot Tracking for Discovery ISO
+# Mark each node as it boots successfully
+
+Bootstrap Node:
+[ ] Booted with discovery ISO
+[ ] Appeared in Assisted Installer web interface
+[ ] Hardware detected correctly
+
+Control Plane Nodes:
+[ ] master-0: Booted and detected
+[ ] master-1: Booted and detected
+[ ] master-2: Booted and detected
+
+Worker Nodes:
+[ ] worker-0: Booted and detected
+[ ] worker-1: Booted and detected
+
+Notes:
+_________________________________
+EOF
+
+echo "Use boot-tracking.txt to track node discovery progress"
+echo "Boot each node with the discovery ISO and monitor the web interface"
+```
+
+**✅ Verification Checkpoint**: All nodes should appear in the Assisted Installer web interface before proceeding.
+
+== Step 5: Configure Nodes in Web Interface [[configure-nodes]]
+
+=== Monitor Node Discovery
+```bash
+# While nodes are booting, monitor the web interface
+echo "=== Node Discovery Monitoring ==="
+echo "1. Return to the Assisted Installer web interface"
+echo "2. Refresh the page to see discovered nodes"
+echo "3. Wait for all nodes to appear (may take 5-10 minutes)"
+echo ""
+echo "Expected nodes:"
+grep -E "^(bootstrap|master|worker)" hardware-inventory.txt | while read line; do
+    echo "   - $(echo $line | cut -d',' -f1)"
+done
+```
+
+=== Assign Node Roles
+```bash
+echo "=== Node Role Assignment ==="
+echo "In the web interface, assign roles to each discovered node:"
+echo ""
+echo "Control Plane nodes (select 3 nodes):"
+echo "   - Choose your most powerful/reliable servers"
+echo "   - Must have minimum 4 CPU cores and 16GB RAM"
+echo ""
+echo "Worker nodes (select remaining nodes):"
+echo "   - These will run application workloads"
+echo "   - Must have minimum 2 CPU cores and 8GB RAM"
+echo ""
+echo "Bootstrap node:"
+echo "   - Automatically assigned by the installer"
+echo "   - Will be deleted after installation completes"
+```
+
+=== Validate Network Configuration
+```bash
+echo "=== Network Validation ==="
+echo "The Assisted Installer will automatically validate:"
+echo "   ✓ Network connectivity between nodes"
+echo "   ✓ DNS resolution for cluster endpoints"
+echo "   ✓ NTP synchronization"
+echo "   ✓ Hardware compatibility"
+echo ""
+echo "If validation fails:"
+echo "   1. Check the 'Validations' tab for specific errors"
+echo "   2. Resolve issues on the affected nodes"
+echo "   3. Reboot nodes if necessary"
+echo "   4. Wait for re-validation"
+```
+
+**✅ Verification Checkpoint**: All validations should pass before starting installation.
+
+==== Basic Cluster Information
+* *Cluster Name*: Choose a descriptive name following link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on-premise_with_assisted_installer/installing-on-prem-assisted#assisted-installer-installing_installing-on-prem-assisted[naming conventions]
+* *Base Domain*: Your organization's domain (e.g., example.com)
+* *OpenShift Version*: Select OpenShift 4.18 or 4.19
+* *CPU Architecture*: Choose x86_64, ARM64, IBM Power, or IBM Z
+
+==== Network Configuration
+* *Machine Network CIDR*: Network range for cluster nodes (e.g., 192.168.1.0/24)
+* *Service Network CIDR*: Internal services network (default: 172.30.0.0/16)
+* *Pod Network CIDR*: Container network range (default: 10.128.0.0/14)
+* *API VIP*: Virtual IP for Kubernetes API access
+* *Ingress VIP*: Virtual IP for application ingress
+
+==== Advanced Networking Options
+* *Network Type*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking/ovn-kubernetes-network-plugin[OVN-Kubernetes] (recommended for 4.18/4.19)
+* *Dual Stack*: Enable IPv4/IPv6 dual-stack if required
+* *Custom Manifests*: Upload additional configuration manifests if needed
+
+=== Step 3: Generate Discovery ISO
+1. Configure SSH public key for cluster access
+2. Select additional operators to install (optional):
+   * link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/virtualization/preparing-cluster-for-virt[OpenShift Virtualization]
+   * link:https://docs.redhat.com/en/documentation/red_hat_openshift_data_foundation/4.18/[OpenShift Data Foundation]
+   * link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/hardware_networks/about-sriov[SR-IOV Network Operator]
+3. Download the discovery ISO image
+4. Optionally, create a bootable USB drive or configure PXE boot
+
+=== Step 4: Boot Nodes with Discovery ISO
+1. Boot each bare metal node using the discovery ISO
+2. Nodes will automatically register with the Assisted Installer
+3. Wait for hardware discovery and validation to complete
+4. Review detected hardware specifications and network configuration
+
+=== Step 5: Configure Node Roles and Networking
+Once nodes are discovered:
+
+==== Assign Node Roles
+* *Control Plane Nodes*: Select 3 nodes for high availability (minimum)
+* *Worker Nodes*: Assign remaining nodes as workers
+* *Infrastructure Nodes*: Optionally designate nodes for infrastructure workloads
+
+==== Validate Network Configuration
+* Verify network connectivity between nodes
+* Confirm DNS resolution for cluster endpoints
+* Validate load balancer configuration
+* Check NTP synchronization
+
+=== Step 6: Review and Start Installation
+1. Review the cluster configuration summary
+2. Validate all pre-flight checks pass successfully
+3. Click "Install cluster" to begin the installation process
+4. Monitor installation progress in real-time
+
+== Installation Monitoring and Validation [[monitoring]]
+
+=== Real-time Installation Tracking
+The Assisted Installer provides comprehensive monitoring throughout the installation process:
+
+* *Bootstrap Phase*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on-premise_with_assisted_installer/installing-on-prem-assisted#assisted-installer-installing_installing-on-prem-assisted[Initial cluster bootstrap] and temporary bootstrap node setup
+* *Control Plane Installation*: Master node configuration and etcd cluster formation
+* *Worker Node Join*: Worker nodes joining the cluster and becoming ready
+* *Operator Installation*: Core OpenShift operators and selected additional operators
+* *Cluster Finalization*: Final configuration and cluster readiness validation
+
+=== Installation Progress Indicators
+Monitor these key installation phases:
+
+1. *Infrastructure Preparation*: Node discovery and hardware validation
+2. *Bootstrap Initialization*: Temporary bootstrap node startup
+3. *Control Plane Deployment*: Master nodes installation and configuration
+4. *Worker Node Configuration*: Worker nodes joining and configuration
+5. *Operator Deployment*: Core and optional operators installation
+6. *Cluster Validation*: Final health checks and readiness confirmation
+
+=== Troubleshooting Common Issues
+If installation issues occur, refer to these resources:
+
+* *Pre-flight Validation Failures*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on-premise_with_assisted_installer/installing-on-prem-assisted#assisted-installer-troubleshooting_installing-on-prem-assisted[Common validation errors and solutions]
+* *Network Connectivity Issues*: DNS resolution, load balancer, and firewall configuration
+* *Hardware Compatibility*: CPU, memory, and storage requirements validation
+* *Bootstrap Failures*: Bootstrap node logs and recovery procedures
+
+== Post-Installation Configuration [[post-install]]
+
+=== Immediate Post-Installation Tasks
+After successful installation, perform these essential tasks:
+
+==== Cluster Access and Authentication
+1. *Download kubeconfig*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on-premise_with_assisted_installer/installing-on-prem-assisted#assisted-installer-installing_installing-on-prem-assisted[Download cluster credentials] from the Assisted Installer
+2. *Install OpenShift CLI*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/cli_tools/openshift-cli-oc[Install and configure oc command-line tool]
+3. *Verify Cluster Access*: Test cluster connectivity and authentication
+4. *Configure Identity Providers*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/authentication_and_authorization/configuring-identity-providers[Set up external authentication] if required
+
+==== Cluster Health Validation
+* *Node Status*: Verify all nodes are in Ready state
+* *Operator Status*: Confirm all cluster operators are available
+* *Pod Health*: Check system pods are running correctly
+* *Storage Validation*: Verify storage classes and persistent volumes
+* *Network Connectivity*: Test pod-to-pod and external connectivity
+
+==== Security Configuration
+* *Certificate Management*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/security_and_compliance/certificate-management[Configure custom certificates] if required
+* *RBAC Setup*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/authentication_and_authorization/using-rbac[Configure role-based access control]
+* *Security Policies*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/authentication_and_authorization/managing-security-context-constraints[Implement security context constraints]
+* *Network Policies*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking/network-security[Configure network security policies]
+
+=== Optional Configuration Tasks
+Consider these additional configurations based on your requirements:
+
+* *Monitoring and Alerting*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/observability/monitoring-overview[Configure cluster monitoring] and custom alerts
+* *Logging*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/observability/logging-overview[Set up centralized logging] with OpenShift Logging
+* *Registry Configuration*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/registry/registry-overview[Configure image registry] for internal use
+* *Backup Strategy*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/backup_and_restore/backup-restore-overview[Implement backup and disaster recovery]
+
+== Best Practices and Recommendations [[best-practices]]
+
+=== Deployment Best Practices
+* *Hardware Standardization*: Use consistent hardware specifications across nodes
+* *Network Segmentation*: Implement proper network isolation and security
+* *Resource Planning*: Plan for growth and resource requirements
+* *Documentation*: Maintain detailed deployment and configuration documentation
+
+=== Operational Considerations
+* *Update Strategy*: Plan for link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/updating_clusters/understanding-openshift-updates-1[cluster updates and maintenance]
+* *Capacity Management*: Monitor resource utilization and plan for scaling
+* *Security Maintenance*: Regular security updates and vulnerability management
+* *Disaster Recovery*: Implement and test backup and recovery procedures
+
+== Documentation References
+For detailed information about the Assisted Installer, refer to:
+
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on-premise_with_assisted_installer/installing-on-prem-assisted[Installing an on-premise cluster using the Assisted Installer - OpenShift 4.18]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/installing_on-premise_with_assisted_installer/installing-on-prem-assisted[Installing an on-premise cluster using the Assisted Installer - OpenShift 4.19]
+* link:https://console.redhat.com/openshift/assisted-installer/clusters[Red Hat Hybrid Cloud Console - Assisted Installer]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/validation_and_troubleshooting/troubleshooting-installation-issues[Troubleshooting installation issues - OpenShift 4.18]
 
 == Next Steps
-Want to explore optional features? Continue to xref:module-06-optional.adoc[Module 6: Optional Features].
+Ready to learn about the Agent-based installer for disconnected environments? Continue to xref:module-04-deployment-agent.adoc[Module 4: Deploying OpenShift using Agent-based Installer].

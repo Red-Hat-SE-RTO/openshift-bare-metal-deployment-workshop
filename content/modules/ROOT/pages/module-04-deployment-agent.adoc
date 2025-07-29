@@ -1,69 +1,369 @@
-= Module 5: Deploying OpenShift 4.16+
+= Module 4: Deploying OpenShift 4.18/4.19 using Agent-based Installer
 :page-layout: module
 
-== Agent-based Installer Method [[agent-based]]
+== Learning Objectives [[objectives]]
 
-=== Overview
-The Agent-based installation method provides the flexibility to boot your on-premises servers in any way that you choose. It combines the ease of use of the Assisted Installation service with the ability to run offline, including in air-gapped environments.
-Agent-based installation is a subcommand of the OpenShift installer.
-It generates a bootable ISO image containing all of the information required to deploy an OpenShift cluster, with an available release image.
+By the end of this module, you will:
 
-The configuration is in the same format as for the installer-provisioned infrastructure and user-provisioned infrastructure installation methods.
-The Agent-based Installer can also optionally generate or accept Zero Touch Provisioning (ZTP) custom resources. ZTP allows you to provision new edge sites with declarative configurations of bare-metal equipment.
+* Successfully deploy OpenShift 4.18/4.19 using the Agent-based Installer
+* Create and configure installation manifests for disconnected environments
+* Generate a custom agent ISO with embedded configuration
+* Monitor the installation process and troubleshoot issues
+* Have a fully functional OpenShift cluster in an air-gapped environment
 
-For more information on the Agent-based Installer, see link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer[the OpenShift Documentation].
+== Prerequisites Check [[prerequisites]]
 
-=== Installation Steps
-* Access Red Hat Hybrid Cloud Console
-* Create new cluster
-* Configure cluster settings
-* Generate discovery ISO
-* Boot nodes with ISO
-* Complete installation
+Before starting the Agent-based Installer deployment, verify you have completed:
 
-=== Advantages
-* User-friendly interface
-* Automated validation
-* Real-time monitoring
-* Guided workflow
+```bash
+# Check prerequisites for Agent-based installation
+echo "=== Agent-based Installer Prerequisites ==="
 
-== Agent-based Installer Method [[agent]]
+# 1. Verify openshift-install binary
+if command -v openshift-install &> /dev/null; then
+    echo "✅ openshift-install binary found"
+    openshift-install version
+else
+    echo "❌ openshift-install binary missing"
+    echo "Download from: https://console.redhat.com/openshift/install/metal/agent-based"
+    exit 1
+fi
 
-=== Overview
-The Agent-based Installer provides more control and flexibility for disconnected or custom environments.
+# 2. Verify pull secret
+if [ -f "pull-secret.txt" ]; then
+    echo "✅ Pull secret found"
+    # Validate JSON format
+    if jq empty pull-secret.txt 2>/dev/null; then
+        echo "✅ Pull secret format valid"
+    else
+        echo "❌ Pull secret format invalid"
+        exit 1
+    fi
+else
+    echo "❌ Pull secret missing"
+    exit 1
+fi
 
-=== Installation Steps
-* Generate agent ISO
-* Configure installation
-* Boot nodes
-* Monitor installation
-* Verify cluster
+# 3. Verify network configuration
+if [ -f "network-plan.txt" ]; then
+    echo "✅ Network plan found"
+    source network-plan.txt
+else
+    echo "❌ Network plan missing - complete Module 2 first"
+    exit 1
+fi
 
-=== Advanced Configuration
-* Custom networking
-* Storage configuration
-* Node roles
-* Security settings
+# 4. Check for disconnected environment setup (if applicable)
+echo ""
+echo "Environment type:"
+if curl -s --connect-timeout 5 https://registry.redhat.io > /dev/null; then
+    echo "✅ Connected environment - can pull images directly"
+    ENVIRONMENT_TYPE="connected"
+else
+    echo "⚠️  Disconnected environment - will need mirrored images"
+    ENVIRONMENT_TYPE="disconnected"
+fi
 
-== Control Plane and Worker Setup [[nodes]]
+echo "ENVIRONMENT_TYPE=$ENVIRONMENT_TYPE" >> network-plan.txt
+echo "Prerequisites check complete!"
+```
 
-=== Control Plane Configuration
-* Master node setup
-* etcd configuration
-* API server settings
-* Controller manager
+== Step 1: Prepare Installation Directory [[prepare-directory]]
 
-=== Worker Node Setup
-* Node labels
-* Taints and tolerations
-* Resource management
-* Monitoring configuration
+=== Create Installation Workspace
+```bash
+# Create dedicated directory for Agent-based installation
+mkdir -p ~/openshift-agent-install
+cd ~/openshift-agent-install
 
-=== Post-Installation Tasks
-* Verify cluster health
-* Configure authentication
-* Set up monitoring
-* Configure logging
+echo "Installation directory: $(pwd)"
+
+# Copy required files
+cp ~/pull-secret.txt .
+cp ~/network-plan.txt .
+
+# Create directory structure
+mkdir -p {manifests,openshift}
+
+echo "✅ Installation workspace prepared"
+```
+
+=== Generate SSH Key Pair
+```bash
+# Generate SSH key for cluster access if not exists
+if [ ! -f ~/.ssh/id_rsa ]; then
+    echo "Generating SSH key pair..."
+    ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ""
+fi
+
+# Copy public key to installation directory
+cp ~/.ssh/id_rsa.pub ssh-key.pub
+
+echo "SSH public key prepared for cluster access"
+cat ssh-key.pub
+```
+
+== Agent-based Installer Overview [[overview]]
+
+=== What is the Agent-based Installer?
+The link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer[Agent-based Installer] is designed for deploying OpenShift Container Platform 4.18/4.19 in disconnected, air-gapped, or highly customized environments. It combines the ease of use of the Assisted Installer with the ability to run completely offline.
+
+The Agent-based Installer is a subcommand of the OpenShift installer that generates a bootable ISO image containing all the information required to deploy an OpenShift cluster, including the release image and configuration data.
+
+=== Key Features and Benefits
+* *Offline Installation*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#agent-install-about_preparing-to-install-with-agent-based-installer[Complete air-gapped deployment capability]
+* *Flexible Boot Methods*: Boot servers using ISO, PXE, or any preferred method
+* *Declarative Configuration*: Uses the same configuration format as IPI and UPI methods
+* *Zero Touch Provisioning*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#agent-install-ztp_preparing-to-install-with-agent-based-installer[ZTP support] for edge site provisioning
+* *Custom Networking*: Advanced networking configurations and customizations
+* *Security Compliance*: Support for FIPS mode and security-hardened environments
+
+=== When to Use Agent-based Installer
+The Agent-based Installer is ideal for:
+
+* *Disconnected Environments*: Networks without internet connectivity
+* *Air-gapped Deployments*: Highly secure environments with strict network isolation
+* *Edge Computing*: Remote locations with limited connectivity
+* *Custom Configurations*: Deployments requiring specific networking or storage configurations
+* *Automated Provisioning*: Integration with existing automation and orchestration tools
+* *Regulatory Compliance*: Environments with strict security and compliance requirements
+
+=== Prerequisites for Agent-based Installer
+Before using the Agent-based Installer, ensure you have:
+
+* *OpenShift Installer*: link:https://console.redhat.com/openshift/install/metal/agent-based[Download the openshift-install binary] for your architecture
+* *Pull Secret*: link:https://console.redhat.com/openshift/install/pull-secret[Red Hat pull secret] for accessing container images
+* *Release Images*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/understanding-disconnected-installation-mirroring[Mirrored release images] for disconnected environments
+* *Hardware Requirements*: Nodes meeting link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on_bare_metal/user-provisioned-infrastructure#minimum-resource-requirements_installing-bare-metal[minimum specifications]
+* *Network Planning*: Properly planned network configuration and DNS setup
+
+== Preparing for Agent-based Installation [[preparation]]
+
+=== Step 1: Environment Preparation
+Before starting the installation, prepare your environment:
+
+==== Download Required Components
+1. *OpenShift Installer*: link:https://console.redhat.com/openshift/install/metal/agent-based[Download openshift-install] for your target architecture
+2. *Pull Secret*: link:https://console.redhat.com/openshift/install/pull-secret[Obtain your pull secret] from Red Hat
+3. *SSH Key*: Generate SSH key pair for cluster access
+4. *Release Images*: For disconnected environments, link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/understanding-disconnected-installation-mirroring[mirror required images]
+
+==== Network Configuration Planning
+* *DNS Records*: Configure required DNS entries for cluster endpoints
+* *Load Balancers*: Set up load balancers for API and ingress traffic
+* *DHCP/Static IPs*: Plan IP address allocation for cluster nodes
+* *Firewall Rules*: Configure necessary firewall rules and port access
+
+=== Step 2: Create Installation Configuration Files
+The Agent-based Installer uses two main configuration files:
+
+==== install-config.yaml
+Create the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#agent-install-sample-config_installing-with-agent-based-installer[install-config.yaml] file with cluster-wide settings:
+
+```yaml
+apiVersion: v1
+baseDomain: example.com
+metadata:
+  name: my-cluster
+compute:
+- name: worker
+  replicas: 3
+controlPlane:
+  name: master
+  replicas: 3
+networking:
+  clusterNetwork:
+  - cidr: 10.128.0.0/14
+    hostPrefix: 23
+  serviceNetwork:
+  - 172.30.0.0/16
+  machineNetwork:
+  - cidr: 192.168.1.0/24
+platform:
+  none: {}
+pullSecret: '<your-pull-secret>'
+sshKey: '<your-ssh-public-key>'
+```
+
+==== agent-config.yaml
+Create the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#agent-install-sample-config_installing-with-agent-based-installer[agent-config.yaml] file for node-specific configurations:
+
+```yaml
+apiVersion: v1alpha1
+kind: AgentConfig
+metadata:
+  name: my-cluster
+rendezvousIP: 192.168.1.10
+hosts:
+- hostname: master-0
+  role: master
+  interfaces:
+  - name: enp1s0
+    macAddress: 52:54:00:aa:bb:cc
+  networkConfig:
+    interfaces:
+    - name: enp1s0
+      type: ethernet
+      state: up
+      ipv4:
+        enabled: true
+        address:
+        - ip: 192.168.1.10
+          prefix-length: 24
+        dhcp: false
+```
+
+== Step-by-Step Installation Process [[installation]]
+
+=== Step 3: Generate Agent ISO
+Generate the bootable ISO image containing all installation components:
+
+```bash
+# Create installation directory
+mkdir agent-installer && cd agent-installer
+
+# Place your configuration files
+# install-config.yaml and agent-config.yaml
+
+# Generate the agent ISO
+openshift-install agent create image --dir .
+```
+
+The installer will create:
+* *agent.x86_64.iso*: Bootable ISO image
+* *auth/kubeconfig*: Cluster access credentials
+* *auth/kubeadmin-password*: Initial admin password
+
+=== Step 4: Boot Nodes with Agent ISO
+Deploy the generated ISO to your bare metal nodes:
+
+==== ISO Deployment Methods
+* *Physical Media*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#agent-install-sample-config_installing-with-agent-based-installer[Create bootable USB drives] or burn to DVD
+* *Virtual Media*: Use BMC virtual media capabilities for remote deployment
+* *PXE Boot*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/prepare-pxe-assets-agent[Configure PXE server] to serve the ISO image
+* *iSCSI Boot*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-using-iscsi[Configure iSCSI boot] for network-based deployment
+
+==== Boot Process
+1. Configure BIOS/UEFI to boot from the chosen media
+2. Boot each node with the agent ISO
+3. Nodes will automatically start the installation process
+4. Monitor installation progress through console logs
+
+=== Step 5: Monitor Installation Progress
+Track the installation progress using various methods:
+
+==== Command Line Monitoring
+```bash
+# Monitor installation progress
+openshift-install agent wait-for bootstrap-complete --dir . --log-level=info
+
+# Wait for installation completion
+openshift-install agent wait-for install-complete --dir . --log-level=info
+```
+
+==== Installation Phases
+1. *Bootstrap Phase*: Temporary bootstrap node initialization
+2. *Control Plane Setup*: Master nodes configuration and etcd cluster formation
+3. *Worker Node Join*: Worker nodes joining the cluster
+4. *Operator Deployment*: Core OpenShift operators installation
+5. *Cluster Finalization*: Final configuration and validation
+
+=== Step 6: Verify Installation Success
+After installation completion, verify cluster health:
+
+```bash
+# Set KUBECONFIG environment variable
+export KUBECONFIG=./auth/kubeconfig
+
+# Verify cluster nodes
+oc get nodes
+
+# Check cluster operators
+oc get clusteroperators
+
+# Verify cluster version
+oc get clusterversion
+```
+
+== Advanced Configuration Options [[advanced]]
+
+=== Custom Networking with Nmstate
+For advanced networking configurations, use link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking/k8s-nmstate-about-the-k8s-nmstate-operator[Nmstate] declarations:
+
+```yaml
+networkConfig:
+  interfaces:
+  - name: bond0
+    type: bond
+    state: up
+    link-aggregation:
+      mode: 802.3ad
+      slaves:
+      - enp1s0
+      - enp2s0
+  - name: bond0.100
+    type: vlan
+    state: up
+    vlan:
+      base-iface: bond0
+      id: 100
+```
+
+=== Storage Configuration
+Configure storage during installation:
+
+* *Local Storage*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/storage/persistent-storage-local[Configure local persistent volumes]
+* *OpenShift Data Foundation*: Prepare for ODF installation
+* *External Storage*: Configure external storage providers
+
+=== Security Hardening
+Implement security configurations:
+
+* *FIPS Mode*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installation_overview/installing-fips[Enable FIPS cryptography]
+* *Custom Certificates*: Configure custom TLS certificates
+* *Security Policies*: Implement pod security standards
+
+== Troubleshooting Agent-based Installation [[troubleshooting]]
+
+=== Common Issues and Solutions
+* *ISO Boot Failures*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#agent-install-troubleshooting_installing-with-agent-based-installer[Verify BIOS settings and boot order]
+* *Network Configuration Errors*: Validate DNS, DHCP, and network connectivity
+* *Hardware Compatibility*: Ensure hardware meets minimum requirements
+* *Configuration Validation*: Check install-config.yaml and agent-config.yaml syntax
+
+=== Log Collection and Analysis
+```bash
+# Collect installation logs
+openshift-install agent gather bootstrap --dir . --bootstrap <bootstrap-ip>
+
+# Analyze cluster logs
+oc adm must-gather
+```
+
+== Post-Installation Configuration [[post-install]]
+
+=== Essential Post-Installation Tasks
+After successful installation, perform these tasks:
+
+==== Cluster Access Configuration
+1. *Configure CLI Access*: Set up oc command-line tool
+2. *Web Console Access*: Access OpenShift web console
+3. *Authentication Setup*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/authentication_and_authorization/configuring-identity-providers[Configure identity providers]
+4. *RBAC Configuration*: Set up role-based access control
+
+==== Operational Setup
+* *Monitoring Configuration*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/observability/monitoring-overview[Configure cluster monitoring]
+* *Logging Setup*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/observability/logging-overview[Implement centralized logging]
+* *Backup Strategy*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/backup_and_restore/backup-restore-overview[Set up backup procedures]
+* *Update Planning*: Plan for cluster updates and maintenance
+
+== Documentation References
+For detailed information about the Agent-based Installer, refer to:
+
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer[Preparing to install with the Agent-based Installer - OpenShift 4.18]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer[Preparing to install with the Agent-based Installer - OpenShift 4.19]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer[Installing a cluster with customizations - OpenShift 4.18]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/understanding-disconnected-installation-mirroring[Understanding disconnected installation mirroring - OpenShift 4.18]
 
 == Next Steps
-Want to explore optional features? Continue to xref:module-06-optional.adoc[Module 6: Optional Features].
+Ready to configure storage with OpenShift Data Foundation? Continue to xref:module-05-storage.adoc[Module 5: Storage Configuration using OpenShift Data Foundation].

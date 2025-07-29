@@ -1,166 +1,635 @@
-= Module 6: Optional Features
+= Module 7: Optional Features for OpenShift 4.18/4.19
 :page-layout: module
 
 == OpenShift Virtualization [[virtualization]]
 
-=== Overview
-OpenShift Virtualization enables you to run and manage virtual machines alongside containers in OpenShift.
+=== What is OpenShift Virtualization?
+link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/virtualization/getting-started#virt-getting-started[OpenShift Virtualization] enables you to run and manage virtual machines alongside containers in OpenShift Container Platform 4.18/4.19, providing a unified platform for both traditional and cloud-native workloads.
 
-=== Installation
-* Install OpenShift Virtualization Operator
-* Configure storage
-* Enable virtualization features
-* Verify installation
+=== Key Features and Capabilities
+* *VM Lifecycle Management*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/virtualization/virtual-machines#virt-creating-vms_virt-creating-and-managing-vms[Create, manage, and delete virtual machines]
+* *Live Migration*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/virtualization/live-migration#virt-about-live-migration_virt-live-migration[Migrate running VMs between nodes] without downtime
+* *Storage Integration*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/virtualization/virtual-machines#virt-about-storage-volumes-for-vm_virt-configuring-storage-for-vms[Persistent storage for VM disks]
+* *Network Configuration*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/virtualization/networking#virt-connecting-vm-to-default-pod-network_virt-networking[Advanced networking options] including SR-IOV
+* *Template Management*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/virtualization/virtual-machines#virt-creating-vm-template_virt-creating-and-managing-vms[VM templates for standardized deployments]
+* *GPU Passthrough*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/virtualization/virtual-machines#virt-configuring-gpu-passthrough_virt-configuring-storage-for-vms[Direct GPU access for VMs]
 
-=== Features
-* VM lifecycle management
-* Live migration
-* Storage management
-* Network configuration
-* Template management
+=== Prerequisites for OpenShift Virtualization
+Before installing OpenShift Virtualization, ensure:
 
-=== Use Cases
-* Legacy workload migration
-* Mixed workload environments
-* Development and testing
-* Application modernization
+* *Hardware Requirements*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/virtualization/preparing-cluster-for-virt#virt-cluster-resource-requirements_preparing-cluster-for-virt[Nodes with hardware virtualization support]
+* *CPU Features*: Intel VT-x or AMD-V virtualization extensions
+* *Memory*: Sufficient RAM for both containers and virtual machines
+* *Storage*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/virtualization/virtual-machines#virt-about-storage-volumes-for-vm_virt-configuring-storage-for-vms[ReadWriteMany (RWX) storage] for live migration
+* *Network*: Proper network configuration for VM connectivity
 
-=== Creating and using a VDDK image
+=== Installing OpenShift Virtualization
 
-You can download the VMware Virtual Disk Development Kit (VDDK), build a VDDK image, and push the VDDK image to your image registry. You then add the VDDK image to the `v2v-vmware` ConfigMap.
+==== Step 1: Install the OpenShift Virtualization Operator
+1. Access the OpenShift web console
+2. Navigate to Operators → OperatorHub
+3. Search for "OpenShift Virtualization"
+4. Click Install and follow the installation wizard
+5. Wait for the operator to be installed successfully
 
-.Prerequisites
+==== Step 2: Create HyperConverged Custom Resource
+```yaml
+# Create HyperConverged instance to enable virtualization
+apiVersion: hco.kubevirt.io/v1beta1
+kind: HyperConverged
+metadata:
+  name: kubevirt-hyperconverged
+  namespace: openshift-cnv
+spec:
+  infra: {}
+  workloads: {}
+```
 
-* You must have access to an OpenShift internal image registry or a secure external registry.
+==== Step 3: Verify Installation
+```bash
+# Check virtualization pods
+oc get pods -n openshift-cnv
 
-.Procedure
+# Verify HyperConverged status
+oc get hco -n openshift-cnv kubevirt-hyperconverged -o yaml
 
-. Create and navigate to a temporary directory:
-+
-[source,terminal]
-----
-$ mkdir /tmp/<dir_name> && cd /tmp/<dir_name>
-----
+# Check node virtualization capabilities
+oc get nodes -o custom-columns=NAME:.metadata.name,VIRT:.status.allocatable.devices\\.kubevirt\\.io/kvm
+```
 
-. In a browser, navigate to link:https://code.vmware.com/home[VMware code] and click *SDKs*.
-. Under *Compute Virtualization*, click *Virtual Disk Development Kit (VDDK)*.
-. Select the VDDK version that corresponds to your VMware vSphere version, for example, VDDK 7.0 for vSphere 7.0, click *Download*, and then save the VDDK archive in the temporary directory.
+=== Creating and Managing Virtual Machines
 
-. Extract the VDDK archive:
-+
-[source,terminal]
-----
-$ tar -xzf VMware-vix-disklib-<version>.x86_64.tar.gz
-----
+==== Creating a VM from Template
+```yaml
+# Example VM configuration
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  name: rhel8-vm
+  namespace: default
+spec:
+  running: true
+  template:
+    metadata:
+      labels:
+        kubevirt.io/vm: rhel8-vm
+    spec:
+      domain:
+        cpu:
+          cores: 2
+        memory:
+          guest: 4Gi
+        devices:
+          disks:
+          - name: rootdisk
+            disk:
+              bus: virtio
+          - name: cloudinitdisk
+            disk:
+              bus: virtio
+          interfaces:
+          - name: default
+            masquerade: {}
+        machine:
+          type: pc-q35-rhel8.4.0
+      networks:
+      - name: default
+        pod: {}
+      volumes:
+      - name: rootdisk
+        containerDisk:
+          image: quay.io/containerdisks/rhel:8-latest
+      - name: cloudinitdisk
+        cloudInitNoCloud:
+          userData: |
+            #cloud-config
+            user: cloud-user
+            password: redhat
+            chpasswd: { expire: False }
+```
 
-. Create a `Dockerfile`:
-+
-[source,terminal]
-----
-$ cat > Dockerfile <<EOF
+==== VM Management Commands
+```bash
+# Start a virtual machine
+virtctl start rhel8-vm
+
+# Stop a virtual machine
+virtctl stop rhel8-vm
+
+# Connect to VM console
+virtctl console rhel8-vm
+
+# SSH into VM (if configured)
+virtctl ssh cloud-user@rhel8-vm
+```
+
+=== Use Cases for OpenShift Virtualization
+* *Legacy Application Migration*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/virtualization/getting-started#virt-getting-started[Migrate existing VMs to OpenShift]
+* *Mixed Workload Environments*: Run VMs and containers on the same infrastructure
+* *Development and Testing*: Provide isolated VM environments for development
+* *Application Modernization*: Gradual migration from VMs to containers
+* *Disaster Recovery*: VM-based backup and recovery solutions
+
+=== VMware Migration with VDDK [[vddk-migration]]
+
+For organizations migrating from VMware vSphere to OpenShift Virtualization, the VMware Virtual Disk Development Kit (VDDK) provides optimized disk transfer capabilities.
+
+==== What is VDDK?
+The link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/virtualization/virtual-machines#virt-about-vddk_virt-migrating-vms-web-console[VMware Virtual Disk Development Kit (VDDK)] is a collection of C libraries, code samples, utilities, and documentation to help you create applications that access VMware virtual disk files. For OpenShift Virtualization, VDDK enables faster and more efficient migration of VMware VMs.
+
+==== Benefits of Using VDDK
+* **Faster Migration**: Direct access to VMware virtual disks
+* **Reduced Network Load**: Optimized data transfer protocols
+* **Better Performance**: Native VMware disk format support
+* **Enterprise Migration**: Suitable for large-scale VM migrations
+
+==== Prerequisites for VDDK Migration
+Before setting up VDDK, ensure you have:
+
+* Access to an OpenShift internal image registry or secure external registry
+* VMware vSphere environment with appropriate VDDK version
+* Migration Toolkit for Virtualization (MTV) installed
+* Sufficient storage for VM migration
+
+==== Creating and Using a VDDK Image
+
+===== Step 1: Download and Prepare VDDK
+```bash
+# Create and navigate to a temporary directory
+mkdir /tmp/vddk-setup && cd /tmp/vddk-setup
+
+# Download VDDK from VMware
+# Navigate to: https://code.vmware.com/web/sdk
+# Under Compute Virtualization, click Virtual Disk Development Kit (VDDK)
+# Select VDDK version matching your vSphere version (e.g., VDDK 7.0 for vSphere 7.0)
+# Download and save the VDDK archive
+
+# Extract the VDDK archive
+tar -xzf VMware-vix-disklib-<version>.x86_64.tar.gz
+```
+
+===== Step 2: Build VDDK Container Image
+```bash
+# Create Dockerfile for VDDK image
+cat > Dockerfile <<EOF
 FROM registry.access.redhat.com/ubi8/ubi-minimal
 USER 1001
 COPY vmware-vix-disklib-distrib /vmware-vix-disklib-distrib
 RUN mkdir -p /opt
 ENTRYPOINT ["cp", "-r", "/vmware-vix-disklib-distrib", "/opt"]
 EOF
-----
 
-. Create a new project for the image
-+
-[source,terminal]
-----
-$ oc new-project vddk
-----
+# Create new project for the VDDK image
+oc new-project vddk
 
-. Create a new image stream for the image
-+ 
-[source,terminal]
-----
-$ oc new-build . --name vddk
-----
+# Create new image stream for the image
+oc new-build . --name vddk
 
-. Start the build
-+
-[source,terminal]
-----
-$ oc start-build vddk --from-dir .
-----
+# Start the build
+oc start-build vddk --from-dir .
+```
 
-. Verify the build
-+
-[source,terminal]
-----
-$ oc get build
-NAME     TYPE     FROM     STATUS     STARTED          DURATION
-vddk-3   Docker   Binary   Complete   22 minutes ago   25s
-----
+===== Step 3: Verify and Configure VDDK Image
+```bash
+# Verify the build completed successfully
+oc get build
+# Expected output:
+# NAME     TYPE     FROM     STATUS     STARTED          DURATION
+# vddk-1   Docker   Binary   Complete   5 minutes ago    45s
 
-. Ensure that the image is accessible to your migration namespace. Replace openshift-mtv with the destination namespace if different.
-+
-[source,terminal]
-----
-$ oc policy add-role-to-user system:image-puller system:serviceaccount:openshift-mtv:default --namespace vddk
-----
+# Ensure image is accessible to migration namespace
+# Replace openshift-mtv with your migration namespace if different
+oc policy add-role-to-user system:image-puller \
+  system:serviceaccount:openshift-mtv:default --namespace vddk
 
-. Edit the `v2v-vmware` ConfigMap in the *openshift-cnv* project:
-+
-[source,terminal]
-----
-$ oc edit configmap v2v-vmware -n openshift-cnv
-----
+# Edit the v2v-vmware ConfigMap in the openshift-cnv project
+oc edit configmap v2v-vmware -n openshift-cnv
+```
 
-. Add the `vddk-init-image` parameter to the `data` stanza:
-+
-[source,yaml]
-----
-...
+===== Step 4: Update Migration Configuration
+Add the VDDK image to the v2v-vmware ConfigMap:
+
+```yaml
+# Add this to the data stanza of the v2v-vmware ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: v2v-vmware
+  namespace: openshift-cnv
 data:
   vddk-init-image: image-registry.openshift-image-registry.svc:5000/vddk/vddk
-----
+  # ... other configuration parameters
+```
 
-== OpenShift AI [[ai]]
+===== Step 5: Verify VDDK Configuration
+```bash
+# Verify the ConfigMap has been updated
+oc get configmap v2v-vmware -n openshift-cnv -o yaml
 
-=== Overview
-OpenShift AI provides tools and services for running AI/ML workloads on OpenShift.
+# Check that the vddk-init-image parameter is present
+oc get configmap v2v-vmware -n openshift-cnv -o jsonpath='{.data.vddk-init-image}'
 
-=== Installation
-* Install OpenShift AI Operator
-* Configure storage
-* Set up model serving
-* Configure pipelines
+# Restart migration pods to pick up the new configuration
+oc delete pods -l app=migration-controller -n openshift-mtv
+```
 
-=== Features
-* Model training
-* Model serving
-* Pipeline automation
-* Experiment tracking
-* Resource optimization
+==== Using VDDK for VM Migration
+Once VDDK is configured, your VMware to OpenShift migrations will automatically use the optimized VDDK libraries:
 
-=== Use Cases
-* Machine learning workflows
-* Deep learning applications
-* Model deployment
-* AI infrastructure
+```bash
+# Create a migration plan that will use VDDK
+# This is typically done through the Migration Toolkit for Virtualization UI
+# The migration will automatically detect and use the VDDK image
 
-== Best Practices
-* Resource allocation
-* Performance optimization
-* Security considerations
-* Monitoring and logging
-* Backup and recovery
+# Monitor migration progress
+oc get migration -n openshift-mtv
 
-== Conclusion
-Congratulations! You've completed the OpenShift 4.16+ Bare Metal Deployment Workshop. You now have the knowledge to:
+# Check migration logs for VDDK usage
+oc logs -l app=migration-controller -n openshift-mtv | grep -i vddk
+```
 
-* Deploy OpenShift on bare metal infrastructure
-* Configure networking and storage
-* Manage cluster operations
-* Implement advanced features
+**✅ Verification Checkpoint**: Confirm VDDK is properly configured and being used for VMware migrations.
 
-For more information, refer to the following resources:
+=== Advanced Virtualization Features
 
-* link:https://docs.openshift.com/container-platform/4.16/[OpenShift 4.16 Documentation]
-* link:https://docs.openshift.com/container-platform/4.17/[OpenShift 4.17 Documentation]
-* link:https://www.openshift.com/solutions/data-foundation[OpenShift Data Foundation]
-* link:https://www.redhat.com/en/technologies/cloud-computing/openshift/virtualization[OpenShift Virtualization]
+==== Live Migration Configuration
+Configure live migration for high availability:
+
+```yaml
+# Configure live migration policy
+apiVersion: kubevirt.io/v1
+kind: KubeVirt
+metadata:
+  name: kubevirt
+  namespace: openshift-cnv
+spec:
+  configuration:
+    migrations:
+      allowAutoConverge: true
+      allowPostCopy: true
+      completionTimeoutPerGiB: 800
+      parallelMigrationsPerCluster: 5
+      parallelOutboundMigrationsPerNode: 2
+      progressTimeout: 150
+```
+
+==== GPU Passthrough Configuration
+Enable GPU passthrough for VMs:
+
+```bash
+# Label nodes with GPU resources
+oc label node worker-gpu-1 nvidia.com/gpu.present=true
+
+# Configure GPU passthrough
+oc patch hco kubevirt-hyperconverged -n openshift-cnv --type=merge --patch='
+{
+  "spec": {
+    "permittedHostDevices": {
+      "pciHostDevices": [
+        {
+          "pciDeviceSelector": "10DE:1EB8",
+          "resourceName": "nvidia.com/TU104GL_Tesla_T4"
+        }
+      ]
+    }
+  }
+}'
+```
+
+==== VM Migration from VMware
+For migrating VMs from VMware vSphere, use the link:https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.6/html/installing_and_using_the_migration_toolkit_for_virtualization/index[Migration Toolkit for Virtualization]:
+
+```bash
+# Install Migration Toolkit for Virtualization
+oc apply -f - <<EOF
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: mtv-operator
+  namespace: openshift-mtv
+spec:
+  channel: release-v2.6
+  name: mtv-operator
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace
+EOF
+```
+
+==== Creating VM Templates
+```yaml
+# Example VM template
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: rhel8-server-template
+  namespace: openshift
+objects:
+- apiVersion: kubevirt.io/v1
+  kind: VirtualMachine
+  metadata:
+    name: ${NAME}
+  spec:
+    running: false
+    template:
+      metadata:
+        labels:
+          kubevirt.io/vm: ${NAME}
+      spec:
+        domain:
+          cpu:
+            cores: ${{CPU_CORES}}
+          memory:
+            guest: ${MEMORY}
+          devices:
+            disks:
+            - name: rootdisk
+              disk:
+                bus: virtio
+            interfaces:
+            - name: default
+              masquerade: {}
+        networks:
+        - name: default
+          pod: {}
+        volumes:
+        - name: rootdisk
+          containerDisk:
+            image: ${DISK_IMAGE}
+parameters:
+- name: NAME
+  description: VM name
+  required: true
+- name: CPU_CORES
+  description: Number of CPU cores
+  value: "2"
+- name: MEMORY
+  description: Memory size
+  value: "4Gi"
+- name: DISK_IMAGE
+  description: Container disk image
+  value: "quay.io/containerdisks/rhel:8-latest"
+```
+
+== OpenShift AI (Red Hat OpenShift AI) [[ai]]
+
+=== What is OpenShift AI?
+link:https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.14/html/introduction_to_red_hat_openshift_ai/index[Red Hat OpenShift AI] provides a comprehensive platform for developing, training, serving, and monitoring AI/ML models on OpenShift Container Platform 4.18/4.19.
+
+=== Key Features and Capabilities
+* *Model Development*: link:https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.14/html/working_with_data_science_projects/index[Jupyter notebooks and development environments]
+* *Model Training*: link:https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.14/html/working_with_data_science_pipelines/index[Distributed training with Kubeflow Pipelines]
+* *Model Serving*: link:https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.14/html/serving_models/index[High-performance model inference serving]
+* *MLOps Integration*: link:https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.14/html/working_with_data_science_pipelines/index[End-to-end ML pipeline automation]
+* *GPU Support*: link:https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.14/html/installing_and_uninstalling_openshift_ai_self-managed/enabling-gpu-support_install[NVIDIA GPU acceleration for training and inference]
+* *Distributed Training*: Support for multi-node, multi-GPU training workloads
+
+=== Prerequisites for OpenShift AI
+Before installing OpenShift AI, ensure:
+
+* *Cluster Resources*: Sufficient CPU, memory, and storage for AI workloads
+* *GPU Support*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/specialized_hardware_and_driver_enablement/gpu-device-plugin[NVIDIA GPU Operator] for GPU acceleration
+* *Storage*: High-performance storage for datasets and model artifacts
+* *Network*: High-bandwidth networking for distributed training
+
+=== Installing OpenShift AI
+
+==== Step 1: Install Required Operators
+```bash
+# Install OpenShift AI Operator
+oc apply -f - <<EOF
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: rhods-operator
+  namespace: redhat-ods-operator
+spec:
+  channel: stable
+  name: rhods-operator
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace
+EOF
+```
+
+==== Step 2: Create DataScienceCluster
+```yaml
+# Create DataScienceCluster instance
+apiVersion: datasciencecluster.opendatahub.io/v1
+kind: DataScienceCluster
+metadata:
+  name: default-dsc
+spec:
+  components:
+    codeflare:
+      managementState: Managed
+    dashboard:
+      managementState: Managed
+    datasciencepipelines:
+      managementState: Managed
+    kserve:
+      managementState: Managed
+    modelmeshserving:
+      managementState: Managed
+    ray:
+      managementState: Managed
+    workbenches:
+      managementState: Managed
+```
+
+==== Step 3: Configure GPU Support (Optional)
+```bash
+# Install NVIDIA GPU Operator
+oc apply -f - <<EOF
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: gpu-operator-certified
+  namespace: nvidia-gpu-operator
+spec:
+  channel: stable
+  name: gpu-operator-certified
+  source: certified-operators
+  sourceNamespace: openshift-marketplace
+EOF
+```
+
+=== AI/ML Workload Examples
+
+==== Creating a Data Science Project
+```yaml
+# Create a data science project
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ml-project
+  labels:
+    opendatahub.io/dashboard: "true"
+  annotations:
+    openshift.io/description: "Machine Learning Project"
+    openshift.io/display-name: "ML Project"
+```
+
+==== Jupyter Notebook Deployment
+```yaml
+# Deploy Jupyter notebook server
+apiVersion: kubeflow.org/v1
+kind: Notebook
+metadata:
+  name: ml-notebook
+  namespace: ml-project
+spec:
+  template:
+    spec:
+      containers:
+      - name: ml-notebook
+        image: quay.io/opendatahub/workbench-images:jupyter-datascience-c9s-py311_2023c_latest
+        resources:
+          requests:
+            cpu: "1"
+            memory: "4Gi"
+            nvidia.com/gpu: "1"
+          limits:
+            cpu: "2"
+            memory: "8Gi"
+            nvidia.com/gpu: "1"
+        volumeMounts:
+        - name: workspace
+          mountPath: /opt/app-root/src
+      volumes:
+      - name: workspace
+        persistentVolumeClaim:
+          claimName: ml-workspace-pvc
+```
+
+==== Model Serving with KServe
+```yaml
+# Deploy a model using KServe
+apiVersion: serving.kserve.io/v1beta1
+kind: InferenceService
+metadata:
+  name: sklearn-iris
+  namespace: ml-project
+spec:
+  predictor:
+    sklearn:
+      storageUri: "gs://kfserving-examples/models/sklearn/1.0/model"
+      resources:
+        requests:
+          cpu: "100m"
+          memory: "256Mi"
+        limits:
+          cpu: "1"
+          memory: "1Gi"
+```
+
+=== Use Cases for OpenShift AI
+* *Machine Learning Workflows*: End-to-end ML pipeline development and deployment
+* *Deep Learning Applications*: GPU-accelerated training for neural networks
+* *Model Deployment*: Scalable model serving and inference
+* *AI Infrastructure*: Centralized platform for AI/ML teams
+* *Research and Development*: Collaborative AI research environments
+* *Edge AI*: Deploy AI models at edge locations
+
+== Additional Optional Features [[additional]]
+
+=== OpenShift Serverless (Knative)
+link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/serverless/about-serverless[OpenShift Serverless] provides serverless computing capabilities:
+
+* *Knative Serving*: Auto-scaling serverless applications
+* *Knative Eventing*: Event-driven architectures
+* *Function-as-a-Service*: Serverless function deployment
+
+=== OpenShift Service Mesh (Istio)
+link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/service_mesh/service-mesh-2-x[OpenShift Service Mesh] provides advanced traffic management:
+
+* *Traffic Management*: Advanced routing and load balancing
+* *Security*: mTLS and security policies
+* *Observability*: Distributed tracing and metrics
+
+=== OpenShift GitOps (ArgoCD)
+link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/cicd/gitops[OpenShift GitOps] enables GitOps-based deployments:
+
+* *Declarative Configuration*: Git-based configuration management
+* *Automated Deployments*: Continuous deployment from Git repositories
+* *Multi-Cluster Management*: Manage multiple clusters from a single interface
+
+=== OpenShift Pipelines (Tekton)
+link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/cicd/pipelines[OpenShift Pipelines] provides cloud-native CI/CD:
+
+* *Cloud-Native Pipelines*: Kubernetes-native CI/CD pipelines
+* *Reusable Tasks*: Modular pipeline components
+* *Integration*: Integration with Git, registries, and deployment targets
+
+== Best Practices for Optional Features [[best-practices]]
+
+=== Resource Management
+* *Resource Allocation*: Plan CPU, memory, and storage requirements for optional features
+* *Node Placement*: Use node selectors and affinity rules for optimal placement
+* *Resource Limits*: Set appropriate resource limits and requests
+* *Monitoring*: Implement comprehensive monitoring for all optional features
+
+=== Performance Optimization
+* *GPU Utilization*: Optimize GPU usage for AI/ML and virtualization workloads
+* *Storage Performance*: Use high-performance storage for data-intensive workloads
+* *Network Optimization*: Configure SR-IOV and high-speed networking for performance-critical applications
+* *Scaling Strategies*: Implement appropriate scaling strategies for different workload types
+
+=== Security Considerations
+* *Network Policies*: Implement network policies for workload isolation
+* *RBAC*: Configure role-based access control for optional features
+* *Image Security*: Use trusted container images and implement image scanning
+* *Compliance*: Ensure compliance with organizational security policies
+
+=== Monitoring and Observability
+* *Metrics Collection*: Configure comprehensive metrics collection
+* *Logging*: Implement centralized logging for all optional features
+* *Alerting*: Set up appropriate alerts for critical issues
+* *Dashboards*: Create monitoring dashboards for operational visibility
+
+=== Backup and Recovery
+* *Data Protection*: Implement backup strategies for persistent data
+* *Configuration Backup*: Back up configuration and custom resources
+* *Disaster Recovery*: Plan for disaster recovery scenarios
+* *Testing*: Regularly test backup and recovery procedures
+
+== Documentation References
+For detailed information about optional features, refer to:
+
+=== OpenShift Virtualization Resources
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/virtualization/getting-started[Getting started with OpenShift Virtualization - OpenShift 4.18]
+* link:https://redhatquickcourses.github.io/architect-the-ocpvirt/Red%20Hat%20OpenShift%20Virtualization%20-%20Architect%20the%20OpenShift%20Virtualization/1/index.html[Red Hat OpenShift Virtualization - Architect the OpenShift Virtualization Quick Course]
+
+=== OpenShift AI and Additional Features
+* link:https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.14/html/introduction_to_red_hat_openshift_ai/index[Introduction to Red Hat OpenShift AI]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/serverless/about-serverless[About OpenShift Serverless - OpenShift 4.18]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/service_mesh/service-mesh-2-x[Service Mesh 2.x - OpenShift 4.18]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/cicd/gitops[GitOps - OpenShift 4.18]
+
+== Workshop Conclusion [[conclusion]]
+
+Congratulations! You've completed the OpenShift 4.18/4.19 Bare Metal Deployment Workshop. You now have comprehensive knowledge to:
+
+=== Core Competencies Achieved
+* *Deploy OpenShift 4.18/4.19* on bare metal infrastructure using multiple installation methods
+* *Configure Advanced Networking* with OVN-Kubernetes, Nmstate, and SR-IOV
+* *Implement Storage Solutions* with OpenShift Data Foundation and Local Storage Operator
+* *Manage Cluster Operations* including monitoring, logging, and maintenance
+* *Deploy Optional Features* such as OpenShift Virtualization and OpenShift AI
+
+=== Next Steps and Continued Learning
+* *Production Deployment*: Apply the knowledge to deploy production OpenShift clusters
+* *Advanced Features*: Explore additional OpenShift capabilities and operators
+* *Certification*: Consider pursuing Red Hat OpenShift certifications
+* *Community Engagement*: Participate in OpenShift community forums and events
+
+=== Additional Resources
+For continued learning and support, refer to these authoritative resources:
+
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/[OpenShift Container Platform 4.18 Documentation]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/[OpenShift Container Platform 4.19 Documentation]
+* link:https://docs.redhat.com/en/documentation/red_hat_openshift_data_foundation/4.18/[OpenShift Data Foundation 4.18 Documentation]
+* link:https://www.redhat.com/en/technologies/cloud-computing/openshift/virtualization[OpenShift Virtualization Product Page]
+* link:https://www.redhat.com/en/technologies/cloud-computing/openshift/openshift-ai[OpenShift AI Product Page]
+* link:https://access.redhat.com/support[Red Hat Customer Portal and Support]
+* link:https://learn.redhat.com/[Red Hat Learning Platform]
+
+Thank you for completing this comprehensive workshop on OpenShift 4.18/4.19 bare metal deployment!

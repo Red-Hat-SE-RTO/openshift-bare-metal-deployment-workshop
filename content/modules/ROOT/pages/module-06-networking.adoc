@@ -1,66 +1,584 @@
-= Module 3: Networking Configuration
+= Module 6: Advanced Network Configuration for OpenShift 4.18/4.19
 :page-layout: module
 
-== VLAN Configuration [[vlans]]
+== Networking Overview for OpenShift 4.18/4.19 [[overview]]
 
-=== Required VLANs
-* *Provisioning Network*
-** Used for PXE boot and node provisioning
-** Requires DHCP and TFTP services
+=== OpenShift Networking Architecture
+OpenShift Container Platform 4.18/4.19 provides advanced networking capabilities through:
 
-* *External Network*
-** Provides external access to the cluster
-** Used for user workload access
+* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking/ovn-kubernetes-network-plugin[OVN-Kubernetes]*: Default Container Network Interface (CNI) plugin
+* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking/k8s-nmstate-about-the-k8s-nmstate-operator[Nmstate Operator]*: Declarative network configuration management
+* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/hardware_networks/about-sriov[SR-IOV Network Operator]*: High-performance networking
+* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/hardware_networks/about-multus[Multus CNI]*: Multiple network interfaces per pod
 
-* *Internal Network*
-** Used for cluster internal communication
-** Requires proper isolation
+=== Network Components and Features
+* *Software-Defined Networking*: Overlay networks with OVN-Kubernetes
+* *Network Policies*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking/network-security[Microsegmentation and traffic control]
+* *Service Mesh*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking/understanding-networking#nw-ne-openshift-dns_understanding-networking[Advanced traffic management]
+* *Load Balancing*: Built-in load balancing and ingress capabilities
+* *IPsec Encryption*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking/ovn-kubernetes-network-plugin#nw-ovn-ipsec-enable_configuring-ipsec-ovn[Pod-to-pod encryption]
 
-=== Network Segmentation
-* Configure switch ports
-* Set up VLAN trunking
-* Implement network policies
+== Nmstate Operator Configuration [[nmstate]]
 
-== DNS Setup [[dns]]
+=== What is the Nmstate Operator?
+The link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking/k8s-nmstate-about-the-k8s-nmstate-operator[Nmstate Operator] provides declarative network configuration management for OpenShift nodes, enabling:
 
-=== Required DNS Records
-* API endpoints
-* Ingress endpoints
-* Node hostnames
-* Service records
+* *Declarative Configuration*: YAML-based network interface configuration
+* *Node Network Management*: Centralized network configuration across cluster nodes
+* *Advanced Networking*: Support for bonds, VLANs, bridges, and complex topologies
+* *State Validation*: Automatic validation and rollback of network configurations
 
-=== DNS Configuration
-* Forward zones
-* Reverse zones
-* Wildcard records
+=== Installing the Nmstate Operator
 
-== Load Balancer Configuration [[loadbalancer]]
+==== Step 1: Install via OperatorHub
+1. Access the OpenShift web console
+2. Navigate to Operators → OperatorHub
+3. Search for "Kubernetes NMState Operator"
+4. Click Install and follow the installation wizard
 
-=== Load Balancer Requirements
-* *API Load Balancer*
-** Port 6443 for Kubernetes API
-** Port 22623 for Machine Config Server
+==== Step 2: Create NMState Instance
+```yaml
+# Create NMState instance
+apiVersion: nmstate.io/v1
+kind: NMState
+metadata:
+  name: nmstate
+spec: {}
+```
 
-* *Application Load Balancer*
-** Port 80 for HTTP traffic
-** Port 443 for HTTPS traffic
+=== Advanced Network Interface Configuration
 
-=== High Availability Setup
-* Configure health checks
-* Set up SSL termination
-* Implement failover mechanisms
+==== Configuring Network Bonds
+```yaml
+# Example: Configure network bonding with LACP
+apiVersion: nmstate.io/v1
+kind: NodeNetworkConfigurationPolicy
+metadata:
+  name: bond-policy
+spec:
+  desiredState:
+    interfaces:
+    - name: bond0
+      type: bond
+      state: up
+      link-aggregation:
+        mode: 802.3ad
+        slaves:
+        - enp1s0
+        - enp2s0
+        options:
+          miimon: "100"
+      ipv4:
+        enabled: true
+        dhcp: true
+```
 
-== Routing and Ingress Setup [[routing]]
+==== VLAN Configuration
+```yaml
+# Example: Configure VLAN interfaces
+apiVersion: nmstate.io/v1
+kind: NodeNetworkConfigurationPolicy
+metadata:
+  name: vlan-policy
+spec:
+  desiredState:
+    interfaces:
+    - name: enp1s0.100
+      type: vlan
+      state: up
+      vlan:
+        base-iface: enp1s0
+        id: 100
+      ipv4:
+        enabled: true
+        address:
+        - ip: 192.168.100.10
+          prefix-length: 24
+```
 
-=== OpenShift Router Configuration
-* Default ingress controller setup
-* Custom routes configuration
-* Certificate management
+==== Bridge Configuration
+```yaml
+# Example: Configure network bridge
+apiVersion: nmstate.io/v1
+kind: NodeNetworkConfigurationPolicy
+metadata:
+  name: bridge-policy
+spec:
+  desiredState:
+    interfaces:
+    - name: br0
+      type: linux-bridge
+      state: up
+      bridge:
+        options:
+          stp:
+            enabled: false
+        port:
+        - name: enp1s0
+      ipv4:
+        enabled: true
+        dhcp: true
+```
 
-=== Network Policies
-* Implementing security policies
-* Traffic flow control
-* Network isolation
+== SR-IOV Network Configuration [[sriov]]
+
+=== What is SR-IOV?
+link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/hardware_networks/about-sriov[Single Root I/O Virtualization (SR-IOV)] enables high-performance networking by allowing direct hardware access to network interfaces.
+
+=== SR-IOV Benefits
+* *High Performance*: Direct hardware access with minimal CPU overhead
+* *Low Latency*: Reduced network latency for performance-critical applications
+* *Hardware Acceleration*: Offload network processing to specialized hardware
+* *Isolation*: Hardware-level network isolation between workloads
+
+=== Installing SR-IOV Network Operator
+
+==== Step 1: Install the Operator
+```bash
+# Install SR-IOV Network Operator via CLI
+oc apply -f - <<EOF
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: sriov-network-operator-subscription
+  namespace: openshift-sriov-network-operator
+spec:
+  channel: stable
+  name: sriov-network-operator
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace
+EOF
+```
+
+==== Step 2: Configure SR-IOV Network Node Policy
+```yaml
+# Example SR-IOV Network Node Policy
+apiVersion: sriovnetwork.openshift.io/v1
+kind: SriovNetworkNodePolicy
+metadata:
+  name: policy-intel-nic
+  namespace: openshift-sriov-network-operator
+spec:
+  resourceName: intel_nics
+  nodeSelector:
+    feature.node.kubernetes.io/network-sriov.capable: "true"
+  priority: 99
+  numVfs: 8
+  nicSelector:
+    vendor: "8086"
+    deviceID: "158b"
+    pfNames: ["ens1f0"]
+  deviceType: netdevice
+```
+
+==== Step 3: Create SR-IOV Network
+```yaml
+# Create SR-IOV Network for applications
+apiVersion: sriovnetwork.openshift.io/v1
+kind: SriovNetwork
+metadata:
+  name: sriov-network
+  namespace: openshift-sriov-network-operator
+spec:
+  resourceName: intel_nics
+  networkNamespace: default
+  vlan: 100
+  spoofChk: "on"
+  trust: "off"
+```
+
+== Multus CNI Configuration [[multus]]
+
+=== What is Multus CNI?
+link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/hardware_networks/about-multus[Multus CNI] enables pods to have multiple network interfaces, supporting complex networking requirements.
+
+=== Creating Network Attachment Definitions
+
+==== Macvlan Network Attachment
+```yaml
+# Example Macvlan Network Attachment Definition
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: macvlan-conf
+spec:
+  config: |
+    {
+      "cniVersion": "0.3.1",
+      "type": "macvlan",
+      "master": "enp1s0",
+      "mode": "bridge",
+      "ipam": {
+        "type": "static",
+        "addresses": [
+          {
+            "address": "192.168.1.100/24",
+            "gateway": "192.168.1.1"
+          }
+        ]
+      }
+    }
+```
+
+==== Bridge Network Attachment
+```yaml
+# Example Bridge Network Attachment Definition
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: bridge-conf
+spec:
+  config: |
+    {
+      "cniVersion": "0.3.1",
+      "type": "bridge",
+      "bridge": "br0",
+      "ipam": {
+        "type": "dhcp"
+      }
+    }
+```
+
+=== Using Multiple Networks in Pods
+```yaml
+# Pod with multiple network interfaces
+apiVersion: v1
+kind: Pod
+metadata:
+  name: multi-network-pod
+  annotations:
+    k8s.v1.cni.cncf.io/networks: macvlan-conf,bridge-conf
+spec:
+  containers:
+  - name: app
+    image: nginx
+    ports:
+    - containerPort: 80
+```
+
+== Network Security and Policies [[security]]
+
+=== Network Policies in OpenShift 4.18/4.19
+link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking/network-security[Network policies] provide microsegmentation and traffic control capabilities.
+
+==== Default Deny Network Policy
+```yaml
+# Deny all ingress traffic by default
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-ingress
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+```
+
+==== Allow Specific Traffic
+```yaml
+# Allow traffic from specific namespaces
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-from-namespace
+spec:
+  podSelector:
+    matchLabels:
+      app: web
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: frontend
+    ports:
+    - protocol: TCP
+      port: 8080
+```
+
+==== Egress Network Policy
+```yaml
+# Control outbound traffic
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-all-egress
+spec:
+  podSelector: {}
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          name: kube-system
+  - to: []
+    ports:
+    - protocol: TCP
+      port: 53
+    - protocol: UDP
+      port: 53
+```
+
+=== IPsec Encryption Configuration
+Enable link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking/ovn-kubernetes-network-plugin#nw-ovn-ipsec-enable_configuring-ipsec-ovn[IPsec encryption] for pod-to-pod communication:
+
+```bash
+# Enable IPsec encryption
+oc patch networks.operator.openshift.io cluster --type=merge \
+  -p='{"spec":{"defaultNetwork":{"ovnKubernetesConfig":{"ipsecConfig":{}}}}}'
+
+# Verify IPsec configuration
+oc get network.operator cluster -o yaml
+```
+
+== Load Balancer and Ingress Configuration [[ingress]]
+
+=== OpenShift Router and Ingress
+OpenShift 4.18/4.19 provides advanced ingress capabilities through the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking/configuring-ingress[Ingress Operator].
+
+==== Default Ingress Controller Configuration
+```yaml
+# Configure default ingress controller
+apiVersion: operator.openshift.io/v1
+kind: IngressController
+metadata:
+  name: default
+  namespace: openshift-ingress-operator
+spec:
+  domain: apps.cluster.example.com
+  endpointPublishingStrategy:
+    type: LoadBalancerService
+  replicas: 3
+  nodePlacement:
+    nodeSelector:
+      matchLabels:
+        node-role.kubernetes.io/worker: ""
+```
+
+==== Custom Ingress Controller
+```yaml
+# Create custom ingress controller for specific workloads
+apiVersion: operator.openshift.io/v1
+kind: IngressController
+metadata:
+  name: custom-ingress
+  namespace: openshift-ingress-operator
+spec:
+  domain: custom.example.com
+  routeSelector:
+    matchLabels:
+      type: custom
+  nodePlacement:
+    nodeSelector:
+      matchLabels:
+        ingress: custom
+```
+
+=== External Load Balancer Configuration
+For bare metal deployments, configure external load balancers:
+
+==== API Load Balancer Requirements
+* *Frontend Configuration*:
+  - api.<cluster-name>.<domain>:6443 (Kubernetes API)
+  - api.<cluster-name>.<domain>:22623 (Machine Config Server)
+* *Backend Configuration*:
+  - All control plane nodes on ports 6443 and 22623
+* *Health Checks*:
+  - HTTPS GET to /readyz on port 6443
+
+==== Application Ingress Load Balancer
+* *Frontend Configuration*:
+  - *.apps.<cluster-name>.<domain>:80 (HTTP)
+  - *.apps.<cluster-name>.<domain>:443 (HTTPS)
+* *Backend Configuration*:
+  - All worker nodes on ports 80 and 443
+* *Health Checks*:
+  - HTTP GET to /healthz/ready on port 1936
+
+=== HAProxy Configuration Example
+```bash
+# Example HAProxy configuration for OpenShift
+global
+    log stdout local0
+    chroot /var/lib/haproxy
+    stats socket /run/haproxy/admin.sock mode 660 level admin
+    stats timeout 30s
+    user haproxy
+    group haproxy
+    daemon
+
+defaults
+    mode http
+    log global
+    option httplog
+    option dontlognull
+    option http-server-close
+    option forwardfor except 127.0.0.0/8
+    option redispatch
+    retries 3
+    timeout http-request 10s
+    timeout queue 1m
+    timeout connect 10s
+    timeout client 1m
+    timeout server 1m
+    timeout http-keep-alive 10s
+    timeout check 10s
+    maxconn 3000
+
+# API Load Balancer
+frontend api-frontend
+    bind *:6443
+    mode tcp
+    default_backend api-backend
+
+backend api-backend
+    mode tcp
+    balance roundrobin
+    server master-0 192.168.1.10:6443 check
+    server master-1 192.168.1.11:6443 check
+    server master-2 192.168.1.12:6443 check
+
+# Application Ingress Load Balancer
+frontend apps-frontend
+    bind *:80
+    bind *:443
+    mode tcp
+    default_backend apps-backend
+
+backend apps-backend
+    mode tcp
+    balance roundrobin
+    server worker-0 192.168.1.20:80 check
+    server worker-1 192.168.1.21:80 check
+    server worker-2 192.168.1.22:80 check
+```
+
+== DNS Configuration for OpenShift 4.18/4.19 [[dns]]
+
+=== DNS Requirements
+Proper DNS configuration is critical for OpenShift cluster operation:
+
+==== Required DNS Records
+* *API Endpoints*:
+  - api.<cluster-name>.<domain> → Load balancer VIP
+  - api-int.<cluster-name>.<domain> → Internal API access
+* *Application Ingress*:
+  - *.apps.<cluster-name>.<domain> → Ingress load balancer VIP
+* *Node Records*:
+  - <hostname>.<cluster-name>.<domain> → Node IP addresses
+* *etcd Records* (optional but recommended):
+  - etcd-<index>.<cluster-name>.<domain> → Control plane node IPs
+
+==== DNS Configuration Example
+```bash
+# Example DNS zone configuration
+$ORIGIN example.com.
+$TTL 300
+
+; Cluster API endpoints
+api.cluster             IN  A       192.168.1.100
+api-int.cluster         IN  A       192.168.1.100
+
+; Application ingress wildcard
+*.apps.cluster          IN  A       192.168.1.101
+
+; Node records
+master-0.cluster        IN  A       192.168.1.10
+master-1.cluster        IN  A       192.168.1.11
+master-2.cluster        IN  A       192.168.1.12
+worker-0.cluster        IN  A       192.168.1.20
+worker-1.cluster        IN  A       192.168.1.21
+worker-2.cluster        IN  A       192.168.1.22
+
+; etcd records
+etcd-0.cluster          IN  A       192.168.1.10
+etcd-1.cluster          IN  A       192.168.1.11
+etcd-2.cluster          IN  A       192.168.1.12
+```
+
+=== CoreDNS Configuration
+OpenShift uses link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking/understanding-networking#nw-ne-openshift-dns_understanding-networking[CoreDNS] for internal cluster DNS resolution:
+
+```yaml
+# Custom CoreDNS configuration
+apiVersion: operator.openshift.io/v1
+kind: DNS
+metadata:
+  name: default
+spec:
+  servers:
+  - name: example-server
+    zones:
+    - example.com
+    forwardPlugin:
+      upstreams:
+      - 192.168.1.1
+      - 192.168.1.2
+```
+
+== Network Troubleshooting and Monitoring [[troubleshooting]]
+
+=== Network Diagnostics Tools
+OpenShift 4.18/4.19 provides various tools for network troubleshooting:
+
+==== Network Connectivity Testing
+```bash
+# Test pod-to-pod connectivity
+oc run test-pod --image=busybox --rm -it -- /bin/sh
+
+# Test DNS resolution
+nslookup kubernetes.default.svc.cluster.local
+
+# Test external connectivity
+curl -I https://registry.redhat.io
+```
+
+==== Network Policy Testing
+```bash
+# Test network policy enforcement
+oc run source-pod --image=busybox --rm -it -- /bin/sh
+wget -qO- http://target-service:8080
+```
+
+=== Network Monitoring and Metrics
+Monitor network performance and health:
+
+* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/observability/monitoring-overview[Prometheus Metrics]*: Network performance metrics
+* *Flow Monitoring*: Network traffic analysis
+* *Policy Violations*: Network policy enforcement monitoring
+* *Ingress Metrics*: Application traffic monitoring
+
+== Best Practices for OpenShift Networking [[best-practices]]
+
+=== Network Design Principles
+* *Segmentation*: Implement proper network segmentation for security
+* *Redundancy*: Design for high availability and fault tolerance
+* *Performance*: Optimize network configuration for workload requirements
+* *Security*: Implement defense-in-depth networking security
+
+=== Operational Best Practices
+* *Monitoring*: Implement comprehensive network monitoring
+* *Documentation*: Maintain detailed network configuration documentation
+* *Testing*: Regular testing of network policies and connectivity
+* *Updates*: Keep network components updated with security patches
+
+=== Performance Optimization
+* *SR-IOV*: Use SR-IOV for high-performance networking requirements
+* *Node Placement*: Optimize pod placement for network locality
+* *Resource Limits*: Configure appropriate network resource limits
+* *Load Balancing*: Implement efficient load balancing strategies
+
+== Documentation References
+For detailed networking configuration information, refer to:
+
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking/understanding-networking[Understanding networking - OpenShift 4.18]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking/ovn-kubernetes-network-plugin[OVN-Kubernetes network plugin - OpenShift 4.18]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking/k8s-nmstate-about-the-k8s-nmstate-operator[Kubernetes NMState Operator - OpenShift 4.18]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/hardware_networks/about-sriov[About SR-IOV hardware networks - OpenShift 4.18]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking/network-security[Network security - OpenShift 4.18]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking/configuring-ingress[Configuring ingress - OpenShift 4.18]
 
 == Next Steps
-Ready to configure storage? Continue to xref:module-04-storage.adoc[Module 4: Storage Configuration].
+Ready to explore optional features like OpenShift Virtualization and AI? Continue to xref:module-07-optional.adoc[Module 7: Optional Features].
