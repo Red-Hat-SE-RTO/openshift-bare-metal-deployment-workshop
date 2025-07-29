@@ -1,39 +1,126 @@
-= Module 1: Introduction to OpenShift 4.16+
+= Module 1: Introduction to OpenShift 4.18/4.19
 :page-layout: module
 
-== Overview of OpenShift Features for Bare Metal [[overview]]
+== Learning Objectives [[objectives]]
 
-=== What is OpenShift?
-OpenShift is Red Hat's enterprise-grade container platform built on Kubernetes. It provides a consistent foundation for building, deploying, and managing containerized applications across diverse infrastructures.
+By the end of this module, you will:
 
-=== Key Features for Bare Metal Deployments
-* *Full Stack Automation*: Automated installation, upgrades, and lifecycle management
-* *Integrated Container Registry*: Built-in registry for container image management
-* *Software-Defined Networking*: Advanced networking capabilities with OVN-Kubernetes
-* *Storage Integration*: Native integration with various storage solutions
-* *Security Features*: Built-in security with SELinux, RBAC, and SCCs
+* Understand what OpenShift Container Platform 4.18/4.19 is and its key benefits
+* Know the different installation methods available for bare metal deployments
+* Understand the workshop structure and learning path
+* Have a clear overview of prerequisites needed for deployment
+* Be ready to choose the appropriate installation method for your environment
 
-== Key Benefits for Modern Workloads [[benefits]]
+== What is OpenShift 4.18/4.19? [[what-is-openshift]]
 
-=== Performance and Scalability
-* Direct hardware access for optimal performance
-* Scalable architecture supporting thousands of nodes
-* Native integration with hardware accelerators
+link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/architecture/architecture-overview[OpenShift Container Platform] is Red Hat's enterprise Kubernetes platform that provides a complete application platform for developing, deploying, and managing containerized applications.
 
-=== Cost Efficiency
-* Eliminate hypervisor licensing costs
-* Optimize hardware utilization
-* Reduce operational overhead
+=== Core Platform
+* **Built on Kubernetes**: 1.31 (OpenShift 4.18) / 1.32 (OpenShift 4.19)
+* **Operating System**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/architecture/architecture-rhcos[Red Hat Enterprise Linux CoreOS (RHCOS)]
+* **Enterprise Features**: Security, monitoring, networking, and storage integrated out-of-the-box
+* **Developer Tools**: Built-in CI/CD, container registry, and development workflows
 
-=== Flexibility and Control
-* Custom hardware configurations
-* Direct access to hardware features
-* Complete control over infrastructure
+== Key Features & Benefits [[key-features]]
 
-=== Enterprise-Grade Security
-* Platform-level security features
-* Network isolation capabilities
-* Integrated authentication and authorization
+=== Why Choose OpenShift for Bare Metal?
 
-== Next Steps
-Ready to start preparing your bare metal infrastructure? Continue to xref:module-02-infrastructure.adoc[Module 2: Preparing Bare Metal Infrastructure].
+==== Enterprise Security
+* Built-in security scanning and compliance
+* Pod security standards and network policies
+* FIPS 140-2/140-3 cryptography support
+
+==== Operational Efficiency
+* Automated updates and lifecycle management
+* Self-healing infrastructure
+* Integrated monitoring and observability
+
+==== Developer Productivity
+* Multiple programming languages and frameworks
+* Built-in container registry and build services
+* Comprehensive API and CLI tools
+
+==== Bare Metal Advantages
+* Maximum performance with direct hardware access
+* Full control over infrastructure and security
+* Cost optimization for predictable workloads
+* Compliance with data sovereignty requirements
+
+== Installation Methods Overview [[installation-methods]]
+
+OpenShift 4.18/4.19 provides multiple installation methods for bare metal deployments:
+
+=== Assisted Installer (Recommended for Most Users)
+* **Best for**: Connected environments with internet access
+* **Interface**: Web-based console with guided workflow
+* **Features**: Automated validation, real-time monitoring, smart defaults
+* **Documentation**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on-premise_with_assisted_installer/installing-on-prem-assisted[Assisted Installer Guide]
+
+=== Agent-based Installer (For Advanced/Disconnected Environments)
+* **Best for**: Air-gapped environments, custom configurations
+* **Interface**: Configuration files and command-line tools
+* **Features**: Full customization, disconnected support, automation-friendly
+* **Documentation**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer[Agent-based Installer Guide]
+
+=== Choosing Your Installation Method
+You'll make this decision based on your environment:
+* **Internet connectivity**: Assisted Installer requires internet access
+* **Customization needs**: Agent-based provides more configuration options
+* **Team expertise**: Assisted Installer is more user-friendly
+* **Automation requirements**: Agent-based integrates better with CI/CD
+
+== Workshop Structure [[workshop-structure]]
+
+.Workshop Flow Overview
+image::diagrams/installation-flows/workshop-flow-overview.svg[Workshop Flow,800,600]
+
+This workshop follows a structured learning path:
+
+* **Module 1 (This Module)**: Introduction and overview
+* **Module 2**: Infrastructure preparation and prerequisites
+* **Module 3**: Deployment using Assisted Installer
+* **Module 4**: Deployment using Agent-based Installer
+* **Module 5**: Storage configuration with OpenShift Data Foundation
+* **Module 6**: Advanced networking with Nmstate
+* **Module 7**: Optional features (Virtualization, AI)
+
+== Prerequisites Overview [[prerequisites-overview]]
+
+Before beginning the hands-on modules, you'll need:
+
+=== Account Requirements
+* Valid Red Hat account with OpenShift subscription
+* Access to link:https://console.redhat.com/[Red Hat Hybrid Cloud Console]
+
+=== Infrastructure Requirements
+* Bare metal servers meeting link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on_bare_metal/user-provisioned-infrastructure#minimum-resource-requirements_installing-bare-metal[minimum specifications]
+* Network infrastructure (DNS, load balancers)
+* Proper BIOS/UEFI configuration
+
+=== Skills and Knowledge
+* Basic Linux system administration
+* Understanding of networking concepts
+* Familiarity with containerization concepts
+
+*Detailed verification procedures for all prerequisites are covered in Module 2.*
+
+== Next Steps [[next-steps]]
+
+Now that you understand OpenShift 4.18/4.19 and the workshop structure, you're ready to begin the hands-on preparation.
+
+=== Your Learning Path
+1. **Complete Module 2**: Infrastructure preparation and prerequisites verification
+2. **Choose your installation method** based on your environment:
+   - Module 3 for Assisted Installer (connected environments)
+   - Module 4 for Agent-based Installer (disconnected/custom environments)
+3. **Configure storage and networking** in Modules 5-6
+4. **Explore optional features** in Module 7
+
+=== Documentation References
+For additional information about OpenShift 4.18/4.19:
+
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/release_notes/ocp-4-18-release-notes[OpenShift Container Platform 4.18 Release Notes]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/release_notes/ocp-4-19-release-notes[OpenShift Container Platform 4.19 Release Notes]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/architecture/architecture-overview[OpenShift Architecture Overview]
+
+Continue to xref:module-02-infrastructure.adoc[Module 2: Prerequisites and Infrastructure for OpenShift 4.18/4.19].
