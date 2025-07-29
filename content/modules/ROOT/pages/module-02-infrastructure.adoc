@@ -11,9 +11,6 @@ By the end of this module, you will have completed the essential infrastructure 
 * **C4**: Boot Method Setup - Discovery ISO Preparation
 * **C5**: BIOS Configuration - UEFI, Secure Boot, Network Boot
 
-.Module 2 Knowledge Graph Components
-image::diagrams/installation-flows/workshop-flow-overview.svg[Module 2 Components,800,400]
-
 == Modern Infrastructure Approach [[modern-approach]]
 
 This module reflects the **simplified infrastructure approach** enabled by Assisted and Agent-based installers:
@@ -496,7 +493,7 @@ echo "✅ Firewall configuration documented: firewall-config.txt"
 Since RHCOS is an immutable operating system, firewall configuration must be handled at the network infrastructure level, not on the nodes themselves.
 
 .OpenShift Network Firewall Architecture
-image::diagrams/network/openshift-firewall-architecture.svg[OpenShift Firewall Architecture,800,600]
+image::network.png[OpenShift Firewall Architecture,800,600]
 
 ==== Infrastructure Firewall Configuration
 Configure firewalls at the infrastructure level (not on RHCOS nodes):

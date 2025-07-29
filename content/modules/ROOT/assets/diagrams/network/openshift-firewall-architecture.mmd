@@ -1,0 +1,66 @@
+graph TD
+    %% OpenShift Network Firewall Architecture for RHCOS
+    
+    %% External Network Layer
+    EXT[External Network<br/>Internet/Corporate Network] --> ELB_API[External Load Balancer<br/>API: 6443/tcp]
+    EXT --> ELB_APPS[External Load Balancer<br/>Apps: 80/443/tcp]
+    
+    %% Network Firewall Layer
+    ELB_API --> FW[Network Firewall/Router<br/>Infrastructure Level]
+    ELB_APPS --> FW
+    
+    %% Firewall Rules
+    FW --> FW_RULES[Firewall Rules<br/>• Allow 6443/tcp to Control Plane<br/>• Allow 80/443/tcp to Workers<br/>• Allow inter-node communication<br/>• Allow outbound to registries]
+    
+    %% OpenShift Cluster Network
+    FW_RULES --> CLUSTER[OpenShift Cluster Network<br/>RHCOS Immutable Nodes]
+    
+    %% Control Plane Nodes
+    CLUSTER --> CP1[Control Plane 1<br/>RHCOS Node]
+    CLUSTER --> CP2[Control Plane 2<br/>RHCOS Node]
+    CLUSTER --> CP3[Control Plane 3<br/>RHCOS Node]
+    
+    %% Worker Nodes
+    CLUSTER --> W1[Worker 1<br/>RHCOS Node]
+    CLUSTER --> W2[Worker 2<br/>RHCOS Node]
+    CLUSTER --> WN[Worker N<br/>RHCOS Node]
+    
+    %% Control Plane Ports
+    CP1 --> CP1_PORTS[Ports:<br/>6443/tcp - API Server<br/>22623/tcp - Machine Config<br/>2379-2380/tcp - etcd<br/>10250/tcp - Kubelet]
+    CP2 --> CP2_PORTS[Ports:<br/>6443/tcp - API Server<br/>22623/tcp - Machine Config<br/>2379-2380/tcp - etcd<br/>10250/tcp - Kubelet]
+    CP3 --> CP3_PORTS[Ports:<br/>6443/tcp - API Server<br/>22623/tcp - Machine Config<br/>2379-2380/tcp - etcd<br/>10250/tcp - Kubelet]
+    
+    %% Worker Ports
+    W1 --> W1_PORTS[Ports:<br/>80/tcp - HTTP Ingress<br/>443/tcp - HTTPS Ingress<br/>10250/tcp - Kubelet<br/>30000-32767/tcp - NodePort]
+    W2 --> W2_PORTS[Ports:<br/>80/tcp - HTTP Ingress<br/>443/tcp - HTTPS Ingress<br/>10250/tcp - Kubelet<br/>30000-32767/tcp - NodePort]
+    WN --> WN_PORTS[Ports:<br/>80/tcp - HTTP Ingress<br/>443/tcp - HTTPS Ingress<br/>10250/tcp - Kubelet<br/>30000-32767/tcp - NodePort]
+    
+    %% Overlay Networks
+    CLUSTER --> OVERLAY[Overlay Networks<br/>VXLAN: 4789/udp<br/>Geneve: 6081/udp<br/>Inter-node Communication]
+    
+    %% Registry Access
+    CLUSTER --> REGISTRY[Outbound Access<br/>registry.redhat.io:443<br/>quay.io:443<br/>registry.connect.redhat.com:443]
+    
+    %% Styling
+    style EXT fill:#ffecb3,stroke:#ff8f00,stroke-width:2px
+    style FW fill:#ffcdd2,stroke:#d32f2f,stroke-width:3px
+    style FW_RULES fill:#ffcdd2,stroke:#d32f2f,stroke-width:2px
+    style CLUSTER fill:#e8f5e8,stroke:#2e7d32,stroke-width:3px
+    
+    %% Control Plane Styling
+    style CP1 fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    style CP2 fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    style CP3 fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    
+    %% Worker Styling
+    style W1 fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style W2 fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style WN fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    
+    %% Network Styling
+    style OVERLAY fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style REGISTRY fill:#e0f2f1,stroke:#00695c,stroke-width:2px
+    
+    %% Load Balancer Styling
+    style ELB_API fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    style ELB_APPS fill:#fce4ec,stroke:#c2185b,stroke-width:2px

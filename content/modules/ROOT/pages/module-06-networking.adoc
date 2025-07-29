@@ -6,22 +6,22 @@
 === OpenShift Networking Architecture
 OpenShift Container Platform 4.18/4.19 provides advanced networking capabilities through:
 
-* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking/ovn-kubernetes-network-plugin[OVN-Kubernetes]*: Default Container Network Interface (CNI) plugin
-* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking/k8s-nmstate-about-the-k8s-nmstate-operator[Nmstate Operator]*: Declarative network configuration management
-* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/hardware_networks/about-sriov[SR-IOV Network Operator]*: High-performance networking
-* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/hardware_networks/about-multus[Multus CNI]*: Multiple network interfaces per pod
+* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#ovn-kubernetes-network-plugin[OVN-Kubernetes]*: Default Container Network Interface (CNI) plugin
+* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#k8s-nmstate-about-the-k8s-nmstate-operator[Nmstate Operator]*: Declarative network configuration management
+* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/hardware_networks/#about-sriov[SR-IOV Network Operator]*: High-performance networking
+* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/hardware_networks/#about-multus[Multus CNI]*: Multiple network interfaces per pod
 
 === Network Components and Features
 * *Software-Defined Networking*: Overlay networks with OVN-Kubernetes
-* *Network Policies*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking/network-security[Microsegmentation and traffic control]
-* *Service Mesh*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking/understanding-networking#nw-ne-openshift-dns_understanding-networking[Advanced traffic management]
+* *Network Policies*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#network-security[Microsegmentation and traffic control]
+* *Service Mesh*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#understanding-networking[Advanced traffic management]
 * *Load Balancing*: Built-in load balancing and ingress capabilities
-* *IPsec Encryption*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking/ovn-kubernetes-network-plugin#nw-ovn-ipsec-enable_configuring-ipsec-ovn[Pod-to-pod encryption]
+* *IPsec Encryption*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#nw-ovn-ipsec-enable_configuring-ipsec-ovn[Pod-to-pod encryption]
 
 == Nmstate Operator Configuration [[nmstate]]
 
 === What is the Nmstate Operator?
-The link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking/k8s-nmstate-about-the-k8s-nmstate-operator[Nmstate Operator] provides declarative network configuration management for OpenShift nodes, enabling:
+The link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#k8s-nmstate-about-the-k8s-nmstate-operator[Nmstate Operator] provides declarative network configuration management for OpenShift nodes, enabling:
 
 * *Declarative Configuration*: YAML-based network interface configuration
 * *Node Network Management*: Centralized network configuration across cluster nodes
@@ -123,7 +123,7 @@ spec:
 == SR-IOV Network Configuration [[sriov]]
 
 === What is SR-IOV?
-link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/hardware_networks/about-sriov[Single Root I/O Virtualization (SR-IOV)] enables high-performance networking by allowing direct hardware access to network interfaces.
+link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/hardware_networks/#about-sriov[Single Root I/O Virtualization (SR-IOV)] enables high-performance networking by allowing direct hardware access to network interfaces.
 
 === SR-IOV Benefits
 * *High Performance*: Direct hardware access with minimal CPU overhead
@@ -190,7 +190,7 @@ spec:
 == Multus CNI Configuration [[multus]]
 
 === What is Multus CNI?
-link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/hardware_networks/about-multus[Multus CNI] enables pods to have multiple network interfaces, supporting complex networking requirements.
+link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/hardware_networks/#about-multus[Multus CNI] enables pods to have multiple network interfaces, supporting complex networking requirements.
 
 === Creating Network Attachment Definitions
 
@@ -259,7 +259,7 @@ spec:
 == Network Security and Policies [[security]]
 
 === Network Policies in OpenShift 4.18/4.19
-link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking/network-security[Network policies] provide microsegmentation and traffic control capabilities.
+link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#network-security[Network policies] provide microsegmentation and traffic control capabilities.
 
 ==== Default Deny Network Policy
 ```yaml
@@ -322,7 +322,7 @@ spec:
 ```
 
 === IPsec Encryption Configuration
-Enable link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking/ovn-kubernetes-network-plugin#nw-ovn-ipsec-enable_configuring-ipsec-ovn[IPsec encryption] for pod-to-pod communication:
+Enable link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#nw-ovn-ipsec-enable_configuring-ipsec-ovn[IPsec encryption] for pod-to-pod communication:
 
 ```bash
 # Enable IPsec encryption
@@ -336,7 +336,7 @@ oc get network.operator cluster -o yaml
 == Load Balancer and Ingress Configuration [[ingress]]
 
 === OpenShift Router and Ingress
-OpenShift 4.18/4.19 provides advanced ingress capabilities through the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking/configuring-ingress[Ingress Operator].
+OpenShift 4.18/4.19 provides advanced ingress capabilities through the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#configuring-ingress[Ingress Operator].
 
 ==== Default Ingress Controller Configuration
 ```yaml
@@ -499,7 +499,7 @@ etcd-2.cluster          IN  A       192.168.1.12
 ```
 
 === CoreDNS Configuration
-OpenShift uses link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking/understanding-networking#nw-ne-openshift-dns_understanding-networking[CoreDNS] for internal cluster DNS resolution:
+OpenShift uses link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#understanding-networking[CoreDNS] for internal cluster DNS resolution:
 
 ```yaml
 # Custom CoreDNS configuration
@@ -545,7 +545,7 @@ wget -qO- http://target-service:8080
 === Network Monitoring and Metrics
 Monitor network performance and health:
 
-* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/observability/monitoring-overview[Prometheus Metrics]*: Network performance metrics
+* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/observability/#monitoring-overview[Prometheus Metrics]*: Network performance metrics
 * *Flow Monitoring*: Network traffic analysis
 * *Policy Violations*: Network policy enforcement monitoring
 * *Ingress Metrics*: Application traffic monitoring
@@ -573,12 +573,12 @@ Monitor network performance and health:
 == Documentation References
 For detailed networking configuration information, refer to:
 
-* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking/understanding-networking[Understanding networking - OpenShift 4.18]
-* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking/ovn-kubernetes-network-plugin[OVN-Kubernetes network plugin - OpenShift 4.18]
-* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking/k8s-nmstate-about-the-k8s-nmstate-operator[Kubernetes NMState Operator - OpenShift 4.18]
-* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/hardware_networks/about-sriov[About SR-IOV hardware networks - OpenShift 4.18]
-* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking/network-security[Network security - OpenShift 4.18]
-* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking/configuring-ingress[Configuring ingress - OpenShift 4.18]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#understanding-networking[Understanding networking - OpenShift 4.19]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#ovn-kubernetes-network-plugin[OVN-Kubernetes network plugin - OpenShift 4.19]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#k8s-nmstate-about-the-k8s-nmstate-operator[Kubernetes NMState Operator - OpenShift 4.19]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/hardware_networks/#about-sriov[About SR-IOV hardware networks - OpenShift 4.19]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#network-security[Network security - OpenShift 4.19]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#configuring-ingress[Configuring ingress - OpenShift 4.19]
 
 == Next Steps
 Ready to explore optional features like OpenShift Virtualization and AI? Continue to xref:module-07-optional.adoc[Module 7: Optional Features].

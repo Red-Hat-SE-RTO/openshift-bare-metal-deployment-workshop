@@ -1,16 +1,16 @@
-= OpenShift Bare Metal Deployment Workshop
+= OpenShift 4.18/4.19 Bare Metal Deployment Workshop
 
 == Introduction
 
-This guide is designed to help you deploy *OpenShift on bare metal* for a variety of workloads, providing flexibility, scalability, and advanced configurations tailored to diverse use cases.
+This comprehensive workshop provides hands-on experience with deploying *OpenShift 4.18/4.19 on bare metal infrastructure*, covering both connected and disconnected environments. The workshop follows a structured knowledge graph approach, guiding participants through essential concepts, multiple installation methods, and advanced post-deployment configurations.
 
-For your convenience, you may optionally *fork this repository* and use it as a *reference guide* when implementing your own bare metal deployments using OpenShift.
+Built on the *Red Hat Enterprise Linux CoreOS (RHCOS)* immutable operating system and *Kubernetes 1.31/1.32* container orchestration, this workshop enables participants to master enterprise-grade OpenShift deployments with advanced storage, networking, and optional features like *OpenShift Virtualization* and *OpenShift AI*.
 
-This workshop provides a *hands-on experience* with deploying OpenShift 4.16+ on bare metal, enabling participants to configure storage, networking, and optionally integrate advanced features such as *OpenShift Virtualization* or *OpenShift AI*.
+For your convenience, you may *fork this repository* and use it as a *reference guide* when implementing your own bare metal deployments using OpenShift.
 
-*OpenShift* empowers users to deploy and manage containerized workloads with enterprise-grade scalability, robust security, and flexibility across diverse infrastructures.
+*OpenShift* empowers users to deploy and manage containerized workloads with enterprise-grade scalability, robust security, and flexibility across diverse infrastructures - from connected cloud environments to air-gapped edge deployments.
 
-During this workshop, we will explore common deployment and management activities that platform administrators and infrastructure engineers encounter in their day-to-day workflows.
+During this workshop, we will explore common deployment and management activities that platform administrators and infrastructure engineers encounter in their day-to-day workflows, with a focus on practical, production-ready configurations.
 
 == Who Will Benefit Most from Attending This Workshop?
 
@@ -30,41 +30,76 @@ Those responsible for deploying, managing, and scaling OpenShift clusters.
 * Setting up and configuring OpenShift components like networking, storage, and advanced features
 * Integrating OpenShift with existing IT environments and workloads
 
-== What Content Is Covered in This Workshop?
+== Workshop Structure and Learning Path
 
-This workshop is organized into *6 main sections*:
+This workshop follows a *knowledge graph approach* with 7 comprehensive modules, designed to accommodate both connected and disconnected deployment scenarios:
 
-=== 1. Introduction to OpenShift
-* Overview of OpenShift and its features for bare metal deployments
-* Key benefits of OpenShift for modern workloads
+=== Module 1: Introduction - Foundation Concepts
+* **Platform Architecture**: Components & benefits of OpenShift 4.18/4.19
+* **Installation Methods**: Assisted vs Agent-based installer comparison
+* **Workshop Learning Path**: Structured approach to bare metal mastery
 
-=== 2. Prerequisites and the Pre-Flight Checklist
-* Hardware prerequisites: Control plane, worker nodes, and network requirements
-* Setting up BIOS/firmware, network and storage
+=== Module 2: Infrastructure Preparation - Essential Requirements
+* **C1: Red Hat Account & Resources** - Pull secrets & tools acquisition
+* **C2: Hardware & DNS Planning** - Inventory & network requirements
+* **C3: Boot Preparation** - BIOS configuration & discovery methods
 
-=== 3. OpenShift Installation and Configuration with the Assisted Installer
-* Step-by-step guide using the *Assisted Installer*:
-* *Assisted Installer*: Simplifies cluster installation with an intuitive web interface
+=== Installation Method Decision Point
+After completing the foundation modules, choose your deployment path based on your environment:
 
-=== 4. OpenShift Installation and Configuration with the Agent-based Installer
-* Step-by-step guide using the *Assisted Installer*:
-* *Agent-based Installer*: Provides flexibility for disconnected or custom bare metal environments
-* Setting up control plane and worker nodes
+==== Connected Environment Path → Module 3: Assisted Installer
+*Cloud-guided Installation with Web-based UI*
 
-=== 5. Storage configuring using OpenShift Data Foundation
-* Prepare storage for ODF
+* **D1: Red Hat Console Access** - Web-based configuration interface
+* **D2: Cluster Configuration** - Network, nodes, and feature settings
+* **D3: Discovery ISO Generation** - Custom boot media creation
+* **D4: Hardware Discovery** - Automatic detection & validation
+* **D5: Installation Monitoring** - Real-time progress tracking
+
+==== Disconnected Environment Path → Module 4: Agent-based Installer
+*Air-gapped Installation with CLI-based Approach*
+
+* **E1: install-config.yaml** - Declarative configuration management
+* **E2: agent-config.yaml** - Node-specific settings and roles
+* **E3: Mirror Registry Setup** - Disconnected image storage
+* **E4: Agent ISO Creation** - Self-contained installation media
+* **E5: Offline Installation** - Complete air-gapped deployment
+
+=== Module 5: Storage Configuration - OpenShift Data Foundation
+* Prepare storage infrastructure for ODF
 * Install and configure the Local Storage Operator
-* Install and configure OpenShift Data Foundation
-* Configure the OpenShift Image Registry for ODF
+* Deploy and configure OpenShift Data Foundation
+* Configure the OpenShift Image Registry with ODF backend
 
-=== 6. Network Configuration using Nmstate
-* Secondary networks overview
-* Configuring secondary networks using Nmstate
-* Exposing networks using NetworkAttachmentDefinitions
+=== Module 6: Network Configuration - Advanced Networking
+* Secondary networks overview and use cases
+* Configuring advanced networks using Nmstate
+* Exposing networks through NetworkAttachmentDefinitions
+* Production networking best practices
 
-=== 7. Optional Features
-* *OpenShift Virtualization*: Managing virtual machines within OpenShift
-* *OpenShift AI*: Enabling AI/ML workloads with OpenShift's AI capabilities
+=== Module 7: Optional Features - Advanced Capabilities
+* **OpenShift Virtualization**: Managing virtual machines within OpenShift
+* **OpenShift AI**: Enabling AI/ML workloads with OpenShift's AI capabilities
+* Integration patterns and best practices
+
+== Key Workshop Features
+
+This workshop emphasizes several advanced OpenShift deployment capabilities:
+
+=== Simplified Architecture Benefits
+* **No Bootstrap Node Required**: Both installation methods eliminate the need for temporary bootstrap infrastructure
+* **Virtual IP Management**: Built-in load balancer functionality without external dependencies
+* **Automatic Hardware Discovery**: Intelligent detection and validation of bare metal resources
+
+=== Flexible Deployment Options
+* **Standard HA Cluster**: 3 control plane + 2+ worker nodes for production workloads
+* **Compact Cluster**: 3 nodes serving dual control plane + worker roles for resource-constrained environments
+* **Connected vs Disconnected**: Full support for both internet-connected and air-gapped deployments
+
+=== Enterprise-Grade Foundation
+* **Red Hat Enterprise Linux CoreOS**: Immutable, security-hardened operating system
+* **Kubernetes 1.31/1.32**: Latest container orchestration with enterprise support
+* **Production-Ready Configurations**: Real-world deployment patterns and best practices
 
 == For Developers
 
@@ -82,13 +117,19 @@ We use GitHub Actions for automated deployments and provide several utility scri
 
 == Version Information
 
-This edition of the *OpenShift 4.16+ Bare Metal Deployment Workshop* has been developed using the following software versions:
+This edition of the *OpenShift 4.18/4.19 Bare Metal Deployment Workshop* has been developed using the following software versions:
 
-* link:https://docs.openshift.com/container-platform/4.16/[OpenShift 4.16 Documentation]
-* link:https://docs.openshift.com/container-platform/4.17/[OpenShift 4.17 Documentation]
-* OpenShift Data Foundation: [Version Number]
-* OpenShift Virtualization: [Version Number] (Optional)
-* OpenShift AI: [Version Number] (Optional)
+* link:https://docs.openshift.com/container-platform/4.18/[OpenShift 4.18 Documentation] - Primary version
+* link:https://docs.openshift.com/container-platform/4.19/[OpenShift 4.19 Documentation] - Latest features
+* **Kubernetes**: 1.31/1.32 (embedded within OpenShift)
+* **Red Hat Enterprise Linux CoreOS**: Latest immutable OS foundation
+* **OpenShift Data Foundation**: Latest version for enterprise storage
+* **OpenShift Virtualization**: Latest version (Optional module)
+* **OpenShift AI**: Latest version (Optional module)
+
+=== Installation Methods Covered
+* **Assisted Installer**: link:https://docs.redhat.com/en/documentation/assisted_installer_for_openshift_container_platform/2025/[2025 Documentation] - Connected environments
+* **Agent-based Installer**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/[4.18 Documentation] - Disconnected environments
 
 == About
 This lab guide is based on the *East Region RTO Workshop Template*.
@@ -97,7 +138,19 @@ For more details, visit:
 link:https://red-hat-se-rto.github.io/se-redhat-rto-workshop-template/[red-hat-se-rto.github.io/se-redhat-rto-workshop-template/]
 
 == Resources
-* link:https://docs.openshift.com/container-platform/4.16/[OpenShift 4.16 Documentation]
-* link:https://docs.openshift.com/container-platform/4.17/[OpenShift 4.17 Documentation]
-* link:https://rhdp.redhat.com/[Red Hat Demo Platform (RHDP)]
-* link:https://www.openshift.com/solutions/data-foundation[OpenShift Data Foundation]
+
+=== Primary Documentation
+* link:https://docs.openshift.com/container-platform/4.18/[OpenShift 4.18 Documentation] - Complete platform guide
+* link:https://docs.openshift.com/container-platform/4.19/[OpenShift 4.19 Documentation] - Latest features and updates
+* link:https://docs.redhat.com/en/documentation/assisted_installer_for_openshift_container_platform/2025/[Assisted Installer 2025 Documentation] - Connected installations
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/[Agent-based Installer Documentation] - Disconnected installations
+
+=== Platform and Tools
+* link:https://rhdp.redhat.com/[Red Hat Demo Platform (RHDP)] - Lab environments
+* link:https://console.redhat.com/openshift/[Red Hat Hybrid Cloud Console] - Assisted Installer access
+* link:https://www.openshift.com/solutions/data-foundation[OpenShift Data Foundation] - Enterprise storage solution
+
+=== Advanced Features
+* link:https://docs.openshift.com/container-platform/4.18/virt/about-virt.html[OpenShift Virtualization Documentation]
+* link:https://docs.redhat.com/en/documentation/red_hat_openshift_ai/[OpenShift AI Documentation]
+* link:https://docs.openshift.com/container-platform/4.18/networking/k8s_nmstate/k8s-nmstate-about-the-k8s-nmstate-operator.html[Nmstate Networking Documentation]

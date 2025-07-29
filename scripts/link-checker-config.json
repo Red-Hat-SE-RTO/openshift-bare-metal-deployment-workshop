@@ -1,0 +1,53 @@
+{
+  "description": "Configuration for the OpenShift Bare Metal Workshop Link Checker",
+  "settings": {
+    "timeout": 30,
+    "max_redirects": 5,
+    "delay_between_checks": 1,
+    "user_agent": "Mozilla/5.0 (compatible; OpenShift-Workshop-LinkChecker/1.0)"
+  },
+  "skip_patterns": [
+    "console\\.redhat\\.com.*openshift.*assisted-installer.*clusters$"
+  ],
+  "skip_reasons": {
+    "console\\.redhat\\.com.*openshift.*assisted-installer.*clusters$": "requires authentication"
+  },
+  "file_patterns": {
+    "adoc": {
+      "extensions": [".adoc"],
+      "link_patterns": [
+        "link:https?://[^[]+\\[[^\\]]*\\]",
+        "https?://[^[:space:]\\[\\]<>()]+"
+      ]
+    },
+    "markdown": {
+      "extensions": [".md"],
+      "link_patterns": [
+        "\\[([^\\]]*)\\]\\(([^)]+)\\)",
+        "https?://[^[:space:]\\[\\]<>()]+"
+      ]
+    }
+  },
+  "directories": [
+    "content/modules/ROOT/pages"
+  ],
+  "files": [
+    "README.adoc"
+  ],
+  "output": {
+    "log_file": "link-check.log",
+    "issue_file": "issue.md",
+    "verbose": true,
+    "colors": true
+  },
+  "http_codes": {
+    "success": ["2xx", "3xx"],
+    "client_error": ["4xx"],
+    "server_error": ["5xx"]
+  },
+  "retry": {
+    "enabled": false,
+    "max_attempts": 3,
+    "delay": 5
+  }
+}

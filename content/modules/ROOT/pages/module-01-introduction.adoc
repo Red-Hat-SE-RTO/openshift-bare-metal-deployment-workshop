@@ -13,8 +13,8 @@ By the end of this module, you will:
 
 == Platform Architecture: Components & Benefits [[platform-architecture]]
 
-.Workshop Knowledge Graph Overview
-image::diagrams/installation-flows/workshop-flow-overview.svg[Workshop Knowledge Graph,800,600]
+.Platform Architecture
+image::module-01.svg[Workshop Knowledge Graph,800,600]
 
 === OpenShift 4.18/4.19: Enterprise Kubernetes Platform
 
