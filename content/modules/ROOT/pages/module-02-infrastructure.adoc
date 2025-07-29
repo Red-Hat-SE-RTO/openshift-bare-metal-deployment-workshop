@@ -1,4 +1,4 @@
-= Module 2: Infrastructure Prep - Simplified for Modern Installers
+= Module 2: Infrastructure Prep 
 :page-layout: module
 
 == Learning Objectives [[objectives]]
@@ -411,6 +411,210 @@ nslookup <dns-server-ip>
 ```
 
 **✅ C3 Verification Checkpoint**: Ensure DNS configuration is planned, documented, and tested before proceeding.
+
+=== Firewall Configuration Requirements
+Firewall rules are critical for OpenShift deployment. Based on link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on_bare_metal/user-provisioned-infrastructure#installation-network-user-infra_installing-bare-metal[network requirements], configure these firewall rules:
+
+==== Required Firewall Ports
+```bash
+# Create firewall configuration documentation
+cat > firewall-config.txt << 'EOF'
+# OpenShift 4.18/4.19 Firewall Configuration
+# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on_bare_metal/user-provisioned-infrastructure#installation-network-user-infra_installing-bare-metal
+
+## Control Plane Node Firewall Rules:
+
+### Inbound Rules (Control Plane):
+# Kubernetes API Server
+6443/tcp    # External access to Kubernetes API
+22623/tcp   # Machine Config Server (internal)
+
+# etcd
+2379/tcp    # etcd client requests
+2380/tcp    # etcd peer communication
+
+# Kubelet and OpenShift SDN
+10250/tcp   # Kubelet API
+10251/tcp   # kube-scheduler
+10252/tcp   # kube-controller-manager
+10256/tcp   # kube-proxy
+
+# OpenShift Router/Ingress (if running on control plane in compact)
+80/tcp      # HTTP traffic (compact clusters only)
+443/tcp     # HTTPS traffic (compact clusters only)
+
+# Network diagnostics and monitoring
+9000-9999/tcp   # Host level services (node exporter, etc.)
+10250-10259/tcp # Kubernetes services
+30000-32767/tcp # NodePort services
+
+### Outbound Rules (Control Plane):
+# All outbound traffic allowed (or specific rules for registries)
+443/tcp     # HTTPS to Red Hat registries
+80/tcp      # HTTP (if needed)
+
+## Worker Node Firewall Rules:
+
+### Inbound Rules (Workers):
+# Kubelet
+10250/tcp   # Kubelet API
+
+# OpenShift Router/Ingress
+80/tcp      # HTTP traffic
+443/tcp     # HTTPS traffic
+
+# Network diagnostics and monitoring
+9000-9999/tcp   # Host level services
+30000-32767/tcp # NodePort services
+
+### Outbound Rules (Workers):
+# All outbound traffic allowed (or specific rules for registries)
+443/tcp     # HTTPS to Red Hat registries
+80/tcp      # HTTP (if needed)
+
+## Network Protocols:
+# VXLAN (for OpenShift SDN)
+4789/udp    # VXLAN overlay network
+
+# Geneve (for OVN-Kubernetes)
+6081/udp    # Geneve overlay network
+
+# ICMP
+icmp        # Network diagnostics and connectivity testing
+
+## Load Balancer Health Checks:
+# Configure health check sources to access:
+6443/tcp    # API server health checks
+80/tcp      # Ingress health checks
+443/tcp     # Ingress health checks
+EOF
+
+echo "✅ Firewall configuration documented: firewall-config.txt"
+```
+
+==== Network Firewall Architecture for RHCOS
+Since RHCOS is an immutable operating system, firewall configuration must be handled at the network infrastructure level, not on the nodes themselves.
+
+.OpenShift Network Firewall Architecture
+image::diagrams/network/openshift-firewall-architecture.svg[OpenShift Firewall Architecture,800,600]
+
+==== Infrastructure Firewall Configuration
+Configure firewalls at the infrastructure level (not on RHCOS nodes):
+
+```bash
+# Document infrastructure firewall approach
+cat >> firewall-config.txt << 'EOF'
+
+## Infrastructure Firewall Configuration for RHCOS
+
+### Network Infrastructure Approach:
+Since RHCOS is immutable, configure firewalls at:
+1. Network switches/routers
+2. External firewalls/security appliances
+3. Cloud provider security groups
+4. Virtualization platform (VMware NSX, etc.)
+5. Load balancers with built-in firewalls
+
+### Switch/Router ACL Configuration:
+# Example Cisco ASA/Router ACL:
+access-list OPENSHIFT_CONTROL_PLANE permit tcp any host <control-plane-1> eq 6443
+access-list OPENSHIFT_CONTROL_PLANE permit tcp any host <control-plane-2> eq 6443
+access-list OPENSHIFT_CONTROL_PLANE permit tcp any host <control-plane-3> eq 6443
+access-list OPENSHIFT_CONTROL_PLANE permit tcp <cluster-network> <cluster-network> eq 22623
+access-list OPENSHIFT_CONTROL_PLANE permit tcp <cluster-network> <cluster-network> range 2379 2380
+
+# Example pfSense/OPNsense Rules:
+# Rule 1: Allow external access to API (6443/tcp)
+# Rule 2: Allow internal cluster communication (all required ports)
+# Rule 3: Allow outbound to Red Hat registries (443/tcp)
+
+### VMware NSX Distributed Firewall:
+# Create security groups for:
+# - OpenShift Control Plane nodes
+# - OpenShift Worker nodes
+# - OpenShift Management network
+
+# Apply micro-segmentation rules between groups
+EOF
+```
+
+==== Network Security Considerations
+```bash
+# Document network security approach
+cat >> firewall-config.txt << 'EOF'
+
+## Network Security Best Practices:
+
+### Segmentation:
+# - Separate management network (BMC/IPMI)
+# - Separate cluster network (node-to-node)
+# - Separate external access network (load balancers)
+
+### Access Control:
+# - Restrict API access (6443/tcp) to authorized sources
+# - Limit SSH access to management networks only
+# - Control ingress traffic (80/443) through load balancers
+
+### Monitoring:
+# - Log firewall denials for security analysis
+# - Monitor unusual traffic patterns
+# - Alert on unauthorized access attempts
+
+### Registry Access:
+# - Allow outbound HTTPS to registry.redhat.io
+# - Allow outbound HTTPS to quay.io
+# - Configure proxy settings if required
+
+## Firewall Testing:
+# Test connectivity between nodes:
+# nc -zv <node-ip> 6443    # API server
+# nc -zv <node-ip> 2379    # etcd
+# nc -zv <node-ip> 10250   # kubelet
+
+# Test external access:
+# curl -k https://<api-vip>:6443/version
+# curl -I http://<ingress-vip>
+EOF
+
+echo "✅ Network security considerations documented"
+```
+
+==== Cloud Provider Firewall Examples
+For cloud-based bare metal or hybrid deployments:
+
+```bash
+# Document cloud firewall configurations
+cat >> firewall-config.txt << 'EOF'
+
+## Cloud Provider Security Groups/Firewall Rules:
+
+### AWS Security Groups:
+# Control Plane Security Group:
+# - Inbound: 6443/tcp from 0.0.0.0/0 (or restricted CIDR)
+# - Inbound: 22623/tcp from cluster CIDR
+# - Inbound: 2379-2380/tcp from control plane security group
+# - Inbound: 10250-10259/tcp from cluster CIDR
+# - Outbound: All traffic
+
+# Worker Security Group:
+# - Inbound: 80/tcp from load balancer security group
+# - Inbound: 443/tcp from load balancer security group
+# - Inbound: 10250/tcp from control plane security group
+# - Inbound: 30000-32767/tcp from load balancer security group
+# - Outbound: All traffic
+
+### Azure Network Security Groups:
+# Similar rules adapted for Azure NSG format
+
+### Google Cloud Firewall Rules:
+# Similar rules adapted for GCP firewall format
+
+### VMware NSX:
+# Distributed firewall rules for on-premises VMware environments
+EOF
+
+echo "✅ Cloud provider firewall examples documented"
+```
 
 == C4: Boot Method Setup - Discovery ISO Preparation [[boot-setup]]
 
