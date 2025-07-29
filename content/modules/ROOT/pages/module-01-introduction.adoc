@@ -11,15 +11,51 @@ By the end of this module, you will:
 * Have a clear overview of prerequisites needed for deployment
 * Be ready to choose the appropriate installation method for your environment
 
-== What is OpenShift 4.18/4.19? [[what-is-openshift]]
+== Platform Architecture: Components & Benefits [[platform-architecture]]
 
-link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/architecture/architecture-overview[OpenShift Container Platform] is Red Hat's enterprise Kubernetes platform that provides a complete application platform for developing, deploying, and managing containerized applications.
+.Workshop Knowledge Graph Overview
+image::diagrams/installation-flows/workshop-flow-overview.svg[Workshop Knowledge Graph,800,600]
 
-=== Core Platform
-* **Built on Kubernetes**: 1.31 (OpenShift 4.18) / 1.32 (OpenShift 4.19)
-* **Operating System**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/architecture/architecture-rhcos[Red Hat Enterprise Linux CoreOS (RHCOS)]
-* **Enterprise Features**: Security, monitoring, networking, and storage integrated out-of-the-box
-* **Developer Tools**: Built-in CI/CD, container registry, and development workflows
+=== OpenShift 4.18/4.19: Enterprise Kubernetes Platform
+
+link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/architecture/architecture-overview[OpenShift Container Platform 4.18/4.19] is Red Hat's enterprise Kubernetes platform that provides a complete application platform for developing, deploying, and managing containerized applications.
+
+==== Core Platform Foundation
+* **Kubernetes 1.31/1.32**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/architecture/architecture#architecture-platform-introduction_architecture[Container orchestration foundation]
+  - OpenShift 4.18 built on Kubernetes 1.31
+  - OpenShift 4.19 built on Kubernetes 1.32
+  - Enhanced with enterprise-grade features and security
+
+* **Red Hat Enterprise Linux CoreOS (RHCOS)**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/architecture/architecture-rhcos[Immutable operating system]
+  - Purpose-built for containerized workloads
+  - Automatic updates and self-healing capabilities
+  - Optimized for OpenShift Container Platform
+
+* **Enterprise Integration**: Security, monitoring, networking, and storage integrated out-of-the-box
+  - Built-in security scanning and compliance
+  - Integrated monitoring with Prometheus and Grafana
+  - Software-defined networking with OVN-Kubernetes
+  - Storage integration with OpenShift Data Foundation
+
+==== Key Benefits for Bare Metal Deployments
+
+===== Performance and Control
+* **Direct Hardware Access**: Maximum performance without hypervisor overhead
+* **Custom Hardware Support**: GPUs, FPGAs, and specialized networking hardware
+* **Resource Optimization**: Full control over CPU, memory, and storage allocation
+* **Predictable Performance**: Consistent performance for critical workloads
+
+===== Enterprise Security
+* **Hardware-Level Security**: Secure Boot, TPM, and hardware encryption support
+* **Network Isolation**: Physical network segmentation capabilities
+* **Compliance**: FIPS 140-2/140-3 cryptography support
+* **Air-Gapped Deployments**: Complete disconnected operation support
+
+===== Operational Efficiency
+* **Automated Lifecycle Management**: Seamless updates and maintenance
+* **Self-Healing Infrastructure**: Automatic recovery from failures
+* **Unified Management**: Single platform for VMs and containers
+* **Cost Optimization**: Eliminate hypervisor licensing and overhead
 
 == Key Features & Benefits [[key-features]]
 
@@ -46,43 +82,143 @@ link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/
 * Cost optimization for predictable workloads
 * Compliance with data sovereignty requirements
 
-== Installation Methods Overview [[installation-methods]]
+== Installation Methods: Assisted vs Agent-based [[installation-methods]]
 
-OpenShift 4.18/4.19 provides multiple installation methods for bare metal deployments:
+OpenShift 4.18/4.19 provides two modern installation methods optimized for bare metal deployments, both eliminating the complexity of traditional User-Provisioned Infrastructure (UPI).
 
-=== Assisted Installer (Recommended for Most Users)
-* **Best for**: Connected environments with internet access
-* **Interface**: Web-based console with guided workflow
-* **Features**: Automated validation, real-time monitoring, smart defaults
-* **Documentation**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on-premise_with_assisted_installer/installing-on-prem-assisted[Assisted Installer Guide]
+=== Modern Installer Advantages
+Both installation methods provide significant improvements over traditional approaches:
 
-=== Agent-based Installer (For Advanced/Disconnected Environments)
-* **Best for**: Air-gapped environments, custom configurations
-* **Interface**: Configuration files and command-line tools
-* **Features**: Full customization, disconnected support, automation-friendly
-* **Documentation**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer[Agent-based Installer Guide]
+* **No Bootstrap Node Required**: Simplified architecture eliminates temporary bootstrap infrastructure
+* **Automatic Hardware Discovery**: Discovery ISOs detect and validate hardware automatically
+* **Virtual IP Management**: Built-in VIP management eliminates external load balancer requirements
+* **Real-time Validation**: Continuous validation throughout the installation process
 
-=== Choosing Your Installation Method
-You'll make this decision based on your environment:
-* **Internet connectivity**: Assisted Installer requires internet access
-* **Customization needs**: Agent-based provides more configuration options
-* **Team expertise**: Assisted Installer is more user-friendly
-* **Automation requirements**: Agent-based integrates better with CI/CD
+=== Assisted Installer: Cloud-guided Installation
+**Best for**: Connected environments with web-based management preference
 
-== Workshop Structure [[workshop-structure]]
+==== Key Characteristics
+* **Interface**: link:https://console.redhat.com/openshift/assisted-installer/clusters[Web-based console] with guided workflow
+* **Environment**: Requires internet connectivity to Red Hat services
+* **Automation**: Automated validation, real-time monitoring, and smart defaults
+* **User Experience**: Intuitive UI suitable for all skill levels
 
-.Workshop Flow Overview
-image::diagrams/installation-flows/workshop-flow-overview.svg[Workshop Flow,800,600]
+==== Technical Features
+* **Discovery Process**: Automatic hardware detection and validation
+* **Network Configuration**: Simplified network setup with VIP management
+* **Monitoring**: Real-time installation progress tracking
+* **Validation**: Continuous pre-flight and installation checks
 
-This workshop follows a structured learning path:
+==== Documentation Reference
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on-premise_with_assisted_installer/installing-on-prem-assisted[OpenShift 4.18 Assisted Installer Guide]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/installing_on-premise_with_assisted_installer/installing-on-prem-assisted[OpenShift 4.19 Assisted Installer Guide]
 
-* **Module 1 (This Module)**: Introduction and overview
-* **Module 2**: Infrastructure preparation and prerequisites
-* **Module 3**: Deployment using Assisted Installer
-* **Module 4**: Deployment using Agent-based Installer
+=== Agent-based Installer: Air-gapped Installation
+**Best for**: Disconnected environments, custom configurations, and automation
+
+==== Key Characteristics
+* **Interface**: Declarative configuration files and command-line tools
+* **Environment**: Supports fully air-gapped and disconnected deployments
+* **Customization**: Complete control over all installation parameters
+* **Automation**: Ideal for CI/CD integration and infrastructure-as-code
+
+==== Technical Features
+* **Configuration Files**: `install-config.yaml` and `agent-config.yaml` for declarative setup
+* **Mirror Registry**: Built-in support for disconnected image mirroring
+* **Agent ISO**: Self-contained installation media with embedded configuration
+* **Offline Operation**: Complete installation without internet connectivity
+
+==== Documentation Reference
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer[OpenShift 4.18 Agent-based Installer Guide]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer[OpenShift 4.19 Agent-based Installer Guide]
+
+=== Installation Method Decision Framework
+Choose your installation method based on these key factors:
+
+[cols="1,2,2", options="header"]
+|===
+|Factor |Assisted Installer |Agent-based Installer
+
+|**Connectivity**
+|Requires internet access
+|Supports air-gapped environments
+
+|**Interface**
+|Web-based GUI
+|Configuration files + CLI
+
+|**Skill Level**
+|Beginner to intermediate
+|Intermediate to advanced
+
+|**Customization**
+|Standard configurations
+|Full customization control
+
+|**Automation**
+|Manual web interface
+|CI/CD and automation friendly
+
+|**Use Cases**
+|Connected labs, POCs, standard deployments
+|Production, regulated environments, custom setups
+|===
+
+== Workshop Learning Path: Structured Approach [[workshop-structure]]
+
+This workshop follows a knowledge-driven learning path designed around modern OpenShift deployment practices and the simplified infrastructure approach enabled by Assisted and Agent-based installers.
+
+=== Learning Path Overview
+
+==== Foundation Phase
+* **Module 1 (Current)**: Platform architecture, installation methods, and workshop structure
+* **Module 2**: Simplified infrastructure preparation (no bootstrap node required)
+
+==== Installation Phase (Choose Your Path)
+* **Module 3**: Assisted Installer deployment (connected environments)
+* **Module 4**: Agent-based Installer deployment (disconnected environments)
+
+==== Configuration Phase
 * **Module 5**: Storage configuration with OpenShift Data Foundation
-* **Module 6**: Advanced networking with Nmstate
-* **Module 7**: Optional features (Virtualization, AI)
+* **Module 6**: Advanced networking configuration
+* **Module 7**: Optional features (Virtualization, AI/ML, VDDK migration)
+
+=== Key Learning Principles
+
+==== Knowledge Graph Approach
+The workshop is structured as a knowledge graph where concepts build upon each other:
+
+* **Core Concepts**: OpenShift platform, RHCOS, and Kubernetes foundations
+* **Installation Methods**: Understanding the decision points and trade-offs
+* **Simplified Infrastructure**: Modern approach eliminating traditional complexity
+* **Practical Implementation**: Hands-on deployment and configuration
+
+==== Decision-Driven Learning
+Rather than covering all possible scenarios, the workshop guides you through decision points:
+
+1. **Installation Method Decision**: Based on your environment (connected vs disconnected)
+2. **Cluster Configuration**: Standard HA vs Compact cluster options
+3. **Infrastructure Approach**: VIPs vs external load balancers
+4. **Advanced Features**: Optional components based on your requirements
+
+==== Modern Best Practices Focus
+The workshop emphasizes current OpenShift deployment best practices:
+
+* **Assisted/Agent-based Installers**: Modern installation methods
+* **Discovery ISO Boot**: Automated hardware detection
+* **Virtual IP Management**: Simplified networking
+* **Immutable Infrastructure**: RHCOS-aware approaches
+* **Declarative Configuration**: Infrastructure-as-code principles
+
+=== Workshop Outcomes
+By completing this workshop, you will:
+
+* **Understand** OpenShift 4.18/4.19 architecture and benefits for bare metal
+* **Choose** the appropriate installation method for your environment
+* **Deploy** a production-ready OpenShift cluster using modern installers
+* **Configure** enterprise-grade storage and networking
+* **Implement** optional features like virtualization and AI/ML workloads
+* **Apply** best practices for ongoing cluster management
 
 == Prerequisites Overview [[prerequisites-overview]]
 
