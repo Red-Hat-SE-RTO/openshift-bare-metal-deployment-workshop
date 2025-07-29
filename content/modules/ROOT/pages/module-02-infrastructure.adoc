@@ -528,12 +528,6 @@ access-list OPENSHIFT_CONTROL_PLANE permit tcp <cluster-network> <cluster-networ
 # Rule 2: Allow internal cluster communication (all required ports)
 # Rule 3: Allow outbound to Red Hat registries (443/tcp)
 
-### VMware NSX Distributed Firewall:
-# Create security groups for:
-# - OpenShift Control Plane nodes
-# - OpenShift Worker nodes
-# - OpenShift Management network
-
 # Apply micro-segmentation rules between groups
 EOF
 ```
@@ -577,43 +571,6 @@ cat >> firewall-config.txt << 'EOF'
 EOF
 
 echo "✅ Network security considerations documented"
-```
-
-==== Cloud Provider Firewall Examples
-For cloud-based bare metal or hybrid deployments:
-
-```bash
-# Document cloud firewall configurations
-cat >> firewall-config.txt << 'EOF'
-
-## Cloud Provider Security Groups/Firewall Rules:
-
-### AWS Security Groups:
-# Control Plane Security Group:
-# - Inbound: 6443/tcp from 0.0.0.0/0 (or restricted CIDR)
-# - Inbound: 22623/tcp from cluster CIDR
-# - Inbound: 2379-2380/tcp from control plane security group
-# - Inbound: 10250-10259/tcp from cluster CIDR
-# - Outbound: All traffic
-
-# Worker Security Group:
-# - Inbound: 80/tcp from load balancer security group
-# - Inbound: 443/tcp from load balancer security group
-# - Inbound: 10250/tcp from control plane security group
-# - Inbound: 30000-32767/tcp from load balancer security group
-# - Outbound: All traffic
-
-### Azure Network Security Groups:
-# Similar rules adapted for Azure NSG format
-
-### Google Cloud Firewall Rules:
-# Similar rules adapted for GCP firewall format
-
-### VMware NSX:
-# Distributed firewall rules for on-premises VMware environments
-EOF
-
-echo "✅ Cloud provider firewall examples documented"
 ```
 
 == C4: Boot Method Setup - Discovery ISO Preparation [[boot-setup]]
