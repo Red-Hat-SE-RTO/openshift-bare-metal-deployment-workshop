@@ -1,211 +1,260 @@
-# Link Checker Scripts
-
-This directory contains scripts for validating links in the OpenShift Bare Metal Workshop documentation.
+# Intelligent Link Checker with AI Analysis
 
 ## Overview
 
-The link checker validates all external links in the workshop documentation to ensure they are accessible and working correctly. It supports both AsciiDoc and Markdown formats and generates detailed reports for any broken links.
+The Intelligent Link Checker is an enhanced Python-based tool that validates documentation links and provides AI-powered analysis of failures using Red Hat's Granite 3.3 8B Instruct model via LangChain.
 
-## Files
+## Features
 
-- **`check-links.sh`** - Main link checker script
-- **`link-checker-config.json`** - Configuration file for the link checker
-- **`README.md`** - This documentation file
+### 🔗 **Advanced Link Validation**
+- Robust HTTP client with retry logic and proper headers
+- JSON configuration support for flexible settings
+- Comprehensive error handling and detailed reporting
+- Support for authentication-required URLs (skip patterns)
+
+### 🤖 **AI-Powered Analysis**
+- **Pattern Recognition**: Identifies common failure patterns (version mismatches, URL structure changes)
+- **Impact Assessment**: Evaluates how broken links affect workshop participants
+- **Smart Recommendations**: Provides specific, actionable fix suggestions
+- **Alternative Sources**: Suggests working documentation alternatives
+
+### 🐙 **GitHub Integration**
+- Automatic GitHub issue creation for broken links
+- AI-generated issue titles and descriptions
+- Structured issue format with analysis and recommendations
+- Proper labeling for easy issue management
+
+## Installation
+
+### Prerequisites
+```bash
+# Install Python dependencies
+pip install -r scripts/requirements.txt
+```
+
+### Dependencies
+- `requests>=2.31.0` - HTTP client library
+- `urllib3>=2.0.0` - HTTP library with retry support
+- `langchain>=0.1.0` - LangChain framework
+- `langchain-openai>=0.1.0` - OpenAI integration for LangChain
+- `langchain-core>=0.1.0` - Core LangChain components
 
 ## Usage
 
-### Basic Usage
-
-Run the link checker from the project root:
-
+### Basic Link Checking
 ```bash
-./scripts/check-links.sh
+# Check all modules
+python3 scripts/intelligent_link_checker.py
+
+# Check specific files
+python3 scripts/intelligent_link_checker.py content/modules/ROOT/pages/module-05-storage.adoc
+
+# Test mode (first 3 links only)
+python3 scripts/intelligent_link_checker.py --test-mode
+
+# Limit links per file
+python3 scripts/intelligent_link_checker.py --max-links 10
 ```
 
-### What It Checks
+### AI Analysis and GitHub Integration
+```bash
+# Run with AI analysis and create GitHub issue for failures
+python3 scripts/intelligent_link_checker.py --create-github-issue --github-repo owner/repo
 
-The script validates links in:
-- All `.adoc` files in `content/modules/ROOT/pages/`
-- `README.adoc` in the project root
-
-### Link Formats Supported
-
-**AsciiDoc:**
-- `link:https://example.com[Link Text]`
-- Bare URLs: `https://example.com`
-
-**Markdown:**
-- `[Link Text](https://example.com)`
-- Bare URLs: `https://example.com`
-
-## Output
-
-### Console Output
-
-The script provides real-time feedback with colored status indicators:
-- ✅ **PASS**: Link is accessible
-- ❌ **FAIL**: Link is broken or inaccessible
-- ⚠️ **WARN**: Link skipped (e.g., requires authentication)
-- ℹ️ **INFO**: General information
-
-### Generated Files
-
-1. **`issue.md`** - Detailed report of all link validation results
-2. **`link-check.log`** - Complete log of the checking process
-
-### Sample issue.md Report
-
-```markdown
-# Link Validation Issues Report
-
-**Generated:** 2024-01-15 10:30:00
-**Total Links Checked:** 45
-**Failed Links:** 3
-**Passed Links:** 42
-
-## ❌ Failed Links (3)
-
-❌ https://broken-link.example.com (in content/modules/ROOT/pages/module-01.adoc)
-❌ https://outdated-docs.redhat.com/old-version (in content/modules/ROOT/pages/module-02.adoc)
-
-## 🔧 Recommended Actions
-
-1. Review each failed link and determine if it should be updated, removed, or replaced
-2. Common fixes include updating Red Hat documentation links to current versions
-3. After making changes, run the link checker again
+# Set GitHub token via environment variable
+export GITHUB_TOKEN=your_token_here
+python3 scripts/intelligent_link_checker.py --create-github-issue
 ```
 
 ## Configuration
 
-The link checker behavior can be customized via `link-checker-config.json`:
-
+### JSON Configuration (`scripts/link-checker-config.json`)
 ```json
 {
   "settings": {
     "timeout": 30,
     "max_redirects": 5,
-    "delay_between_checks": 1
+    "delay_between_checks": 1,
+    "user_agent": "Mozilla/5.0 (compatible; OpenShift-Workshop-LinkChecker/1.0)"
   },
   "skip_patterns": [
     "console\\.redhat\\.com.*openshift.*assisted-installer.*clusters$"
-  ]
+  ],
+  "skip_reasons": {
+    "console\\.redhat\\.com.*openshift.*assisted-installer.*clusters$": "requires authentication"
+  },
+  "output": {
+    "log_file": "link-check.log",
+    "issue_file": "issue.md",
+    "verbose": true,
+    "colors": true
+  }
 }
 ```
 
-### Key Configuration Options
+### AI Model Configuration
+The tool uses Red Hat's Granite 3.3 8B Instruct model:
+- **Endpoint**: `https://granite-3-3-8b-instruct-maas-apicast-production.apps.prod.rhoai.rh-aiservices-bu.com:443/v1`
+- **Model**: `granite-3-3-8b-instruct`
+- **Temperature**: 0.01 (focused, deterministic responses)
+- **Max Tokens**: 1024 (sufficient for detailed analysis)
 
-- **`timeout`**: Maximum time to wait for each link (seconds)
-- **`max_redirects`**: Maximum number of redirects to follow
-- **`delay_between_checks`**: Delay between link checks (seconds)
-- **`skip_patterns`**: Regex patterns for URLs to skip
+## AI Analysis Capabilities
+
+### Pattern Recognition
+The AI analyzes broken links to identify:
+- **Version Mismatches**: Links pointing to outdated OpenShift versions
+- **URL Structure Changes**: Red Hat documentation restructuring
+- **Domain Changes**: Documentation moved to new domains
+- **Authentication Issues**: Links requiring login credentials
+
+### Impact Assessment
+Evaluates how broken links affect:
+- **Workshop Flow**: Disruption to learning progression
+- **Participant Experience**: Frustration and confusion
+- **Content Authority**: Credibility of workshop materials
+- **Maintenance Burden**: Effort required for fixes
+
+### Smart Recommendations
+Provides specific actions:
+- **Version Updates**: Upgrade to current OpenShift documentation
+- **URL Corrections**: Fix typos and structural issues
+- **Alternative Sources**: Working documentation alternatives
+- **Preventive Measures**: Strategies to avoid future breaks
+
+## GitHub Issue Creation
+
+### Automatic Issue Generation
+When broken links are detected, the tool can automatically create GitHub issues with:
+
+**Issue Title**: `🔗 Broken Documentation Links Detected - X failures`
+
+**Issue Content**:
+- AI analysis of failure patterns
+- Impact assessment on workshop participants
+- Specific recommendations for each broken link
+- Structured list of all broken links by module
+- Next steps for resolution
+
+**Labels**: `documentation`, `bug`, `automated`, `link-checker`
+
+### GitHub Token Setup
+```bash
+# Set as environment variable
+export GITHUB_TOKEN=ghp_your_token_here
+
+# Or pass via command line
+python3 scripts/intelligent_link_checker.py --create-github-issue --github-repo owner/repo
+```
 
 ## CI/CD Integration
 
-### GitHub Actions
+### GitHub Actions Workflow
+The tool integrates with GitHub Actions for automated link checking:
 
-The repository includes a GitHub Actions workflow (`.github/workflows/link-checker.yml`) that:
+```yaml
+- name: Run intelligent link checker
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  run: |
+    python3 scripts/intelligent_link_checker.py --create-github-issue --github-repo ${{ github.repository }}
+```
 
-- Runs on pushes to main branch
-- Runs on pull requests
-- Runs weekly to catch external link changes
-- Comments on PRs with broken link reports
-- Creates issues for broken links found in scheduled runs
+### Workflow Triggers
+- **Push to main**: Validate documentation changes
+- **Pull Requests**: Check links before merging
+- **Scheduled**: Weekly validation to catch external changes
+- **Manual**: On-demand validation
 
-### Manual Workflow Trigger
+## Output Examples
 
-You can manually trigger the link checker workflow in GitHub Actions:
+### Console Output
+```
+2025-07-29 18:19:44,127 - INFO - 🚀 Processing Module 05: Storage
+2025-07-29 18:19:44,127 - INFO - 📄 File: content/modules/ROOT/pages/module-05-storage.adoc
+2025-07-29 18:19:44,133 - INFO - 🔗 Testing first 3 links (limited for testing)
+2025-07-29 18:19:45,841 - INFO - ✅ PASS: https://docs.redhat.com/... (1.71s)
+2025-07-29 18:19:52,388 - ERROR - ❌ FAIL: https://docs.redhat.com/... - HTTP 404
+2025-07-29 18:19:52,389 - INFO - 🤖 Performing AI analysis of link failures...
+2025-07-29 18:19:55,123 - INFO - ✅ AI analysis completed
+2025-07-29 18:19:55,456 - INFO - 🐙 Creating GitHub issue...
+2025-07-29 18:19:56,789 - INFO - ✅ GitHub issue created: https://github.com/owner/repo/issues/123
+```
 
-1. Go to the "Actions" tab in your repository
-2. Select "Link Checker" workflow
-3. Click "Run workflow"
+### Generated Report (`issue.md`)
+```markdown
+# OpenShift Bare Metal Workshop - Link Validation Report
+
+**Generated:** 2025-07-29 18:19:52
+**Total Links Checked:** 26
+**Passed Links:** 24
+**Failed Links:** 2
+**Success Rate:** 92%
+
+## 🤖 AI Analysis
+
+The broken links show a pattern of OpenShift 4.18 documentation URLs returning 404 errors, 
+indicating that Red Hat has restructured their documentation. The observability and 
+monitoring documentation appears to have moved to a new URL structure...
+
+## 🎯 Recommendations
+
+1. Update all OpenShift 4.18 links to use the current 4.19 documentation structure
+2. Replace `/html/observability/` paths with `/html-single/observability/`
+3. Verify all Red Hat documentation links use the latest available versions
+```
 
 ## Troubleshooting
 
 ### Common Issues
 
-**Script Permission Denied**
+**LangChain Import Error**
 ```bash
-chmod +x scripts/check-links.sh
+pip install langchain langchain-openai langchain-core
 ```
 
-**Missing Dependencies**
-The script requires standard Unix tools:
-- `curl` - for HTTP requests
-- `grep` - for pattern matching
-- `sed` - for text processing
-
-**False Positives**
-Some links may fail due to:
-- Rate limiting
-- Temporary server issues
-- Authentication requirements
-- Geographic restrictions
-
-### Debugging
-
-Enable verbose logging by checking the generated `link-check.log` file:
-
+**GitHub API Authentication**
 ```bash
-tail -f link-check.log
+export GITHUB_TOKEN=your_personal_access_token
 ```
 
-## Best Practices
+**AI Model Connection Issues**
+- Verify network connectivity to the Granite model endpoint
+- Check if the model service is available
+- Review model configuration in the script
 
-### For Documentation Authors
-
-1. **Test Links Locally**: Run the link checker before committing changes
-2. **Use Stable URLs**: Prefer stable, versioned documentation links
-3. **Update Regularly**: Keep links current with latest product versions
-4. **Document Skips**: If a link must be skipped, document why in comments
-
-### For Maintainers
-
-1. **Review Reports**: Regularly review generated issue reports
-2. **Update Patterns**: Add skip patterns for known problematic URLs
-3. **Monitor Trends**: Track link failure patterns over time
-4. **Automate Fixes**: Consider automated updates for common patterns
-
-## Examples
-
-### Running with Custom Timeout
-
-Modify the script or configuration to use a longer timeout for slow servers:
-
-```bash
-# Edit the timeout value in the script or config file
-timeout=60
+### Debug Mode
+Enable verbose logging by modifying the configuration:
+```json
+{
+  "output": {
+    "verbose": true,
+    "log_file": "debug-link-check.log"
+  }
+}
 ```
 
-### Checking Specific Files
+## Benefits Over Bash Version
 
-To check only specific files, modify the script's file discovery logic or create a custom version.
+### ✅ **Reliability**
+- Proper HTTP client with retry logic
+- Better error handling and reporting
+- Consistent results across environments
 
-### Integration with Other Tools
+### ✅ **Intelligence**
+- AI-powered failure analysis
+- Pattern recognition and recommendations
+- Impact assessment for broken links
 
-The link checker can be integrated with:
-- Pre-commit hooks
-- Documentation build processes
-- Continuous integration pipelines
-- Monitoring systems
+### ✅ **Automation**
+- GitHub issue creation
+- CI/CD integration
+- Structured reporting
 
-## Contributing
-
-To improve the link checker:
-
-1. Test changes thoroughly
-2. Update this documentation
-3. Consider backward compatibility
-4. Add appropriate error handling
-
-## Support
-
-For issues with the link checker:
-
-1. Check the generated `link-check.log` for detailed error information
-2. Review the `issue.md` report for specific link failures
-3. Verify network connectivity and DNS resolution
-4. Check if the issue is temporary (server maintenance, etc.)
+### ✅ **Maintainability**
+- JSON configuration
+- Modular Python code
+- Extensible architecture
 
 ---
-
-*This link checker is designed specifically for the OpenShift Bare Metal Workshop documentation and follows Red Hat documentation best practices.*
+*Enhanced with AI analysis using Red Hat's Granite 3.3 8B Instruct model*
