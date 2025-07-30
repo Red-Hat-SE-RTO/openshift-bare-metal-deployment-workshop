@@ -369,3 +369,46 @@ jobs:
           link-check.log
           issue.md
         retention-days: 30
+
+  # Job for README.adoc
+  check-readme:
+    runs-on: ubuntu-latest
+    name: Check README
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r scripts/requirements.txt
+
+    - name: Run link checker for README
+      id: link-check
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        MASS_API: ${{ secrets.MASS_API }}
+      run: |
+        echo "Running intelligent link checker for README..."
+        if python3 scripts/intelligent_link_checker.py --max-links 25 --create-github-issue --github-repo ${{ github.repository }} README.adoc; then
+          echo "link_check_result=success" >> $GITHUB_OUTPUT
+        else
+          echo "link_check_result=failure" >> $GITHUB_OUTPUT
+        fi
+      continue-on-error: true
+
+    - name: Upload link check log for README
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: link-check-log-readme
+        path: |
+          link-check.log
+          issue.md
+        retention-days: 30

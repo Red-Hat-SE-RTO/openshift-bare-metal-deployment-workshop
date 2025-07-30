@@ -4,23 +4,23 @@
 == OpenShift Virtualization [[virtualization]]
 
 === What is OpenShift Virtualization?
-link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/virtualization/getting-started#virt-getting-started[OpenShift Virtualization] enables you to run and manage virtual machines alongside containers in OpenShift Container Platform 4.18/4.19, providing a unified platform for both traditional and cloud-native workloads.
+link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/virtualization[OpenShift Virtualization] enables you to run and manage virtual machines alongside containers in OpenShift Container Platform 4.18/4.19, providing a unified platform for both traditional and cloud-native workloads.
 
 === Key Features and Capabilities
-* *VM Lifecycle Management*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/virtualization/virtual-machines#virt-creating-vms_virt-creating-and-managing-vms[Create, manage, and delete virtual machines]
-* *Live Migration*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/virtualization/live-migration#virt-about-live-migration_virt-live-migration[Migrate running VMs between nodes] without downtime
-* *Storage Integration*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/virtualization/virtual-machines#virt-about-storage-volumes-for-vm_virt-configuring-storage-for-vms[Persistent storage for VM disks]
-* *Network Configuration*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/virtualization/networking#virt-connecting-vm-to-default-pod-network_virt-networking[Advanced networking options] including SR-IOV
-* *Template Management*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/virtualization/virtual-machines#virt-creating-vm-template_virt-creating-and-managing-vms[VM templates for standardized deployments]
-* *GPU Passthrough*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/virtualization/virtual-machines#virt-configuring-gpu-passthrough_virt-configuring-storage-for-vms[Direct GPU access for VMs]
+* *VM Lifecycle Management*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/virtualization[Create, manage, and delete virtual machines]
+* *Live Migration*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/virtualization[Migrate running VMs between nodes] without downtime
+* *Storage Integration*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/virtualization[Persistent storage for VM disks]
+* *Network Configuration*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/virtualization[Advanced networking options] including SR-IOV
+* *Template Management*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/virtualization[VM templates for standardized deployments]
+* *GPU Passthrough*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/virtualization[Direct GPU access for VMs]
 
 === Prerequisites for OpenShift Virtualization
 Before installing OpenShift Virtualization, ensure:
 
-* *Hardware Requirements*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/virtualization/preparing-cluster-for-virt#virt-cluster-resource-requirements_preparing-cluster-for-virt[Nodes with hardware virtualization support]
+* *Hardware Requirements*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/virtualization[Nodes with hardware virtualization support]
 * *CPU Features*: Intel VT-x or AMD-V virtualization extensions
 * *Memory*: Sufficient RAM for both containers and virtual machines
-* *Storage*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/virtualization/virtual-machines#virt-about-storage-volumes-for-vm_virt-configuring-storage-for-vms[ReadWriteMany (RWX) storage] for live migration
+* *Storage*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/virtualization[ReadWriteMany (RWX) storage] for live migration
 * *Network*: Proper network configuration for VM connectivity
 
 === Installing OpenShift Virtualization
@@ -164,7 +164,7 @@ virtctl ssh cloud-user@rhel8-vm
 ```
 
 === Use Cases for OpenShift Virtualization
-* *Legacy Application Migration*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/virtualization/getting-started#virt-getting-started[Migrate existing VMs to OpenShift]
+* *Legacy Application Migration*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/virtualization[Migrate existing VMs to OpenShift]
 * *Mixed Workload Environments*: Run VMs and containers on the same infrastructure
 * *Development and Testing*: Provide isolated VM environments for development
 * *Application Modernization*: Gradual migration from VMs to containers
@@ -175,7 +175,7 @@ virtctl ssh cloud-user@rhel8-vm
 For organizations migrating from VMware vSphere to OpenShift Virtualization, the VMware Virtual Disk Development Kit (VDDK) provides optimized disk transfer capabilities.
 
 ==== What is VDDK?
-The link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/virtualization/virtual-machines#virt-about-vddk_virt-migrating-vms-web-console[VMware Virtual Disk Development Kit (VDDK)] is a collection of C libraries, code samples, utilities, and documentation to help you create applications that access VMware virtual disk files. For OpenShift Virtualization, VDDK enables faster and more efficient migration of VMware VMs.
+The link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/virtualization[VMware Virtual Disk Development Kit (VDDK)] is a collection of C libraries, code samples, utilities, and documentation to help you create applications that access VMware virtual disk files. For OpenShift Virtualization, VDDK enables faster and more efficient migration of VMware VMs.
 
 ==== Benefits of Using VDDK
 * **Faster Migration**: Direct access to VMware virtual disks
@@ -427,7 +427,7 @@ link:https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/
 Before installing OpenShift AI, ensure:
 
 * *Cluster Resources*: Sufficient CPU, memory, and storage for AI workloads
-* *GPU Support*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/specialized_hardware_and_driver_enablement/gpu-device-plugin[NVIDIA GPU Operator] for GPU acceleration
+* *GPU Support*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/hardware_accelerators[NVIDIA GPU Operator] for GPU acceleration
 * *Storage*: High-performance storage for datasets and model artifacts
 * *Network*: High-bandwidth networking for distributed training
 
@@ -572,28 +572,28 @@ spec:
 == Additional Optional Features [[additional]]
 
 === OpenShift Serverless (Knative)
-link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/serverless/about-serverless[OpenShift Serverless] provides serverless computing capabilities:
+link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/serverless[OpenShift Serverless] provides serverless computing capabilities:
 
 * *Knative Serving*: Auto-scaling serverless applications
 * *Knative Eventing*: Event-driven architectures
 * *Function-as-a-Service*: Serverless function deployment
 
 === OpenShift Service Mesh (Istio)
-link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/service_mesh/service-mesh-2-x[OpenShift Service Mesh] provides advanced traffic management:
+link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/service_mesh[OpenShift Service Mesh] provides advanced traffic management:
 
 * *Traffic Management*: Advanced routing and load balancing
 * *Security*: mTLS and security policies
 * *Observability*: Distributed tracing and metrics
 
 === OpenShift GitOps (ArgoCD)
-link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/cicd/gitops[OpenShift GitOps] enables GitOps-based deployments:
+link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/gitops[OpenShift GitOps] enables GitOps-based deployments:
 
 * *Declarative Configuration*: Git-based configuration management
 * *Automated Deployments*: Continuous deployment from Git repositories
 * *Multi-Cluster Management*: Manage multiple clusters from a single interface
 
 === OpenShift Pipelines (Tekton)
-link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/cicd/pipelines[OpenShift Pipelines] provides cloud-native CI/CD:
+link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/pipelines[OpenShift Pipelines] provides cloud-native CI/CD:
 
 * *Cloud-Native Pipelines*: Kubernetes-native CI/CD pipelines
 * *Reusable Tasks*: Modular pipeline components
@@ -635,14 +635,14 @@ link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/
 For detailed information about optional features, refer to:
 
 === OpenShift Virtualization Resources
-* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/virtualization/getting-started[Getting started with OpenShift Virtualization - OpenShift 4.18]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/virtualization[Getting started with OpenShift Virtualization - OpenShift 4.19]
 * link:https://redhatquickcourses.github.io/architect-the-ocpvirt/Red%20Hat%20OpenShift%20Virtualization%20-%20Architect%20the%20OpenShift%20Virtualization/1/index.html[Red Hat OpenShift Virtualization - Architect the OpenShift Virtualization Quick Course]
 
 === OpenShift AI and Additional Features
 * link:https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.14/html/introduction_to_red_hat_openshift_ai/index[Introduction to Red Hat OpenShift AI]
-* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/serverless/about-serverless[About OpenShift Serverless - OpenShift 4.18]
-* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/service_mesh/service-mesh-2-x[Service Mesh 2.x - OpenShift 4.18]
-* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/cicd/gitops[GitOps - OpenShift 4.18]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/serverless[About OpenShift Serverless - OpenShift 4.19]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/service_mesh[Service Mesh 2.x - OpenShift 4.19]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/gitops[GitOps - OpenShift 4.19]
 
 == Workshop Conclusion [[conclusion]]
 
@@ -670,6 +670,5 @@ For continued learning and support, refer to these authoritative resources:
 * link:https://www.redhat.com/en/technologies/cloud-computing/openshift/virtualization[OpenShift Virtualization Product Page]
 * link:https://www.redhat.com/en/technologies/cloud-computing/openshift/openshift-ai[OpenShift AI Product Page]
 * link:https://access.redhat.com/support[Red Hat Customer Portal and Support]
-* link:https://learn.redhat.com/[Red Hat Learning Platform]
 
 Thank you for completing this comprehensive workshop on OpenShift 4.18/4.19 bare metal deployment!

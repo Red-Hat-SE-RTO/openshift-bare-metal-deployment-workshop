@@ -48,16 +48,16 @@ xref:module-04-deployment-agent.adoc[Start Module 4 →]
 === Module 5: Storage Configuration using OpenShift Data Foundation
 * link:https://docs.redhat.com/en/documentation/red_hat_openshift_data_foundation/4.18/html/planning_your_deployment/index[OpenShift Data Foundation planning] and architecture
 * link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/storage/persistent-storage-local[Local Storage Operator installation] and configuration
-* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/registry/configuring-registry-storage[Image registry storage configuration] and optimization
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/registry/setting-up-and-configuring-the-registry[Image registry storage configuration] and optimization
 * link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/backup_and_restore/oadp-application-backup-and-restore[Backup and disaster recovery] strategies
 xref:module-05-storage.adoc[Start Module 5 →]
 
 [.card.card-6]
 === Module 6: Advanced Network Configuration using Nmstate
-* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking/k8s-nmstate-about-the-k8s-nmstate-operator[Nmstate Operator overview] and installation
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking_operators/k8s-nmstate-about-the-k8s-nmstate-operator[Nmstate Operator overview] and installation
 * link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/hardware_networks/about-sriov[SR-IOV networking configuration] for high-performance workloads
-* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/hardware_networks/configuring-additional-network[NetworkAttachmentDefinitions] and multi-network configurations
-* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking/network-security[Network policies and security] implementation
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/hardware_networks/index[NetworkAttachmentDefinitions] and multi-network configurations
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/network_security/index[Network policies and security] implementation
 xref:module-06-networking.adoc[Start Module 6 →]
 
 [.card.card-7]
@@ -84,7 +84,7 @@ xref:module-07-optional.adoc[Start Module 7 →]
 
 === Storage and Networking Resources
 * link:https://docs.redhat.com/en/documentation/red_hat_openshift_data_foundation/4.18/[OpenShift Data Foundation 4.18 Documentation]
-* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking/understanding-networking[OpenShift 4.18 Networking Guide]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking_overview/index[OpenShift 4.18 Networking Guide]
 * link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/storage/understanding-persistent-storage[OpenShift 4.18 Storage Guide]
 
 === Optional Features Documentation

@@ -75,15 +75,24 @@ echo "✅ Pull secret downloaded and secured"
 === Download OpenShift Installer (For Agent-based Method)
 The link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#installing-ocp-agent-gather_preparing-to-install-with-agent-based-installer[openshift-install binary] is required for Agent-based installations:
 
+[NOTE]
+====
+The binary download URLs below point to the OpenShift mirror repository. If you encounter download issues, you can:
+
+1. Browse to link:https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/[OpenShift Client Downloads] to find available versions
+2. Use the link:https://console.redhat.com/openshift/downloads[Red Hat OpenShift Console Downloads] page for the latest stable releases
+3. Check the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#installing-ocp-agent-install[official installation documentation] for alternative download methods
+====
+
 ```bash
 # Note: Assisted Installer doesn't require local installer binary
 # Agent-based Installer requires the openshift-install binary
 
 # For OpenShift 4.18:
-wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable-4.18/openshift-install-linux.tar.gz
+wget https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable-4.18/openshift-install-linux.tar.gz
 
 # For OpenShift 4.19:
-wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable-4.19/openshift-install-linux.tar.gz
+wget https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable-4.19/openshift-install-linux.tar.gz
 
 # Extract and install:
 tar -xzf openshift-install-linux.tar.gz
@@ -98,7 +107,7 @@ echo "✅ OpenShift installer ready for Agent-based deployment"
 === Download Additional Tools (Recommended)
 ```bash
 # Download oc CLI tool for cluster management
-wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz
+wget https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/latest/openshift-client-linux.tar.gz
 tar -xzf openshift-client-linux.tar.gz
 sudo mv oc kubectl /usr/local/bin/
 
@@ -345,8 +354,8 @@ cat > dns-config.txt << 'EOF'
 # Example: *.apps.ocp4.example.com IN A 192.168.1.101
 
 ## Your DNS Configuration:
-Cluster Name: [your-cluster-name]
-Base Domain: [your-base-domain]
+Cluster Name: cluster
+Base Domain: example.com
 API VIP/LB IP: [api-ip-address]
 Ingress VIP/LB IP: [ingress-ip-address]
 EOF

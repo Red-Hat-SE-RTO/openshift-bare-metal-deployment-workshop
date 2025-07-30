@@ -344,37 +344,52 @@ hosts:
 
 == E3: Mirror Registry Setup - Disconnected Image Storage [[e3-mirror-registry]]
 
-For air-gapped environments, the Agent-based Installer requires a local mirror registry containing all necessary OpenShift images. This section covers the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/understanding-disconnected-installation-mirroring[disconnected installation mirroring] process.
+For air-gapped environments, the Agent-based Installer requires a local mirror registry containing all necessary OpenShift images. This section covers the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/understanding-disconnected-installation-mirroring[disconnected installation mirroring] process using the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/disconnected_environments/mirroring-in-disconnected-environments#installing-mirroring-creating-registry[mirror registry for Red Hat OpenShift].
+
+[NOTE]
+====
+The **mirror registry for Red Hat OpenShift** is a small-scale container registry included with OpenShift Container Platform subscriptions. It provides a streamlined way to create a local mirror of OpenShift images for disconnected installations. The tool is available from the link:https://console.redhat.com/openshift/downloads#tool-mirror-registry[OpenShift Console Downloads page] and as open source at link:https://github.com/quay/mirror-registry[GitHub].
+====
 
 === Documentation References
 * **Mirroring Guide**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/understanding-disconnected-installation-mirroring#agent-install-mirroring-images-disconnected_understanding-disconnected-installation-mirroring[Mirroring images for disconnected installation] - Complete mirroring process
+* **Mirror Registry Setup**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/disconnected_environments/mirroring-in-disconnected-environments#mirror-registry-localhost_installing-mirroring-creating-registry[Mirror registry for Red Hat OpenShift installation] - Official mirror registry setup guide
 * **Mirror Registry Configuration**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/understanding-disconnected-installation-mirroring#configuring-the-agent-based-installer-to-use-mirrored-images[Configuring Agent-based Installer to use mirrored images] - Configuration guide
 * **oc-mirror Plugin**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html-single/disconnected_environments/#about-installing-oc-mirror-v2[Mirroring with oc-mirror plugin v2] - Advanced mirroring tool
+* **Mirror Registry Downloads**: link:https://console.redhat.com/openshift/downloads#tool-mirror-registry[OpenShift Console Downloads] - Official download location for mirror-registry tool
 
 === Setting Up Mirror Registry
 
-Establish a local container registry for storing mirrored OpenShift images:
+Establish a local container registry for storing mirrored OpenShift images using the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/disconnected_environments/mirroring-in-disconnected-environments#mirror-registry-localhost_installing-mirroring-creating-registry[mirror registry for Red Hat OpenShift]:
 
 ```bash
 # Install and configure mirror registry
 echo "=== Setting Up Mirror Registry ==="
 
 # Option 1: Using mirror-registry tool (recommended)
-# Download mirror-registry from Red Hat
-curl -O https://developers.redhat.com/content-gateway/rest/mirror/pub/openshift-v4/clients/mirror-registry/latest/mirror-registry.tar.gz
+# Download mirror-registry from Red Hat OpenShift Console Downloads page
+# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/disconnected_environments/mirroring-in-disconnected-environments#mirror-registry-localhost_installing-mirroring-creating-registry
+echo "=== Downloading Mirror Registry for Red Hat OpenShift ==="
+echo "Primary download location: https://console.redhat.com/openshift/downloads#tool-mirror-registry"
+echo "Alternative GitHub releases: https://github.com/quay/mirror-registry/releases"
+
+# Download from GitHub releases (latest version)
+curl -L -O https://github.com/quay/mirror-registry/releases/latest/download/mirror-registry.tar.gz
+
+# Verify download
+echo "Downloaded mirror-registry.tar.gz - verifying archive..."
+tar -tzf mirror-registry.tar.gz | head -5
 
 # Extract and install
 tar -xzf mirror-registry.tar.gz
-sudo ./mirror-registry install \
+./mirror-registry install \
   --quayHostname mirror.example.com \
   --quayRoot /opt/quay \
-  --pgStorage /opt/quay-postgres \
-  --sslCert /path/to/ssl.crt \
-  --sslKey /path/to/ssl.key
+  --verbose
 
 # Option 2: Using existing registry (if available)
 # Configure existing registry for OpenShift mirroring
-echo "Using existing registry at mirror.example.com:5000"
+echo "Alternative: Using existing registry at mirror.example.com:5000"
 ```
 
 === Mirroring OpenShift Release Images
@@ -460,10 +475,12 @@ For advanced mirroring scenarios, use the link:https://docs.redhat.com/en/docume
 # Using oc-mirror plugin for advanced mirroring
 echo "=== Using oc-mirror Plugin ==="
 
-# Install oc-mirror plugin
+# Install oc-mirror plugin from official OpenShift mirror
+# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html-single/disconnected_environments/#installing-oc-mirror-v2
 curl -O https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable/oc-mirror.tar.gz
 tar -xzf oc-mirror.tar.gz
 sudo mv oc-mirror /usr/local/bin/
+chmod +x /usr/local/bin/oc-mirror
 
 # Create ImageSetConfiguration
 cat > imageset-config.yaml << EOF

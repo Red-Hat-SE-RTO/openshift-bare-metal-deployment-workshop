@@ -146,9 +146,9 @@ link:https://red-hat-se-rto.github.io/se-redhat-rto-workshop-template/[red-hat-s
 * link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/[Agent-based Installer Documentation] - Disconnected installations
 
 === Platform and Tools
-* link:https://rhdp.redhat.com/[Red Hat Demo Platform (RHDP)] - Lab environments
+* link:https://connect.redhat.com/en/training/demo-platform[Red Hat Demo Platform (RHDP)] - Lab environments
 * link:https://console.redhat.com/openshift/[Red Hat Hybrid Cloud Console] - Assisted Installer access
-* link:https://www.openshift.com/solutions/data-foundation[OpenShift Data Foundation] - Enterprise storage solution
+* link:https://www.redhat.com/en/technologies/cloud-computing/openshift-data-foundation[OpenShift Data Foundation] - Enterprise storage solution
 
 === Advanced Features
 * link:https://docs.openshift.com/container-platform/4.18/virt/about-virt.html[OpenShift Virtualization Documentation]

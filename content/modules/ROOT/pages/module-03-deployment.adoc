@@ -109,10 +109,10 @@ cat > cluster-configuration.txt << 'EOF'
 # Reference: https://docs.redhat.com/en/documentation/assisted_installer_for_openshift_container_platform/2025/html/installing_openshift_container_platform_with_the_assisted_installer/installing-with-ui#setting-the-cluster-details_installing-with-ui
 
 ## Basic Cluster Information:
-Cluster Name: [your-cluster-name]
+Cluster Name: cluster
 # Requirements: 1-54 characters, lowercase letters, numbers, hyphens
 
-Base Domain: [your-base-domain]
+Base Domain: example.com
 # Must be a valid DNS domain you control
 # Example: example.com, lab.company.com
 
@@ -242,7 +242,7 @@ cat > discovery-iso-process.txt << 'EOF'
    - Pull secret for image access
 
 ## ISO Characteristics:
-ISO Name: discovery_image_[cluster-name].iso
+ISO Name: discovery_image_cluster.iso
 Size: ~1GB (approximate, includes RHCOS live image)
 Boot Type: UEFI and Legacy BIOS compatible
 Network: Pre-configured for your cluster network settings
@@ -450,7 +450,7 @@ cat > installation-progress.txt << 'EOF'
 
 ## Installation Initiated:
 Start Time: [timestamp]
-Cluster Name: [cluster-name]
+Cluster Name: cluster
 OpenShift Version: [version]
 Installation Method: Assisted Installer (cloud-guided)
 Expected Duration: 45-90 minutes (varies by hardware and network)
@@ -521,8 +521,8 @@ Total Duration: [duration]
 Status: [Success/Failed]
 
 ## Cluster Access Information (provided by Assisted Installer):
-Console URL: https://console-openshift-console.apps.[cluster-name].[base-domain]
-API URL: https://api.[cluster-name].[base-domain]:6443
+Console URL: https://console-openshift-console.apps.cluster.example.com
+API URL: https://api.cluster.example.com:6443
 kubeadmin Password: [provided-by-assisted-installer]
 # Note: kubeadmin is temporary admin user - create proper users post-installation
 
@@ -600,7 +600,7 @@ cat > post-installation-resources.txt << 'EOF'
 ## Cluster Management:
 - OpenShift Console: Available via cluster URL
 - CLI Access: Use downloaded kubeconfig file
-- API Access: Available via api.[cluster-name].[base-domain]:6443
+- API Access: Available via api.cluster.example.com:6443
 EOF
 
 echo "✅ Post-installation resources documented"

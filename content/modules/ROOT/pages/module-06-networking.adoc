@@ -545,7 +545,7 @@ wget -qO- http://target-service:8080
 === Network Monitoring and Metrics
 Monitor network performance and health:
 
-* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/observability/#monitoring-overview[Prometheus Metrics]*: Network performance metrics
+* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/network_observability/metrics-dashboards-alerts[Prometheus Metrics]*: Network performance metrics
 * *Flow Monitoring*: Network traffic analysis
 * *Policy Violations*: Network policy enforcement monitoring
 * *Ingress Metrics*: Application traffic monitoring
