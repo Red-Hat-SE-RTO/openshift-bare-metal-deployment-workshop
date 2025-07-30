@@ -815,6 +815,8 @@ echo "C5 - BIOS Configuration: ✅"
 Continue to your chosen installation method based on your environment requirements.
 
 == Next Steps
+
 Ready to Deploy? 
+
 * For connected environments, proceed to xref:module-03-deployment.adoc[Module 3: Deploying OpenShift using Assisted Installer].
 * For disconnected environments, proceed to xref:module-04-deployment-agent.adoc[Module 4: Deploying OpenShift using Agent-based Installer].
