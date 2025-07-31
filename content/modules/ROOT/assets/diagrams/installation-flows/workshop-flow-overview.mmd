@@ -1,0 +1,81 @@
+graph TD
+    %% Knowledge Graph: OpenShift 4.18/4.19 Bare Metal Deployment Workshop
+
+    %% Core Concepts
+    OCP[OpenShift 4.18/4.19<br/>Enterprise Kubernetes Platform] --> RHCOS[Red Hat Enterprise Linux CoreOS<br/>Immutable Operating System]
+    OCP --> K8S[Kubernetes 1.31/1.32<br/>Container Orchestration]
+
+    %% Module 1: Foundation Knowledge
+    A[Module 1: Introduction<br/>Foundation Concepts] --> A1[Platform Architecture<br/>Components & Benefits]
+    A --> A2[Installation Methods<br/>Assisted vs Agent-based]
+    A --> A3[Workshop Learning Path<br/>Structured Approach]
+
+    %% Installation Method Decision
+    A --> B{Installation Method<br/>Decision Point}
+    B -->|Connected Environment<br/>Web-based UI| D[Module 3: Assisted Installer<br/>Cloud-guided Installation]
+    B -->|Disconnected Environment<br/>CLI-based| E[Module 4: Agent-based Installer<br/>Air-gapped Installation]
+
+    %% Module 2: Essential Infrastructure (Streamlined)
+    A --> C[Module 2: Infrastructure Prep<br/>Essential Requirements Only]
+    C --> C1[Red Hat Account & Resources<br/>Pull Secret & Tools]
+    C --> C2[Hardware & DNS Planning<br/>Inventory & Network Requirements]
+    C --> C3[Boot Preparation<br/>BIOS & Discovery Methods]
+
+    %% Assisted Installer Knowledge Path
+    D --> D1[Red Hat Console Access<br/>Web-based Configuration]
+    D --> D2[Cluster Configuration<br/>Network, Nodes, Features]
+    D --> D3[Discovery ISO Generation<br/>Custom Boot Media]
+    D --> D4[Hardware Discovery<br/>Automatic Detection & Validation]
+    D --> D5[Installation Monitoring<br/>Real-time Progress Tracking]
+
+    %% Agent-based Installer Knowledge Path
+    E --> E1[install-config.yaml<br/>Declarative Configuration]
+    E --> E2[agent-config.yaml<br/>Node-specific Settings]
+    E --> E3[Mirror Registry Setup<br/>Disconnected Image Storage]
+    E --> E4[Agent ISO Creation<br/>Self-contained Installation]
+    E --> E5[Offline Installation<br/>Air-gapped Deployment]
+
+    %% Key Installer Features (Knowledge Nodes)
+    DISCOVERY[Discovery Process<br/>Automatic Hardware Detection] --> D4
+    DISCOVERY --> E4
+    VIP[Virtual IP Management<br/>No External Load Balancer] --> D
+    VIP --> E
+    NOBOOTSTRAP[No Bootstrap Node<br/>Simplified Architecture] --> D
+    NOBOOTSTRAP --> E
+
+    %% Cluster Configurations
+    STANDARD[Standard HA Cluster<br/>3 Control + 2+ Workers] --> C2
+    COMPACT[Compact Cluster<br/>3 Nodes Control+Worker] --> C2
+
+    %% Post-Installation Modules
+    C --> F[Module 5: Storage<br/>OpenShift Data Foundation]
+    D --> F
+    E --> F
+
+    F --> G[Module 6: Networking<br/>Advanced Network Config]
+    G --> H[Module 7: Optional Features<br/>Virtualization & AI/ML]
+
+    %% Knowledge Relationships
+    RHCOS -.-> C5
+    K8S -.-> A1
+    OCP -.-> A1
+
+    %% Styling for Knowledge Graph
+    style A fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    style B fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style C fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    style D fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+    style E fill:#fff8e1,stroke:#e65100,stroke-width:2px
+    style F fill:#fce4ec,stroke:#880e4f,stroke-width:2px
+    style G fill:#e0f2f1,stroke:#004d40,stroke-width:2px
+    style H fill:#f1f8e9,stroke:#33691e,stroke-width:2px
+
+    %% Knowledge Node Styling
+    style OCP fill:#ffecb3,stroke:#ff8f00,stroke-width:3px
+    style RHCOS fill:#ffecb3,stroke:#ff8f00,stroke-width:2px
+    style K8S fill:#ffecb3,stroke:#ff8f00,stroke-width:2px
+    style DISCOVERY fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    style VIP fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    style NOBOOTSTRAP fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    style STANDARD fill:#e1bee7,stroke:#7b1fa2,stroke-width:2px
+    style COMPACT fill:#e1bee7,stroke:#7b1fa2,stroke-width:2px

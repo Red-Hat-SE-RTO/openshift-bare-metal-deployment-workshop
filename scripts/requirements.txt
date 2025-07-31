@@ -1,0 +1,15 @@
+# OpenShift Workshop Link Checker - Python Dependencies
+requests>=2.31.0
+urllib3>=2.0.0
+
+# LangChain dependencies for AI analysis
+langchain>=0.1.0
+langchain-openai>=0.1.0
+langchain-core>=0.1.0
+langchain-community>=0.1.0
+
+# Web search capabilities
+ddgs>=8.0.0
+
+# Environment variable management
+python-dotenv>=1.0.0

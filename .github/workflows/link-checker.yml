@@ -1,0 +1,414 @@
+name: Link Checker
+
+on:
+  # Run on push to any branch
+  push:
+    paths:
+      - 'content/modules/ROOT/pages/**/*.adoc'
+      - 'README.adoc'
+      - 'scripts/intelligent_link_checker.py'
+      - 'scripts/requirements.txt'
+      - '.github/workflows/link-checker.yml'
+
+  # Run on pull requests to any branch
+  pull_request:
+    paths:
+      - 'content/modules/ROOT/pages/**/*.adoc'
+      - 'README.adoc'
+      - 'scripts/intelligent_link_checker.py'
+      - 'scripts/requirements.txt'
+      - '.github/workflows/link-checker.yml'
+
+  # Allow manual triggering
+  workflow_dispatch:
+
+  # Run weekly to catch external link changes
+  schedule:
+    - cron: '0 6 * * 1'  # Every Monday at 6 AM UTC
+
+jobs:
+  # Job for module-01-introduction
+  check-module-01:
+    runs-on: ubuntu-latest
+    name: Check Module 01 - Introduction
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r scripts/requirements.txt
+
+    - name: Run link checker for Module 01
+      id: link-check
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        MASS_API: ${{ secrets.MASS_API }}
+      run: |
+        echo "Running intelligent link checker for Module 01..."
+        if python3 scripts/intelligent_link_checker.py --max-links 25 --create-github-issue --github-repo ${{ github.repository }} content/modules/ROOT/pages/module-01-introduction.adoc; then
+          echo "link_check_result=success" >> $GITHUB_OUTPUT
+        else
+          echo "link_check_result=failure" >> $GITHUB_OUTPUT
+        fi
+      continue-on-error: true
+
+    - name: Upload link check log for Module 01
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: link-check-log-module-01
+        path: |
+          link-check.log
+          issue.md
+        retention-days: 30
+
+  # Job for module-02-infrastructure
+  check-module-02:
+    runs-on: ubuntu-latest
+    name: Check Module 02 - Infrastructure
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r scripts/requirements.txt
+
+    - name: Run link checker for Module 02
+      id: link-check
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        MASS_API: ${{ secrets.MASS_API }}
+      run: |
+        echo "Running intelligent link checker for Module 02..."
+        if python3 scripts/intelligent_link_checker.py --max-links 25 --create-github-issue --github-repo ${{ github.repository }} content/modules/ROOT/pages/module-02-infrastructure.adoc; then
+          echo "link_check_result=success" >> $GITHUB_OUTPUT
+        else
+          echo "link_check_result=failure" >> $GITHUB_OUTPUT
+        fi
+      continue-on-error: true
+
+    - name: Upload link check log for Module 02
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: link-check-log-module-02
+        path: |
+          link-check.log
+          issue.md
+        retention-days: 30
+
+  # Job for module-03-deployment
+  check-module-03:
+    runs-on: ubuntu-latest
+    name: Check Module 03 - Deployment
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r scripts/requirements.txt
+
+    - name: Run link checker for Module 03
+      id: link-check
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        MASS_API: ${{ secrets.MASS_API }}
+      run: |
+        echo "Running intelligent link checker for Module 03..."
+        if python3 scripts/intelligent_link_checker.py --max-links 25 --create-github-issue --github-repo ${{ github.repository }} content/modules/ROOT/pages/module-03-deployment.adoc; then
+          echo "link_check_result=success" >> $GITHUB_OUTPUT
+        else
+          echo "link_check_result=failure" >> $GITHUB_OUTPUT
+        fi
+      continue-on-error: true
+
+    - name: Upload link check log for Module 03
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: link-check-log-module-03
+        path: |
+          link-check.log
+          issue.md
+        retention-days: 30
+  # Job for module-04-deployment-agent
+  check-module-04:
+    runs-on: ubuntu-latest
+    name: Check Module 04 - Deployment Agent
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r scripts/requirements.txt
+
+    - name: Run link checker for Module 04
+      id: link-check
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        MASS_API: ${{ secrets.MASS_API }}
+      run: |
+        echo "Running intelligent link checker for Module 04..."
+        if python3 scripts/intelligent_link_checker.py --max-links 25 --create-github-issue --github-repo ${{ github.repository }} content/modules/ROOT/pages/module-04-deployment-agent.adoc; then
+          echo "link_check_result=success" >> $GITHUB_OUTPUT
+        else
+          echo "link_check_result=failure" >> $GITHUB_OUTPUT
+        fi
+      continue-on-error: true
+
+    - name: Upload link check log for Module 04
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: link-check-log-module-04
+        path: |
+          link-check.log
+          issue.md
+        retention-days: 30
+
+  # Job for module-05-storage
+  check-module-05:
+    runs-on: ubuntu-latest
+    name: Check Module 05 - Storage
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r scripts/requirements.txt
+
+    - name: Run link checker for Module 05
+      id: link-check
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        MASS_API: ${{ secrets.MASS_API }}
+      run: |
+        echo "Running intelligent link checker for Module 05..."
+        if python3 scripts/intelligent_link_checker.py --max-links 25 --create-github-issue --github-repo ${{ github.repository }} content/modules/ROOT/pages/module-05-storage.adoc; then
+          echo "link_check_result=success" >> $GITHUB_OUTPUT
+        else
+          echo "link_check_result=failure" >> $GITHUB_OUTPUT
+        fi
+      continue-on-error: true
+
+    - name: Upload link check log for Module 05
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: link-check-log-module-05
+        path: |
+          link-check.log
+          issue.md
+        retention-days: 30
+
+  # Job for module-06-networking
+  check-module-06:
+    runs-on: ubuntu-latest
+    name: Check Module 06 - Networking
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r scripts/requirements.txt
+
+    - name: Run link checker for Module 06
+      id: link-check
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        MASS_API: ${{ secrets.MASS_API }}
+      run: |
+        echo "Running intelligent link checker for Module 06..."
+        if python3 scripts/intelligent_link_checker.py --max-links 25 --create-github-issue --github-repo ${{ github.repository }} content/modules/ROOT/pages/module-06-networking.adoc; then
+          echo "link_check_result=success" >> $GITHUB_OUTPUT
+        else
+          echo "link_check_result=failure" >> $GITHUB_OUTPUT
+        fi
+      continue-on-error: true
+
+    - name: Upload link check log for Module 06
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: link-check-log-module-06
+        path: |
+          link-check.log
+          issue.md
+        retention-days: 30
+
+  # Job for module-07-optional
+  check-module-07:
+    runs-on: ubuntu-latest
+    name: Check Module 07 - Optional
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r scripts/requirements.txt
+
+    - name: Run link checker for Module 07
+      id: link-check
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        MASS_API: ${{ secrets.MASS_API }}
+      run: |
+        echo "Running intelligent link checker for Module 07..."
+        if python3 scripts/intelligent_link_checker.py --max-links 25 --create-github-issue --github-repo ${{ github.repository }} content/modules/ROOT/pages/module-07-optional.adoc; then
+          echo "link_check_result=success" >> $GITHUB_OUTPUT
+        else
+          echo "link_check_result=failure" >> $GITHUB_OUTPUT
+        fi
+      continue-on-error: true
+
+    - name: Upload link check log for Module 07
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: link-check-log-module-07
+        path: |
+          link-check.log
+          issue.md
+        retention-days: 30
+
+  # Job for index page
+  check-index:
+    runs-on: ubuntu-latest
+    name: Check Index Page
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r scripts/requirements.txt
+
+    - name: Run link checker for Index
+      id: link-check
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        MASS_API: ${{ secrets.MASS_API }}
+      run: |
+        echo "Running intelligent link checker for Index..."
+        if python3 scripts/intelligent_link_checker.py --max-links 25 --create-github-issue --github-repo ${{ github.repository }} content/modules/ROOT/pages/index.adoc; then
+          echo "link_check_result=success" >> $GITHUB_OUTPUT
+        else
+          echo "link_check_result=failure" >> $GITHUB_OUTPUT
+        fi
+      continue-on-error: true
+
+    - name: Upload link check log for Index
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: link-check-log-index
+        path: |
+          link-check.log
+          issue.md
+        retention-days: 30
+
+  # Job for README.adoc
+  check-readme:
+    runs-on: ubuntu-latest
+    name: Check README
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r scripts/requirements.txt
+
+    - name: Run link checker for README
+      id: link-check
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        MASS_API: ${{ secrets.MASS_API }}
+      run: |
+        echo "Running intelligent link checker for README..."
+        if python3 scripts/intelligent_link_checker.py --max-links 25 --create-github-issue --github-repo ${{ github.repository }} README.adoc; then
+          echo "link_check_result=success" >> $GITHUB_OUTPUT
+        else
+          echo "link_check_result=failure" >> $GITHUB_OUTPUT
+        fi
+      continue-on-error: true
+
+    - name: Upload link check log for README
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: link-check-log-readme
+        path: |
+          link-check.log
+          issue.md
+        retention-days: 30

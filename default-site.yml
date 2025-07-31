@@ -1,6 +1,6 @@
 ---
 site:
-  title: "OpenShift 4.16+ Bare Metal Deployment Workshop!"  
+  title: "OpenShift 4.18/4.19 Bare Metal Deployment Workshop!"  
   # url: https://redhat-scholars.github.io/course-template
   start_page: modules::index.adoc
 

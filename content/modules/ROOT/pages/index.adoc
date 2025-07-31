@@ -1,14 +1,14 @@
-= OpenShift 4.16+ Bare Metal Deployment Workshop
+= OpenShift 4.18/4.19 Bare Metal Deployment Workshop
 :page-layout: home
 :!sectids:
 
 [.text-center.strong]
-== Welcome to the OpenShift 4.16+ Bare Metal Deployment Workshop!
+== Welcome to the OpenShift 4.18/4.19 Bare Metal Deployment Workshop!
 
-This comprehensive workshop is designed to provide you with hands-on experience in deploying OpenShift 4.16+ on bare metal infrastructure. Whether you're an infrastructure administrator or a platform engineer, this workshop will equip you with the knowledge and skills needed to successfully deploy and manage OpenShift in your environment.
+This comprehensive workshop is designed to provide you with hands-on experience in deploying link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/[OpenShift Container Platform 4.18] and link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/[4.19] on bare metal infrastructure. Whether you're an infrastructure administrator or a platform engineer, this workshop will equip you with the knowledge and skills needed to successfully deploy and manage the latest OpenShift versions in your environment, with every statement backed by authoritative Red Hat documentation.
 
 [.text-center]
-image::redhat-logo.png[Red Hat Logo,400,400]
+image::openshift-logo.jpeg[Red Hat Logo,400,400]
 
 [.text-center]
 *Ready to begin? Select a module below to get started!*
@@ -17,55 +17,88 @@ image::redhat-logo.png[Red Hat Logo,400,400]
 == Workshop Modules
 
 [.card.card-1]
-=== Module 1: Introduction to OpenShift
-* Overview of OpenShift features for bare metal deployments
-* Key benefits for modern workloads
+=== Module 1: Introduction to OpenShift 4.18/4.19
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/architecture/architecture-overview[Overview of OpenShift 4.18/4.19 features] for bare metal deployments
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/release_notes/ocp-4-18-release-notes[Key benefits and new capabilities] for modern workloads
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on_bare_metal/preparing-to-install-on-bare-metal[Installation methods] comparison and selection
 xref:module-01-introduction.adoc[Start Module 1 →]
 
 [.card.card-2]
-=== Module 2: Prerequisites and the Pre-Flight Checklist
-* Hardware prerequisites: Control plane, worker nodes, and network requirements
-* Setting up BIOS/firmware, network and storage
+=== Module 2: Prerequisites and Infrastructure for OpenShift 4.18/4.19
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on_bare_metal/user-provisioned-infrastructure#minimum-resource-requirements_installing-bare-metal[Hardware requirements]: Control plane, worker nodes, and network specifications
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on_bare_metal/preparing-to-install-on-bare-metal[BIOS/firmware configuration], network planning, and storage preparation
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installation_overview/installing-fips[Security considerations] including FIPS compliance
 xref:module-02-infrastructure.adoc[Start Module 2 →]
 
 [.card.card-3]
-=== 3. OpenShift Installation and Configuration with the Assisted Installer
-* Step-by-step guide using the *Assisted Installer*:
-* *Assisted Installer*: Simplifies cluster installation with an intuitive web interface
+=== Module 3: Deploying OpenShift using Assisted Installer
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on-premise_with_assisted_installer/installing-on-prem-assisted[Step-by-step Assisted Installer guide] for connected environments
+* link:https://console.redhat.com/openshift/assisted-installer/clusters[Web-based installation interface] with automated validation
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on-premise_with_assisted_installer/installing-on-prem-assisted#assisted-installer-installing_installing-on-prem-assisted[Real-time monitoring] and troubleshooting
 xref:module-03-deployment.adoc[Start Module 3 →]
 
 [.card.card-4]
-=== 4. OpenShift Installation and Configuration with the Agent-based Installer
-* Step-by-step guide using the *Assisted Installer*:
-* *Agent-based Installer*: Provides flexibility for disconnected or custom bare metal environments
-* Setting up control plane and worker nodes
-xref:module-04-deployment-assisted.adoc[Start Module 4 →]
+=== Module 4: Deploying OpenShift using Agent-based Installer
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer[Agent-based installer guide] for disconnected environments
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/understanding-disconnected-installation-mirroring[Air-gapped deployment capabilities] and custom configurations
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer[Advanced networking and storage] configuration options
+xref:module-04-deployment-agent.adoc[Start Module 4 →]
 
 [.card.card-5]
-=== 5. Storage configuring using OpenShift Data Foundation
-* Prepare storage for ODF
-* Install and configure the Local Storage Operator
-* Install and configure OpenShift Data Foundation
-* Configure the OpenShift Image Registry for ODF
+=== Module 5: Storage Configuration using OpenShift Data Foundation
+* link:https://docs.redhat.com/en/documentation/red_hat_openshift_data_foundation/4.18/html/planning_your_deployment/index[OpenShift Data Foundation planning] and architecture
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/storage/persistent-storage-local[Local Storage Operator installation] and configuration
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/registry/setting-up-and-configuring-the-registry[Image registry storage configuration] and optimization
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/backup_and_restore/oadp-application-backup-and-restore[Backup and disaster recovery] strategies
 xref:module-05-storage.adoc[Start Module 5 →]
 
 [.card.card-6]
-=== 6. Network Configuration using Nmstate
-* Secondary networks overview
-* Configuring secondary networks using Nmstate
-* Exposing networks using NetworkAttachmentDefinitions
-xref:module-06-network.adoc[Start Module 6 →]
+=== Module 6: Advanced Network Configuration using Nmstate
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking_operators/k8s-nmstate-about-the-k8s-nmstate-operator[Nmstate Operator overview] and installation
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/hardware_networks/about-sriov[SR-IOV networking configuration] for high-performance workloads
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/hardware_networks/index[NetworkAttachmentDefinitions] and multi-network configurations
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/network_security/index[Network policies and security] implementation
+xref:module-06-networking.adoc[Start Module 6 →]
 
 [.card.card-7]
-=== Module 7: Optional Features
-* OpenShift Virtualization
-* OpenShift AI
+=== Module 7: Optional Features (Virtualization & AI)
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/virtualization/getting-started[OpenShift Virtualization installation] and VM management
+* link:https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.14/html/introduction_to_red_hat_openshift_ai/index[OpenShift AI deployment] for machine learning workloads
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/serverless/about-serverless[Additional optional features] including Serverless and Service Mesh
 xref:module-07-optional.adoc[Start Module 7 →]
 
 [.text-center.strong]
 == Additional Resources
 
-* link:https://docs.openshift.com/container-platform/4.16/[OpenShift 4.16 Documentation]
-* link:https://docs.openshift.com/container-platform/4.17/[OpenShift 4.17 Documentation]
+=== Official OpenShift 4.18/4.19 Documentation
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/[OpenShift Container Platform 4.18 Documentation]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/[OpenShift Container Platform 4.19 Documentation]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/release_notes/ocp-4-18-release-notes[OpenShift 4.18 Release Notes]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/release_notes/ocp-4-19-release-notes[OpenShift 4.19 Release Notes]
+
+=== Installation and Deployment Guides
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on_bare_metal/[Installing on bare metal - OpenShift 4.18]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/installing_on_bare_metal/[Installing on bare metal - OpenShift 4.19]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on-premise_with_assisted_installer/installing-on-prem-assisted[Assisted Installer Guide - OpenShift 4.18]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer[Agent-based Installer Guide - OpenShift 4.18]
+
+=== Storage and Networking Resources
+* link:https://docs.redhat.com/en/documentation/red_hat_openshift_data_foundation/4.18/[OpenShift Data Foundation 4.18 Documentation]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/networking_overview/index[OpenShift 4.18 Networking Guide]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/storage/understanding-persistent-storage[OpenShift 4.18 Storage Guide]
+
+=== Optional Features Documentation
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/virtualization/getting-started[OpenShift Virtualization - Getting Started]
+* link:https://redhatquickcourses.github.io/architect-the-ocpvirt/Red%20Hat%20OpenShift%20Virtualization%20-%20Architect%20the%20OpenShift%20Virtualization/1/index.html[Red Hat OpenShift Virtualization - Architect the OpenShift Virtualization Quick Course]
+* link:https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.14/[Red Hat OpenShift AI Documentation]
+
+=== Support and Learning Resources
+* link:https://console.redhat.com/[Red Hat Hybrid Cloud Console]
+* link:https://access.redhat.com/support[Red Hat Customer Portal and Support]
+* link:https://learn.redhat.com/[Red Hat Learning Platform]
 * link:https://rhdp.redhat.com/[Red Hat Demo Platform (RHDP)]
-* link:https://www.openshift.com/solutions/data-foundation[OpenShift Data Foundation]
+
+=== Community and Additional Resources
+* link:https://www.redhat.com/en/technologies/cloud-computing/openshift[OpenShift Product Page]
+* link:https://cloud.redhat.com/blog/tag/openshift[OpenShift Blog]
+* link:https://developers.redhat.com/products/openshift/overview[OpenShift Developer Resources]

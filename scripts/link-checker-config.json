@@ -1,0 +1,81 @@
+{
+  "description": "Configuration for the OpenShift Bare Metal Workshop Link Checker",
+  "settings": {
+    "timeout": 30,
+    "max_redirects": 5,
+    "delay_between_checks": 1,
+    "user_agent": "Mozilla/5.0 (compatible; OpenShift-Workshop-LinkChecker/1.0)"
+  },
+  "skip_patterns": [
+    "console\\.redhat\\.com.*openshift.*assisted-installer.*clusters$",
+    "http://target-service:8080",
+    "https?://.*-service:[0-9]+",
+    "https?://example\\.",
+    "https?://.*\\.example",
+    "https?://.*\\.example\\.",
+    "https?://localhost:[0-9]+",
+    "https?://127\\.0\\.0\\.1:[0-9]+",
+    "https?://.*\\.local:[0-9]+",
+    "https?://.*-svc:[0-9]+",
+    "https?://.*\\.svc:[0-9]+",
+    "https?://.*\\.cluster\\.local:[0-9]+",
+    "https?://mirror\\.openshift\\.com.*\\.tar\\.gz$",
+    "https?://github\\.com.*releases.*\\.tar\\.gz$",
+    "https?://mirror\\.openshift\\.com/pub/openshift-v4/x86_64/clients/ocp/?$"
+  ],
+  "skip_reasons": {
+    "console\\.redhat\\.com.*openshift.*assisted-installer.*clusters$": "requires authentication",
+    "http://target-service:8080": "example service URL used in documentation",
+    "https?://.*-service:[0-9]+": "example service URLs with ports",
+    "https?://example\\.": "example.com and similar example domains",
+    "https?://.*\\.example": "subdomains of example domains",
+    "https?://.*\\.example\\.": "example domains with subdomains",
+    "https?://localhost:[0-9]+": "localhost URLs with ports",
+    "https?://127\\.0\\.0\\.1:[0-9]+": "loopback IP addresses with ports",
+    "https?://.*\\.local:[0-9]+": "local domain URLs with ports",
+    "https?://.*-svc:[0-9]+": "Kubernetes service URLs",
+    "https?://.*\\.svc:[0-9]+": "Kubernetes service URLs with .svc",
+    "https?://.*\\.cluster\\.local:[0-9]+": "Kubernetes cluster-local URLs",
+    "https?://mirror\\.openshift\\.com.*\\.tar\\.gz$": "binary download files that may have availability issues",
+    "https?://github\\.com.*releases.*\\.tar\\.gz$": "binary release files that may have availability issues",
+    "https?://mirror\\.openshift\\.com/pub/openshift-v4/x86_64/clients/ocp/?$": "OpenShift client directory listing that may have availability issues"
+  },
+  "file_patterns": {
+    "adoc": {
+      "extensions": [".adoc"],
+      "link_patterns": [
+        "link:https?://[^[]+\\[[^\\]]*\\]",
+        "https?://[^[:space:]\\[\\]<>()]+"
+      ]
+    },
+    "markdown": {
+      "extensions": [".md"],
+      "link_patterns": [
+        "\\[([^\\]]*)\\]\\(([^)]+)\\)",
+        "https?://[^[:space:]\\[\\]<>()]+"
+      ]
+    }
+  },
+  "directories": [
+    "content/modules/ROOT/pages"
+  ],
+  "files": [
+    "README.adoc"
+  ],
+  "output": {
+    "log_file": "link-check.log",
+    "issue_file": "issue.md",
+    "verbose": true,
+    "colors": true
+  },
+  "http_codes": {
+    "success": ["2xx", "3xx"],
+    "client_error": ["4xx"],
+    "server_error": ["5xx"]
+  },
+  "retry": {
+    "enabled": false,
+    "max_attempts": 3,
+    "delay": 5
+  }
+}
