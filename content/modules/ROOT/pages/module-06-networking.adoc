@@ -6,7 +6,7 @@
 === OpenShift Networking Architecture
 OpenShift Container Platform 4.18/4.19 provides advanced networking capabilities through:
 
-* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#ovn-kubernetes-network-plugin[OVN-Kubernetes]*: Default Container Network Interface (CNI) plugin
+* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/ovn-kubernetes_network_plugin/[OVN-Kubernetes]*: Default Container Network Interface (CNI) plugin
 * *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/networking_operators/k8s-nmstate-about-the-k8s-nmstate-operator[Nmstate Operator]*: Declarative network configuration management
 * *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/hardware_networks/#about-sriov[SR-IOV Network Operator]*: High-performance networking
 * *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/hardware_networks/#about-multus[Multus CNI]*: Multiple network interfaces per pod
@@ -14,7 +14,7 @@ OpenShift Container Platform 4.18/4.19 provides advanced networking capabilities
 === Network Components and Features
 * *Software-Defined Networking*: Overlay networks with OVN-Kubernetes
 * *Network Policies*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/network_security/network-policy[Network policy]
-* *Service Mesh*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#understanding-networking[Advanced traffic management]
+* *Service Mesh*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking_overview/[Advanced traffic management]
 * *Load Balancing*: Built-in load balancing and ingress capabilities
 * *IPsec Encryption*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/network_security/configuring-ipsec-ovn[Pod-to-pod encryption]
 
@@ -499,7 +499,7 @@ etcd-2.cluster          IN  A       192.168.1.12
 ```
 
 === CoreDNS Configuration
-OpenShift uses link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#understanding-networking[CoreDNS] for internal cluster DNS resolution:
+OpenShift uses link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking_overview/[CoreDNS] for internal cluster DNS resolution:
 
 ```yaml
 # Custom CoreDNS configuration
@@ -573,7 +573,7 @@ Monitor network performance and health:
 == Documentation References
 For detailed networking configuration information, refer to:
 
-* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#understanding-networking[Understanding networking - OpenShift 4.19]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking_overview/[Understanding networking - OpenShift 4.19]
 * link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#ovn-kubernetes-network-plugin[OVN-Kubernetes network plugin - OpenShift 4.19]
 * link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#k8s-nmstate-about-the-k8s-nmstate-operator[Kubernetes NMState Operator - OpenShift 4.19]
 * link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/hardware_networks/#about-sriov[About SR-IOV hardware networks - OpenShift 4.19]
