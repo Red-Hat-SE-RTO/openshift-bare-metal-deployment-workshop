@@ -16,7 +16,7 @@ OpenShift Container Platform 4.18/4.19 provides advanced networking capabilities
 * *Network Policies*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/network_security/network-policy[Network policy]
 * *Service Mesh*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#understanding-networking[Advanced traffic management]
 * *Load Balancing*: Built-in load balancing and ingress capabilities
-* *IPsec Encryption*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#nw-ovn-ipsec-enable_configuring-ipsec-ovn[Pod-to-pod encryption]
+* *IPsec Encryption*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/network_security/configuring-ipsec-ovn[Pod-to-pod encryption]
 
 == Nmstate Operator Configuration [[nmstate]]
 
@@ -322,7 +322,7 @@ spec:
 ```
 
 === IPsec Encryption Configuration
-Enable link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#nw-ovn-ipsec-enable_configuring-ipsec-ovn[IPsec encryption] for pod-to-pod communication:
+Enable link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/network_security/configuring-ipsec-ovn[IPsec encryption] for pod-to-pod communication:
 
 ```bash
 # Enable IPsec encryption
