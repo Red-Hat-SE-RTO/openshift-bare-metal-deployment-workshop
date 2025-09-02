@@ -7,13 +7,13 @@
 OpenShift Container Platform 4.18/4.19 provides advanced networking capabilities through:
 
 * *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#ovn-kubernetes-network-plugin[OVN-Kubernetes]*: Default Container Network Interface (CNI) plugin
-* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#k8s-nmstate-about-the-k8s-nmstate-operator[Nmstate Operator]*: Declarative network configuration management
+* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/networking_operators/k8s-nmstate-about-the-k8s-nmstate-operator[Nmstate Operator]*: Declarative network configuration management
 * *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/hardware_networks/#about-sriov[SR-IOV Network Operator]*: High-performance networking
 * *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/hardware_networks/#about-multus[Multus CNI]*: Multiple network interfaces per pod
 
 === Network Components and Features
 * *Software-Defined Networking*: Overlay networks with OVN-Kubernetes
-* *Network Policies*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#network-security[Microsegmentation and traffic control]
+* *Network Policies*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/network_security/network-policy[Network policy]
 * *Service Mesh*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#understanding-networking[Advanced traffic management]
 * *Load Balancing*: Built-in load balancing and ingress capabilities
 * *IPsec Encryption*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#nw-ovn-ipsec-enable_configuring-ipsec-ovn[Pod-to-pod encryption]
@@ -21,7 +21,7 @@ OpenShift Container Platform 4.18/4.19 provides advanced networking capabilities
 == Nmstate Operator Configuration [[nmstate]]
 
 === What is the Nmstate Operator?
-The link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#k8s-nmstate-about-the-k8s-nmstate-operator[Nmstate Operator] provides declarative network configuration management for OpenShift nodes, enabling:
+The link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/networking_operators/k8s-nmstate-about-the-k8s-nmstate-operator[Nmstate Operator] provides declarative network configuration management for OpenShift nodes, enabling:
 
 * *Declarative Configuration*: YAML-based network interface configuration
 * *Node Network Management*: Centralized network configuration across cluster nodes
@@ -259,7 +259,7 @@ spec:
 == Network Security and Policies [[security]]
 
 === Network Policies in OpenShift 4.18/4.19
-link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#network-security[Network policies] provide microsegmentation and traffic control capabilities.
+link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/network_security/index[Network policies] provide microsegmentation and traffic control capabilities.
 
 ==== Default Deny Network Policy
 ```yaml
