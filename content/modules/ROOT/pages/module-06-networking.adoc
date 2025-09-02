@@ -336,7 +336,7 @@ oc get network.operator cluster -o yaml
 == Load Balancer and Ingress Configuration [[ingress]]
 
 === OpenShift Router and Ingress
-OpenShift 4.18/4.19 provides advanced ingress capabilities through the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#configuring-ingress[Ingress Operator].
+OpenShift 4.18/4.19 provides advanced ingress capabilities through the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/networking_operators/configuring-ingress[Ingress Operator].
 
 ==== Default Ingress Controller Configuration
 ```yaml
@@ -578,7 +578,7 @@ For detailed networking configuration information, refer to:
 * link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#k8s-nmstate-about-the-k8s-nmstate-operator[Kubernetes NMState Operator - OpenShift 4.19]
 * link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/hardware_networks/#about-sriov[About SR-IOV hardware networks - OpenShift 4.19]
 * link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#network-security[Network security - OpenShift 4.19]
-* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#configuring-ingress[Configuring ingress - OpenShift 4.19]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/ingress_and_load_balancing/configuring-routes[Configuring ingress - OpenShift 4.19]
 
 == Next Steps
 Ready to explore optional features like OpenShift Virtualization and AI? Continue to xref:module-07-optional.adoc[Module 7: Optional Features].
