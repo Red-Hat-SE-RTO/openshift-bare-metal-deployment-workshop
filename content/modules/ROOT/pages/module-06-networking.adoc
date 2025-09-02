@@ -574,10 +574,10 @@ Monitor network performance and health:
 For detailed networking configuration information, refer to:
 
 * link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking_overview/[Understanding networking - OpenShift 4.19]
-* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#ovn-kubernetes-network-plugin[OVN-Kubernetes network plugin - OpenShift 4.19]
-* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#k8s-nmstate-about-the-k8s-nmstate-operator[Kubernetes NMState Operator - OpenShift 4.19]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/ovn-kubernetes_network_plugin/about-ovn-kubernetes[OVN-Kubernetes network plugin - OpenShift 4.19]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/networking_operators/k8s-nmstate-about-the-k8s-nmstate-operator[Kubernetes NMState Operator - OpenShift 4.19]
 * link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/hardware_networks/#about-sriov[About SR-IOV hardware networks - OpenShift 4.19]
-* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html-single/networking/#network-security[Network security - OpenShift 4.19]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/network_security/index[Network security - OpenShift 4.19]
 * link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/ingress_and_load_balancing/configuring-routes[Configuring ingress - OpenShift 4.19]
 
 == Next Steps
