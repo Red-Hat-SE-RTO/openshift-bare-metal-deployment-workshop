@@ -246,6 +246,8 @@ oc policy add-role-to-user system:image-puller \
 oc edit configmap v2v-vmware -n openshift-cnv
 ```
 
+For more information on images and permissions, see the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.20/html/images/managing-images#images-allow-pods-to-reference-images-across-projects_using-image-pull-secrets[Image Guide]
+
 ===== Step 4: Update Migration Configuration
 Add the VDDK image to the v2v-vmware ConfigMap:
 
