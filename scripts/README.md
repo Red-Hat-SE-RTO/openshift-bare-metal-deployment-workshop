@@ -93,9 +93,9 @@ python3 scripts/intelligent_link_checker.py --create-github-issue
 ```
 
 ### AI Model Configuration
-The tool uses Red Hat's Granite 3.3 8B Instruct model:
-- **Endpoint**: `https://granite-3-3-8b-instruct-maas-apicast-production.apps.prod.rhoai.rh-aiservices-bu.com:443/v1`
-- **Model**: `granite-3-3-8b-instruct`
+The tool uses Red Hat's Granite 3.2 8B Instruct model via LiteLLM:
+- **Endpoint**: `https://litellm-prod.apps.maas.redhatworkshops.io/v1`
+- **Model**: `granite-3-2-8b-instruct`
 - **Temperature**: 0.01 (focused, deterministic responses)
 - **Max Tokens**: 1024 (sufficient for detailed analysis)
 

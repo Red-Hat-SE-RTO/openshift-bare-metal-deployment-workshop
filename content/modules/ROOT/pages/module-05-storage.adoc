@@ -16,7 +16,7 @@ Before configuring storage, understand the requirements:
 
 * *Container Registry*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/registry/setting-up-and-configuring-the-registry[Persistent storage for image registry]
 * *Monitoring*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/monitoring/index[Storage for Prometheus and Alertmanager]
-* *Logging*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/logging/index[Storage for log aggregation]
+* *Logging*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/logging/index[Storage for log aggregation] — OCP 4.x uses the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/logging/index[Cluster Logging Operator with LokiStack] for log aggregation. Elasticsearch-based logging is deprecated and not supported in new installations on OCP 4.20+.
 * *Application Workloads*: Persistent volumes for stateful applications
 * *etcd Backup*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/backup_and_restore/control-plane-backup-and-restore[Storage for cluster state backups]
 

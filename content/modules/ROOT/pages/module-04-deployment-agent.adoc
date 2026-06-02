@@ -507,7 +507,7 @@ mirror:
   - catalog: registry.redhat.io/redhat/redhat-operator-index:v4.21
     packages:
     - name: cluster-logging
-    - name: elasticsearch-operator
+    - name: loki-operator
 EOF
 
 # Execute mirroring

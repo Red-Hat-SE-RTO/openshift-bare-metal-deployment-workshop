@@ -49,7 +49,7 @@ xref:module-04-deployment-agent.adoc[Start Module 4 →]
 [.card.card-5]
 === Module 5: Storage Configuration using OpenShift Data Foundation
 * link:https://docs.redhat.com/en/documentation/red_hat_openshift_data_foundation/4.21/html/planning_your_deployment/index[OpenShift Data Foundation planning] and architecture
-* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/storage/persistent-storage-local[Local Storage Operator installation] and configuration
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/storage/configuring-persistent-storage[Local Storage Operator installation] and configuration
 * link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/registry/setting-up-and-configuring-the-registry[Image registry storage configuration] and optimization
 * link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/backup_and_restore/oadp-application-backup-and-restore[Backup and disaster recovery] strategies
 xref:module-05-storage.adoc[Start Module 5 →]

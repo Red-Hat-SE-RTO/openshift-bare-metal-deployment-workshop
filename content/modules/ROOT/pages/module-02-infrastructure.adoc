@@ -340,7 +340,7 @@ For production environments, configure external DNS based on link:https://docs.r
 ```bash
 # Create DNS configuration documentation
 cat > dns-config.txt << 'EOF'
-# OpenShift 4.18/4.19 DNS Configuration
+# OpenShift 4.19/4.20/4.21 DNS Configuration
 # Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_on_bare_metal/user-provisioned-infrastructure#installation-dns-user-infra_installing-bare-metal
 
 ## Required DNS Records:

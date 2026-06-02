@@ -98,8 +98,8 @@ class IntelligentLinkChecker(LinkChecker):
             # Configure the Granite model with proper authentication
             self.llm = ChatOpenAI(
                 openai_api_key=mass_api_key,
-                openai_api_base="https://granite-3-3-8b-instruct-maas-apicast-production.apps.prod.rhoai.rh-aiservices-bu.com:443/v1",
-                model_name="granite-3-3-8b-instruct",
+                openai_api_base="https://litellm-prod.apps.maas.redhatworkshops.io/v1",
+                model_name="granite-3-2-8b-instruct",
                 temperature=0.01,
                 max_tokens=1024,
                 streaming=False,  # Disable streaming for analysis
@@ -458,7 +458,7 @@ class IntelligentLinkChecker(LinkChecker):
         body = f"""# 🔗 Broken Documentation Links Report
 
 **Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
-**Workshop:** OpenShift 4.18/4.19 Bare Metal Deployment
+**Workshop:** OpenShift 4.19/4.20/4.21 Bare Metal Deployment
 **Failed Links:** {len(failed_links)}
 **Validated Replacements Found:** {len(validated_replacements) if validated_replacements else 0}
 
@@ -597,7 +597,7 @@ This issue was created automatically by the Intelligent Link Checker with AI ana
             f.write(analysis.impact_assessment)
 
             f.write("\n\n---\n")
-            f.write("*Enhanced with AI analysis and validated URL search using Granite 3.3 8B Instruct model*\n")
+            f.write("*Enhanced with AI analysis and validated URL search using Granite 3.2 8B Instruct model*\n")
         
         self.logger.info("🤖 Enhanced report with AI analysis generated")
 

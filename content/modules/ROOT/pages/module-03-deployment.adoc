@@ -16,7 +16,7 @@ By the end of this module, you will have completed the Assisted Installer deploy
 The link:https://docs.redhat.com/en/documentation/assisted_installer_for_openshift_container_platform/2026/html/installing_openshift_container_platform_with_the_assisted_installer/index[Assisted Installer] provides a cloud-guided installation experience for connected environments, eliminating the complexity of traditional bare metal deployments.
 
 === Primary Documentation Resources
-* **Complete 2025 Guide**: link:https://docs.redhat.com/en/documentation/assisted_installer_for_openshift_container_platform/2026/html/installing_openshift_container_platform_with_the_assisted_installer/index[Assisted Installer for OpenShift Container Platform 2025] - Authoritative installation guide
+* **Complete 2026 Guide**: link:https://docs.redhat.com/en/documentation/assisted_installer_for_openshift_container_platform/2026/html/installing_openshift_container_platform_with_the_assisted_installer/index[Assisted Installer for OpenShift Container Platform 2026] - Authoritative installation guide
 * **Web Console Walkthrough**: link:https://docs.redhat.com/en/documentation/assisted_installer_for_openshift_container_platform/2026/html/installing_openshift_container_platform_with_the_assisted_installer/installing-with-ui[Installing with the Assisted Installer web console] - Step-by-step UI guide
 * **Blog Guide**: link:https://www.redhat.com/en/blog/how-to-use-the-openshift-assisted-installer[How to use the OpenShift Assisted Installer] - Practical tips and best practices
 
@@ -49,7 +49,7 @@ Based on link:https://docs.redhat.com/en/documentation/assisted_installer_for_op
 # URL: https://console.redhat.com/openshift/assisted-installer/clusters
 # Reference: https://docs.redhat.com/en/documentation/assisted_installer_for_openshift_container_platform/2026/html/installing_openshift_container_platform_with_the_assisted_installer/installing-with-ui
 
-# Login Requirements (per 2025 documentation):
+# Login Requirements (per 2026 documentation):
 # - Red Hat account credentials
 # - Organization Administrator role
 # - Active OpenShift subscriptions
@@ -75,7 +75,7 @@ echo "✅ Red Hat Console accessed successfully"
 Based on link:https://docs.redhat.com/en/documentation/assisted_installer_for_openshift_container_platform/2026/html/installing_openshift_container_platform_with_the_assisted_installer/prerequisites[prerequisites]:
 
 ```bash
-# Verify you have the necessary permissions per 2025 documentation:
+# Verify you have the necessary permissions per 2026 documentation:
 # Reference: https://docs.redhat.com/en/documentation/assisted_installer_for_openshift_container_platform/2026/html/installing_openshift_container_platform_with_the_assisted_installer/prerequisites
 
 # Required Permissions:
@@ -90,7 +90,7 @@ Based on link:https://docs.redhat.com/en/documentation/assisted_installer_for_op
 # - OpenShift clusters overview
 # - Account settings
 
-echo "Account verification completed per 2025 prerequisites" >> assisted-installer-session.txt
+echo "Account verification completed per 2026 prerequisites" >> assisted-installer-session.txt
 ```
 
 **✅ D1 Verification Checkpoint**: Confirm access to Red Hat Console and Assisted Installer interface.
@@ -105,7 +105,7 @@ Based on link:https://docs.redhat.com/en/documentation/assisted_installer_for_op
 ```bash
 # Document your cluster configuration choices
 cat > cluster-configuration.txt << 'EOF'
-# Assisted Installer 2025 Configuration
+# Assisted Installer 2026 Configuration
 # Reference: https://docs.redhat.com/en/documentation/assisted_installer_for_openshift_container_platform/2026/html/installing_openshift_container_platform_with_the_assisted_installer/installing-with-ui#setting-the-cluster-details_installing-with-ui
 
 ## Basic Cluster Information:
@@ -224,7 +224,7 @@ Platform: [Bare Metal / None]
 # Reference: https://docs.redhat.com/en/documentation/assisted_installer_for_openshift_container_platform/2026/html/installing_openshift_container_platform_with_the_assisted_installer/prerequisites#supported-cpu-architectures_prerequisites
 EOF
 
-echo "✅ Cluster configuration documented with 2025 Assisted Installer references"
+echo "✅ Cluster configuration documented with 2026 Assisted Installer references"
 ```
 
 **✅ D2 Verification Checkpoint**: Complete cluster configuration in Assisted Installer web interface.
@@ -255,7 +255,7 @@ cat > discovery-iso-process.txt << 'EOF'
 ## ISO Characteristics:
 ISO Name: discovery_image_cluster.iso
 Size: ~1GB (approximate, includes RHCOS live image)
-Boot Type: UEFI and Legacy BIOS compatible
+Boot Type: UEFI (required for OCP 4.19+; Legacy BIOS is not supported for new installations)
 Network: Pre-configured for your cluster network settings
 Validity: ISO expires after 7 days (regenerate if needed)
 # Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_on-premise_with_assisted_installer/installing-on-prem-assisted#assisted-installer-adding-hosts_installing-on-prem-assisted
@@ -310,7 +310,7 @@ cat >> discovery-iso-process.txt << 'EOF'
 # Reference: https://docs.redhat.com/en/documentation/assisted_installer_for_openshift_container_platform/2026/html/installing_openshift_container_platform_with_the_assisted_installer/assembly_configuring-the-discovery-image
 EOF
 
-echo "✅ Discovery ISO prepared for deployment with 2025 documentation references"
+echo "✅ Discovery ISO prepared for deployment with 2026 documentation references"
 ```
 
 **✅ D3 Verification Checkpoint**: Discovery ISO generated and prepared for deployment via chosen boot method.
@@ -432,7 +432,7 @@ Worker Nodes: [list-assigned-nodes]
 # https://docs.redhat.com/en/documentation/assisted_installer_for_openshift_container_platform/2026/html/installing_openshift_container_platform_with_the_assisted_installer/assembly_preinstallation-validations#host-validations-in-detail_preinstallation-validations
 EOF
 
-echo "✅ Hardware discovery completed and validated per 2025 documentation"
+echo "✅ Hardware discovery completed and validated per 2026 documentation"
 ```
 
 **✅ D4 Verification Checkpoint**: All nodes discovered, validated, and assigned appropriate roles.
