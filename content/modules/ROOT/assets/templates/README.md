@@ -39,7 +39,7 @@ templates/
 - Include version information when relevant
 - Use descriptive names indicating purpose and use case
 - Examples:
-  - `install-config-assisted-4.18.yaml`
+  - `install-config-assisted-4.21.yaml`
   - `network-validation-script.sh`
   - `dns-zone-template.txt`
 
@@ -48,7 +48,7 @@ Each template must include:
 
 ```yaml
 # Template: [Template Name]
-# Version: OpenShift 4.18/4.19
+# Version: OpenShift 4.19/4.20/4.21
 # Use Case: [Specific use case or scenario]
 # Prerequisites: [List of prerequisites]
 # Instructions: [How to use this template]
@@ -113,11 +113,11 @@ openshift-install create manifests --dir=./cluster-config
 ### Install Config Template
 ```yaml
 # Template: Assisted Installer Configuration
-# Version: OpenShift 4.18/4.19
+# Version: OpenShift 4.19/4.20/4.21
 # Use Case: Standard bare metal deployment
 # Prerequisites: DNS configured, hardware meets requirements
 # Instructions: Replace all <PLACEHOLDER> values
-# Documentation: https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on-premise_with_assisted_installer/installing-on-prem-assisted
+# Documentation: https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_on-premise_with_assisted_installer/installing-on-prem-assisted
 
 apiVersion: v1
 baseDomain: <BASE_DOMAIN>  # Example: example.com
@@ -147,15 +147,15 @@ sshKey: '<SSH_PUBLIC_KEY>'        # Your SSH public key
 ```bash
 #!/bin/bash
 # Template: Hardware Verification Script
-# Version: OpenShift 4.18/4.19
+# Version: OpenShift 4.19/4.20/4.21
 # Use Case: Validate hardware meets OpenShift requirements
 # Prerequisites: Run on each node to be added to cluster
 # Instructions: ./verify-hardware.sh [control-plane|worker]
-# Documentation: https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on_bare_metal/user-provisioned-infrastructure#minimum-resource-requirements_installing-bare-metal
+# Documentation: https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_on_bare_metal/user-provisioned-infrastructure#minimum-resource-requirements_installing-bare-metal
 
 NODE_TYPE=${1:-worker}
 
-echo "=== OpenShift 4.18/4.19 Hardware Verification ==="
+echo "=== OpenShift 4.19/4.20/4.21 Hardware Verification ==="
 echo "Node Type: $NODE_TYPE"
 echo "Node: $(hostname)"
 echo "Date: $(date)"
@@ -170,7 +170,7 @@ Before using templates in workshop:
 - [ ] All placeholders are clearly marked and documented
 - [ ] Configuration syntax is valid
 - [ ] Scripts execute without errors
-- [ ] Templates work with both OpenShift 4.18 and 4.19
+- [ ] Templates work with OpenShift 4.19, 4.20, and 4.21
 - [ ] All prerequisites are documented
 - [ ] Links to official documentation are included
 

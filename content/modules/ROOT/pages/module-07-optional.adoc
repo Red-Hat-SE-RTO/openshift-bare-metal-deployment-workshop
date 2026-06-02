@@ -1,10 +1,10 @@
-= Module 7: Optional Features for OpenShift 4.18/4.19
+= Module 7: Optional Features for OpenShift 4.19/4.20/4.21
 :page-layout: module
 
 == OpenShift Virtualization [[virtualization]]
 
 === What is OpenShift Virtualization?
-link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/virtualization[OpenShift Virtualization] enables you to run and manage virtual machines alongside containers in OpenShift Container Platform 4.18/4.19, providing a unified platform for both traditional and cloud-native workloads.
+link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/virtualization[OpenShift Virtualization] enables you to run and manage virtual machines alongside containers in OpenShift Container Platform 4.19/4.20/4.21, providing a unified platform for both traditional and cloud-native workloads.
 
 === Key Features and Capabilities
 * *VM Lifecycle Management*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/virtualization[Create, manage, and delete virtual machines]
@@ -33,56 +33,26 @@ Before installing OpenShift Virtualization, ensure:
 5. Wait for the operator to be installed successfully
 
 ==== Step 2: Create HyperConverged Custom Resource
+
+NOTE: Starting with OpenShift Virtualization 4.20, the HyperConverged operator manages most feature gates automatically based on cluster capabilities and OCP version. Best practice is to use a minimal CR and let the operator manage defaults. Only override specific options when you have a concrete reason. See the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/virtualization/[OCP 4.21 Virtualization docs] for the current feature gate reference.
+
 ```yaml
 # Create HyperConverged instance to enable virtualization
+# Minimal recommended CR — operator manages feature gates and defaults
 apiVersion: hco.kubevirt.io/v1beta1
 kind: HyperConverged
 metadata:
   name: kubevirt-hyperconverged
-  annotations:
-    deployOVS: 'false'
   namespace: openshift-cnv
 spec:
-  virtualMachineOptions:
-    disableFreePageReporting: false
-    disableSerialConsoleLog: true
-  higherWorkloadDensity:
-    memoryOvercommitPercentage: 100
   liveMigrationConfig:
-    allowAutoConverge: false
-    allowPostCopy: false
-    completionTimeoutPerGiB: 150
+    allowAutoConverge: true           # Allow auto-converge for stuck migrations
     parallelMigrationsPerCluster: 5
     parallelOutboundMigrationsPerNode: 2
-    progressTimeout: 150
-  certConfig:
-    ca:
-      duration: 48h0m0s
-      renewBefore: 24h0m0s
-    server:
-      duration: 24h0m0s
-      renewBefore: 12h0m0s
-  applicationAwareConfig:
-    allowApplicationAwareClusterResourceQuota: false
-    vmiCalcConfigName: DedicatedVirtualResources
-  featureGates:
-    enableCommonBootImageImport: true
-    downwardMetrics: false
-    disableMDevConfiguration: false
-    enableApplicationAwareQuota: false
-    deployKubeSecondaryDNS: false
-    alignCPUs: false
-    deployVmConsoleProxy: false
-    persistentReservation: false
-    autoResourceLimits: false
   workloadUpdateStrategy:
-    batchEvictionInterval: 1m0s
-    batchEvictionSize: 10
     workloadUpdateMethods:
       - LiveMigrate
   uninstallStrategy: BlockUninstallIfWorkloadsExist
-  resourceRequirements:
-    vmiCPUAllocationRatio: 10
 ```
 
 ==== Step 3: Verify Installation
@@ -100,19 +70,22 @@ oc get nodes -o custom-columns=NAME:.metadata.name,VIRT:.status.allocatable.devi
 === Creating and Managing Virtual Machines
 
 ==== Creating a VM from Template
+
+The preferred way to create VMs is through the web console using Red Hat-provided templates. The YAML below shows the structure for reference. Note: `machine.type` should use a current QEMU machine type for your OCP version — use `q35` or the console default rather than a hard-coded version string.
+
 ```yaml
-# Example VM configuration
+# Example RHEL 9 VM configuration (use RHEL 9 for new deployments)
 apiVersion: kubevirt.io/v1
 kind: VirtualMachine
 metadata:
-  name: rhel8-vm
+  name: rhel9-vm
   namespace: default
 spec:
   running: true
   template:
     metadata:
       labels:
-        kubevirt.io/vm: rhel8-vm
+        kubevirt.io/vm: rhel9-vm
     spec:
       domain:
         cpu:
@@ -131,22 +104,26 @@ spec:
           - name: default
             masquerade: {}
         machine:
-          type: pc-q35-rhel8.4.0
+          type: q35                     # Use q35 - avoid hard-coded RHEL version strings
       networks:
       - name: default
         pod: {}
       volumes:
       - name: rootdisk
         containerDisk:
-          image: quay.io/containerdisks/rhel:8-latest
+          image: quay.io/containerdisks/rhel:9-latest
       - name: cloudinitdisk
         cloudInitNoCloud:
           userData: |
             #cloud-config
             user: cloud-user
-            password: redhat
-            chpasswd: { expire: False }
+            # IMPORTANT: Do not hardcode passwords. Use SSH keys or a Secret reference.
+            # Example: set password via: virtctl credentials set-password --user cloud-user --password <pw> rhel9-vm
+            ssh_authorized_keys:
+            - ssh-ed25519 AAAA... your-public-key-here
 ```
+
+NOTE: For RHEL 8 VMs that still need to be created, replace the `image` with `quay.io/containerdisks/rhel:8-latest`. However, Red Hat recommends using RHEL 9 for new virtual machine deployments.
 
 ==== VM Management Commands
 ```bash
@@ -339,10 +316,11 @@ oc patch hco kubevirt-hyperconverged -n openshift-cnv --type=merge --patch='
 ```
 
 ==== VM Migration from VMware
-For migrating VMs from VMware vSphere, use the link:https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.6/html/installing_and_using_the_migration_toolkit_for_virtualization/index[Migration Toolkit for Virtualization]:
+For migrating VMs from VMware vSphere, use the link:https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.10/html/installing_and_using_the_migration_toolkit_for_virtualization/index[Migration Toolkit for Virtualization]:
 
 ```bash
 # Install Migration Toolkit for Virtualization
+# Use channel release-v2.10 or the latest stable channel matching your needs
 oc apply -f - <<EOF
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
@@ -350,7 +328,7 @@ metadata:
   name: mtv-operator
   namespace: openshift-mtv
 spec:
-  channel: release-v2.6
+  channel: release-v2.10
   name: mtv-operator
   source: redhat-operators
   sourceNamespace: openshift-marketplace
@@ -415,29 +393,35 @@ parameters:
 == OpenShift AI (Red Hat OpenShift AI) [[ai]]
 
 === What is OpenShift AI?
-link:https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.14/html/introduction_to_red_hat_openshift_ai/index[Red Hat OpenShift AI] provides a comprehensive platform for developing, training, serving, and monitoring AI/ML models on OpenShift Container Platform 4.18/4.19.
+link:https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/3.x/html/introduction_to_red_hat_openshift_ai/index[Red Hat OpenShift AI] provides a comprehensive platform for developing, training, serving, and monitoring AI/ML models on OpenShift Container Platform 4.19/4.20/4.21.
 
 === Key Features and Capabilities
-* *Model Development*: link:https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.14/html/working_with_data_science_projects/index[Jupyter notebooks and development environments]
-* *Model Training*: link:https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.14/html/working_with_data_science_pipelines/index[Distributed training with Kubeflow Pipelines]
-* *Model Serving*: link:https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.14/html/serving_models/index[High-performance model inference serving]
-* *MLOps Integration*: link:https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.14/html/working_with_data_science_pipelines/index[End-to-end ML pipeline automation]
-* *GPU Support*: link:https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.14/html/installing_and_uninstalling_openshift_ai_self-managed/enabling-gpu-support_install[NVIDIA GPU acceleration for training and inference]
+* *Model Development*: link:https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/3.x/html/working_with_data_science_projects/index[Jupyter notebooks and development environments]
+* *Model Training*: link:https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/3.x/html/working_with_data_science_pipelines/index[Distributed training with Kubeflow Pipelines]
+* *Model Serving*: link:https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/3.x/html/serving_models/index[High-performance model inference serving]
+* *MLOps Integration*: link:https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/3.x/html/working_with_data_science_pipelines/index[End-to-end ML pipeline automation]
+* *GPU Support*: link:https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/3.x/html/installing_and_uninstalling_openshift_ai_self-managed/enabling-gpu-support_install[NVIDIA GPU acceleration for training and inference]
 * *Distributed Training*: Support for multi-node, multi-GPU training workloads
 
 === Prerequisites for OpenShift AI
 Before installing OpenShift AI, ensure:
 
 * *Cluster Resources*: Sufficient CPU, memory, and storage for AI workloads
-* *GPU Support*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/hardware_accelerators[NVIDIA GPU Operator] for GPU acceleration
+* *GPU Support*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/hardware_accelerators[NVIDIA GPU Operator] for GPU acceleration
 * *Storage*: High-performance storage for datasets and model artifacts
 * *Network*: High-bandwidth networking for distributed training
 
-=== Installing OpenShift AI
+=== Installing OpenShift AI 3.x
 
-==== Step 1: Install Required Operators
+NOTE: OpenShift AI 3.x introduced significant changes to the installation flow compared to 2.x. The operator name is now `rhods-operator` on the `rhoai` channel (or `fast-3.x` for early access to the latest 3.x features). A new **DSCInitialization** custom resource must be created before the DataScienceCluster. The `modelmeshserving` component has been removed from DataScienceCluster in 3.x (it is now managed separately). See the link:https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/3.x/html/installing_and_uninstalling_openshift_ai_self-managed/index[RHOAI 3.x installation guide].
+
+==== Step 1: Install OpenShift AI Operator
 ```bash
-# Install OpenShift AI Operator
+# Create the namespace for RHOAI operator
+oc create namespace redhat-ods-operator
+
+# Install the OpenShift AI Operator on the rhoai channel (stable 3.x)
+# Use fast-3.x to track latest 3.x patch releases
 oc apply -f - <<EOF
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
@@ -445,16 +429,47 @@ metadata:
   name: rhods-operator
   namespace: redhat-ods-operator
 spec:
-  channel: stable
+  channel: fast-3.x
   name: rhods-operator
   source: redhat-operators
   sourceNamespace: openshift-marketplace
 EOF
+
+# Wait for the operator to be ready
+oc wait --for=condition=Ready pods -l name=rhods-operator -n redhat-ods-operator --timeout=120s
 ```
 
-==== Step 2: Create DataScienceCluster
+==== Step 2: Create DSCInitialization (Required in 3.x)
 ```yaml
-# Create DataScienceCluster instance
+# DSCInitialization must be created before DataScienceCluster
+# This replaces the manual namespace/configmap setup from RHOAI 2.x
+apiVersion: dscinitialization.opendatahub.io/v1
+kind: DSCInitialization
+metadata:
+  name: default-dsci
+spec:
+  applicationsNamespace: redhat-ods-applications
+  monitoring:
+    managementState: Managed
+    namespace: redhat-ods-monitoring
+  trustedCABundle:
+    managementState: Managed
+  serviceMesh:
+    managementState: Removed   # Set to Managed to enable ServiceMesh integration
+```
+
+```bash
+# Apply DSCInitialization
+oc apply -f dsci.yaml
+
+# Wait for DSCInitialization to be ready
+oc wait --for=condition=Ready dscinitializations/default-dsci --timeout=180s
+```
+
+==== Step 3: Create DataScienceCluster
+```yaml
+# Create DataScienceCluster instance (RHOAI 3.x)
+# NOTE: modelmeshserving is no longer a component of DataScienceCluster in 3.x
 apiVersion: datasciencecluster.opendatahub.io/v1
 kind: DataScienceCluster
 metadata:
@@ -469,15 +484,26 @@ spec:
       managementState: Managed
     kserve:
       managementState: Managed
-    modelmeshserving:
-      managementState: Managed
+      serving:
+        managementState: Removed   # Set to Managed to deploy KNative-based model serving
     ray:
       managementState: Managed
     workbenches:
       managementState: Managed
+    trainingoperator:
+      managementState: Managed
 ```
 
-==== Step 3: Configure GPU Support (Optional)
+```bash
+# Apply DataScienceCluster
+oc apply -f dsc.yaml
+
+# Verify installation
+oc get datasciencecluster default-dsc -o yaml
+oc get pods -n redhat-ods-applications
+```
+
+==== Step 4: Configure GPU Support (Optional)
 ```bash
 # Install NVIDIA GPU Operator
 oc apply -f - <<EOF
@@ -523,7 +549,7 @@ spec:
     spec:
       containers:
       - name: ml-notebook
-        image: quay.io/opendatahub/workbench-images:jupyter-datascience-c9s-py311_2023c_latest
+        image: quay.io/opendatahub/workbench-images:jupyter-datascience-c9s-py311_2024b_latest
         resources:
           requests:
             cpu: "1"
@@ -641,36 +667,39 @@ For detailed information about optional features, refer to:
 * link:https://redhatquickcourses.github.io/architect-the-ocpvirt/Red%20Hat%20OpenShift%20Virtualization%20-%20Architect%20the%20OpenShift%20Virtualization/1/index.html[Red Hat OpenShift Virtualization - Architect the OpenShift Virtualization Quick Course]
 
 === OpenShift AI and Additional Features
-* link:https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.14/html/introduction_to_red_hat_openshift_ai/index[Introduction to Red Hat OpenShift AI]
+* link:https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/3.x/html/introduction_to_red_hat_openshift_ai/index[Introduction to Red Hat OpenShift AI]
 * link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/serverless[About OpenShift Serverless - OpenShift 4.19]
 * link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/service_mesh[Service Mesh 2.x - OpenShift 4.19]
 * link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/gitops[GitOps - OpenShift 4.19]
 
 == Workshop Conclusion [[conclusion]]
 
-Congratulations! You've completed the OpenShift 4.18/4.19 Bare Metal Deployment Workshop. You now have comprehensive knowledge to:
+Congratulations! You've completed the OpenShift 4.19/4.20/4.21 Bare Metal Deployment Workshop. You now have comprehensive knowledge to:
 
 === Core Competencies Achieved
-* *Deploy OpenShift 4.18/4.19* on bare metal infrastructure using multiple installation methods
+* *Deploy OpenShift 4.19/4.20/4.21* on bare metal infrastructure using multiple installation methods
 * *Configure Advanced Networking* with OVN-Kubernetes, Nmstate, and SR-IOV
 * *Implement Storage Solutions* with OpenShift Data Foundation and Local Storage Operator
 * *Manage Cluster Operations* including monitoring, logging, and maintenance
-* *Deploy Optional Features* such as OpenShift Virtualization and OpenShift AI
+* *Deploy Optional Features* such as OpenShift Virtualization and OpenShift AI 3.x
 
 === Next Steps and Continued Learning
 * *Production Deployment*: Apply the knowledge to deploy production OpenShift clusters
 * *Advanced Features*: Explore additional OpenShift capabilities and operators
-* *Certification*: Consider pursuing Red Hat OpenShift certifications
+* *Certification*: Consider pursuing Red Hat OpenShift certifications (EX280 — Red Hat Certified Specialist in OpenShift Administration)
 * *Community Engagement*: Participate in OpenShift community forums and events
 
 === Additional Resources
 For continued learning and support, refer to these authoritative resources:
 
-* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/[OpenShift Container Platform 4.18 Documentation]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/[OpenShift Container Platform 4.21 Documentation]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.20/[OpenShift Container Platform 4.20 Documentation]
 * link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/[OpenShift Container Platform 4.19 Documentation]
-* link:https://docs.redhat.com/en/documentation/red_hat_openshift_data_foundation/4.18/[OpenShift Data Foundation 4.18 Documentation]
+* link:https://docs.redhat.com/en/documentation/red_hat_openshift_data_foundation/4.21/[OpenShift Data Foundation 4.21 Documentation]
+* link:https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/3.x/[OpenShift AI 3.x Documentation]
 * link:https://www.redhat.com/en/technologies/cloud-computing/openshift/virtualization[OpenShift Virtualization Product Page]
 * link:https://www.redhat.com/en/technologies/cloud-computing/openshift/openshift-ai[OpenShift AI Product Page]
+* link:https://access.redhat.com/support/policy/updates/openshift[Red Hat OpenShift Life Cycle Policy]
 * link:https://access.redhat.com/support[Red Hat Customer Portal and Support]
 
-Thank you for completing this comprehensive workshop on OpenShift 4.18/4.19 bare metal deployment!
+Thank you for completing this comprehensive workshop on OpenShift 4.19/4.20/4.21 bare metal deployment!

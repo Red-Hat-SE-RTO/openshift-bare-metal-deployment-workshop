@@ -350,7 +350,7 @@ class IntelligentLinkChecker(LinkChecker):
 
         # Prepare analysis input
         analysis_input = {
-            "workshop_context": "OpenShift 4.18/4.19 Bare Metal Deployment Workshop",
+            "workshop_context": "OpenShift 4.19/4.20/4.21 Bare Metal Deployment Workshop",
             "failed_links": failed_links,
             "total_modules": len(results),
             "total_failed": len(failed_links)

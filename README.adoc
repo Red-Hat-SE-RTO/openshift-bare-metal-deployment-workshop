@@ -1,10 +1,10 @@
-= OpenShift 4.18/4.19 Bare Metal Deployment Workshop
+= OpenShift 4.19/4.20/4.21 Bare Metal Deployment Workshop
 
 == Introduction
 
-This comprehensive workshop provides hands-on experience with deploying *OpenShift 4.18/4.19 on bare metal infrastructure*, covering both connected and disconnected environments. The workshop follows a structured knowledge graph approach, guiding participants through essential concepts, multiple installation methods, and advanced post-deployment configurations.
+This comprehensive workshop provides hands-on experience with deploying *OpenShift 4.19/4.20/4.21 on bare metal infrastructure*, covering both connected and disconnected environments. The workshop follows a structured knowledge graph approach, guiding participants through essential concepts, multiple installation methods, and advanced post-deployment configurations.
 
-Built on the *Red Hat Enterprise Linux CoreOS (RHCOS)* immutable operating system and *Kubernetes 1.31/1.32* container orchestration, this workshop enables participants to master enterprise-grade OpenShift deployments with advanced storage, networking, and optional features like *OpenShift Virtualization* and *OpenShift AI*.
+Built on the *Red Hat Enterprise Linux CoreOS (RHCOS)* immutable operating system and *Kubernetes 1.32/1.33/1.34* container orchestration, this workshop enables participants to master enterprise-grade OpenShift deployments with advanced storage, networking, and optional features like *OpenShift Virtualization* and *OpenShift AI*.
 
 For your convenience, you may *fork this repository* and use it as a *reference guide* when implementing your own bare metal deployments using OpenShift.
 
@@ -35,7 +35,7 @@ Those responsible for deploying, managing, and scaling OpenShift clusters.
 This workshop follows a *knowledge graph approach* with 7 comprehensive modules, designed to accommodate both connected and disconnected deployment scenarios:
 
 === Module 1: Introduction - Foundation Concepts
-* **Platform Architecture**: Components & benefits of OpenShift 4.18/4.19
+* **Platform Architecture**: Components & benefits of OpenShift 4.19/4.20/4.21
 * **Installation Methods**: Assisted vs Agent-based installer comparison
 * **Workshop Learning Path**: Structured approach to bare metal mastery
 
@@ -94,11 +94,12 @@ This workshop emphasizes several advanced OpenShift deployment capabilities:
 === Flexible Deployment Options
 * **Standard HA Cluster**: 3 control plane + 2+ worker nodes for production workloads
 * **Compact Cluster**: 3 nodes serving dual control plane + worker roles for resource-constrained environments
+* **Two-Node with Arbiter**: 2 control plane + arbiter for edge/cost-sensitive deployments (4.19+)
 * **Connected vs Disconnected**: Full support for both internet-connected and air-gapped deployments
 
 === Enterprise-Grade Foundation
 * **Red Hat Enterprise Linux CoreOS**: Immutable, security-hardened operating system
-* **Kubernetes 1.31/1.32**: Latest container orchestration with enterprise support
+* **Kubernetes 1.32/1.33/1.34**: Latest container orchestration with enterprise support
 * **Production-Ready Configurations**: Real-world deployment patterns and best practices
 
 == For Developers
@@ -117,19 +118,48 @@ We use GitHub Actions for automated deployments and provide several utility scri
 
 == Version Information
 
-This edition of the *OpenShift 4.18/4.19 Bare Metal Deployment Workshop* has been developed using the following software versions:
+This edition of the *OpenShift 4.19/4.20/4.21 Bare Metal Deployment Workshop* has been developed using the following software versions:
 
-* link:https://docs.openshift.com/container-platform/4.18/[OpenShift 4.18 Documentation] - Primary version
-* link:https://docs.openshift.com/container-platform/4.19/[OpenShift 4.19 Documentation] - Latest features
-* **Kubernetes**: 1.31/1.32 (embedded within OpenShift)
+WARNING: OpenShift 4.18 is approaching End of Life. New deployments should target 4.19, 4.20, or 4.21. Always verify current support status at the link:https://access.redhat.com/support/policy/updates/openshift[Red Hat OpenShift Container Platform Life Cycle Policy].
+
+[cols="1,1,1,1", options="header"]
+|===
+|OpenShift Version |Kubernetes Version |Support Status |Release Notes
+
+|link:https://docs.openshift.com/container-platform/4.18/[4.18]
+|1.31
+|Approaching EOL — link:https://access.redhat.com/support/policy/updates/openshift[Check lifecycle]
+|link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/release_notes/ocp-4-18-release-notes[4.18 Release Notes]
+
+|link:https://docs.openshift.com/container-platform/4.19/[4.19]
+|1.32
+|Full Support
+|link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/release_notes/ocp-4-19-release-notes[4.19 Release Notes]
+
+|link:https://docs.openshift.com/container-platform/4.20/[4.20]
+|1.33
+|Full Support
+|link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.20/html/release_notes/ocp-4-20-release-notes[4.20 Release Notes]
+
+|link:https://docs.openshift.com/container-platform/4.21/[4.21]
+|1.34
+|Full Support
+|link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/release_notes/ocp-4-21-release-notes[4.21 Release Notes]
+
+|4.22 _(upcoming)_
+|1.35
+|Not yet released — link:https://access.redhat.com/support/policy/updates/openshift[Track on lifecycle page]
+|—
+|===
+
 * **Red Hat Enterprise Linux CoreOS**: Latest immutable OS foundation
-* **OpenShift Data Foundation**: Latest version for enterprise storage
-* **OpenShift Virtualization**: Latest version (Optional module)
-* **OpenShift AI**: Latest version (Optional module)
+* **OpenShift Data Foundation**: 4.20/4.21 for enterprise storage
+* **OpenShift Virtualization**: 4.21 (Optional module)
+* **OpenShift AI**: 3.x (Optional module)
 
 === Installation Methods Covered
-* **Assisted Installer**: link:https://docs.redhat.com/en/documentation/assisted_installer_for_openshift_container_platform/2025/[2025 Documentation] - Connected environments
-* **Agent-based Installer**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/[4.18 Documentation] - Disconnected environments
+* **Assisted Installer**: link:https://docs.redhat.com/en/documentation/assisted_installer_for_openshift_container_platform/2026/[2026 Documentation] - Connected environments
+* **Agent-based Installer**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/[4.21 Documentation] - Disconnected environments
 
 == About
 This lab guide is based on the *East Region RTO Workshop Template*.
@@ -140,10 +170,12 @@ link:https://red-hat-se-rto.github.io/se-redhat-rto-workshop-template/[red-hat-s
 == Resources
 
 === Primary Documentation
-* link:https://docs.openshift.com/container-platform/4.18/[OpenShift 4.18 Documentation] - Complete platform guide
-* link:https://docs.openshift.com/container-platform/4.19/[OpenShift 4.19 Documentation] - Latest features and updates
-* link:https://docs.redhat.com/en/documentation/assisted_installer_for_openshift_container_platform/2025/[Assisted Installer 2025 Documentation] - Connected installations
-* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/[Agent-based Installer Documentation] - Disconnected installations
+* link:https://docs.openshift.com/container-platform/4.21/[OpenShift 4.21 Documentation] - Current version
+* link:https://docs.openshift.com/container-platform/4.20/[OpenShift 4.20 Documentation] - Previous version
+* link:https://docs.openshift.com/container-platform/4.19/[OpenShift 4.19 Documentation] - Previous version
+* link:https://docs.redhat.com/en/documentation/assisted_installer_for_openshift_container_platform/2026/[Assisted Installer 2026 Documentation] - Connected installations
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/[Agent-based Installer Documentation] - Disconnected installations
+* link:https://access.redhat.com/support/policy/updates/openshift[OpenShift Life Cycle Policy] - Support status for all versions
 
 === Platform and Tools
 * link:https://connect.redhat.com/en/training/demo-platform[Red Hat Demo Platform (RHDP)] - Lab environments
@@ -151,6 +183,6 @@ link:https://red-hat-se-rto.github.io/se-redhat-rto-workshop-template/[red-hat-s
 * link:https://www.redhat.com/en/technologies/cloud-computing/openshift-data-foundation[OpenShift Data Foundation] - Enterprise storage solution
 
 === Advanced Features
-* link:https://docs.openshift.com/container-platform/4.18/virt/about-virt.html[OpenShift Virtualization Documentation]
+* link:https://docs.openshift.com/container-platform/4.21/virt/about-virt.html[OpenShift Virtualization Documentation]
 * link:https://docs.redhat.com/en/documentation/red_hat_openshift_ai/[OpenShift AI Documentation]
-* link:https://docs.openshift.com/container-platform/4.18/networking/k8s_nmstate/k8s-nmstate-about-the-k8s-nmstate-operator.html[Nmstate Networking Documentation]
+* link:https://docs.openshift.com/container-platform/4.21/networking/k8s_nmstate/k8s-nmstate-about-the-k8s-nmstate-operator.html[Nmstate Networking Documentation]

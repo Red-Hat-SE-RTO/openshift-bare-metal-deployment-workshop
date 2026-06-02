@@ -1,29 +1,29 @@
-= Module 5: Storage Configuration for OpenShift 4.18/4.19
+= Module 5: Storage Configuration for OpenShift 4.19/4.20/4.21
 :page-layout: module
 
-== Storage Overview for OpenShift 4.18/4.19 [[overview]]
+== Storage Overview for OpenShift 4.19/4.20/4.21 [[overview]]
 
 === Storage Architecture in OpenShift
-OpenShift Container Platform 4.18/4.19 provides comprehensive storage capabilities through multiple storage solutions:
+OpenShift Container Platform 4.19/4.20/4.21 provides comprehensive storage capabilities through multiple storage solutions:
 
-* *link:https://docs.redhat.com/en/documentation/red_hat_openshift_data_foundation/4.18/html/planning_your_deployment/index[OpenShift Data Foundation (ODF)]*: Software-defined storage solution
-* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/storage/configuring-persistent-storage#overview-of-lso-functionality_ways-to-provision-local-storage[Local Storage Operator]*: Local persistent volume management
-* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/storage/understanding-persistent-storage[External Storage Providers]*: Integration with existing storage systems
-* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/storage/dynamic-provisioning[Dynamic Provisioning]*: Automated storage allocation
+* *link:https://docs.redhat.com/en/documentation/red_hat_openshift_data_foundation/4.21/html/planning_your_deployment/index[OpenShift Data Foundation (ODF)]*: Software-defined storage solution
+* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/storage/configuring-persistent-storage#overview-of-lso-functionality_ways-to-provision-local-storage[Local Storage Operator]*: Local persistent volume management
+* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/storage/understanding-persistent-storage[External Storage Providers]*: Integration with existing storage systems
+* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/storage/dynamic-provisioning[Dynamic Provisioning]*: Automated storage allocation
 
-=== Storage Requirements for OpenShift 4.18/4.19
+=== Storage Requirements for OpenShift 4.19/4.20/4.21
 Before configuring storage, understand the requirements:
 
-* *Container Registry*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/registry/setting-up-and-configuring-the-registry[Persistent storage for image registry]
-* *Monitoring*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/monitoring/index[Storage for Prometheus and Alertmanager]
-* *Logging*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/logging/index[Storage for log aggregation]
+* *Container Registry*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/registry/setting-up-and-configuring-the-registry[Persistent storage for image registry]
+* *Monitoring*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/monitoring/index[Storage for Prometheus and Alertmanager]
+* *Logging*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/logging/index[Storage for log aggregation]
 * *Application Workloads*: Persistent volumes for stateful applications
-* *etcd Backup*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/backup_and_restore/control-plane-backup-and-restore[Storage for cluster state backups]
+* *etcd Backup*: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/backup_and_restore/control-plane-backup-and-restore[Storage for cluster state backups]
 
 == OpenShift Data Foundation (ODF) Setup [[odf]]
 
-=== What is OpenShift Data Foundation?https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/storage/configuring-persistent-storage#persistent-storage-using-azure
-link:https://docs.redhat.com/en/documentation/red_hat_openshift_data_foundation/4.18/html/planning_your_deployment/index[OpenShift Data Foundation] is Red Hat's software-defined storage solution that provides:
+=== What is OpenShift Data Foundation?
+link:https://docs.redhat.com/en/documentation/red_hat_openshift_data_foundation/4.21/html/planning_your_deployment/index[OpenShift Data Foundation] is Red Hat's software-defined storage solution that provides:
 
 * *Block Storage*: High-performance block storage using Ceph RBD
 * *File Storage*: Shared file storage using CephFS
@@ -39,7 +39,7 @@ link:https://docs.redhat.com/en/documentation/red_hat_openshift_data_foundation/
 === Prerequisites for ODF Installation
 Before installing ODF, ensure:
 
-* *Hardware Requirements*: link:https://docs.redhat.com/en/documentation/red_hat_openshift_data_foundation/4.18/html/planning_your_deployment/infrastructure-requirements_rhodf[Minimum 3 worker nodes with local storage]
+* *Hardware Requirements*: link:https://docs.redhat.com/en/documentation/red_hat_openshift_data_foundation/4.21/html/planning_your_deployment/infrastructure-requirements_rhodf[Minimum 3 worker nodes with local storage]
 * *Storage Devices*: Raw block devices or local disks on each storage node
 * *Network Requirements*: High-bandwidth, low-latency network between storage nodes
 * *Node Labels*: Proper node labeling for storage node identification
@@ -47,11 +47,15 @@ Before installing ODF, ensure:
 === Step-by-Step ODF Installation
 
 ==== Step 1: Install OpenShift Data Foundation Operator
-1. Access the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/web_console/web-console-overview[OpenShift web console]
+
+IMPORTANT: Always install an ODF version that matches your OCP minor version. For OCP 4.21, use the `stable-4.21` channel. For OCP 4.20, use `stable-4.20`. Using a mismatched version is not supported. See the link:https://docs.redhat.com/en/documentation/red_hat_openshift_data_foundation/4.21/html/planning_your_deployment/[ODF 4.21 Planning Guide] for supported configurations.
+
+1. Access the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/web_console/web-console-overview[OpenShift web console]
 2. Navigate to Operators → OperatorHub
 3. Search for "OpenShift Data Foundation"
-4. Click Install and follow the installation wizard
-5. Wait for the operator to be installed successfully
+4. Select Update Channel: `stable-4.21` (match your OCP version)
+5. Click Install and follow the installation wizard
+6. Wait for the operator to be installed successfully
 
 ==== Step 2: Prepare Storage Nodes
 Label nodes that will provide storage:
@@ -73,12 +77,15 @@ oc label nodes worker-3 cluster.ocs.openshift.io/openshift-storage=""
 == Local Storage Operator Configuration [[local-storage]]
 
 === What is the Local Storage Operator?
-The link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/storage/configuring-persistent-storage[Local Storage Operator] enables the use of local storage devices for persistent volumes in OpenShift 4.18/4.19.
+The link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/storage/configuring-persistent-storage[Local Storage Operator (LSO)] enables the use of local storage devices for persistent volumes in OpenShift 4.19/4.20/4.21.
+
+NOTE: For single-node, compact, or edge deployments, consider **Logical Volume Manager Storage (LVMS)** as an alternative to LSO. LVMS creates a single StorageClass backed by LVM thin pools and is simpler to operate for environments with 1–3 nodes. See the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/storage/configuring-persistent-storage#lvms-provisioning_using-lvms[LVMS documentation] for details.
 
 === Local Storage Use Cases
 * *High-performance workloads*: Applications requiring low-latency storage access
 * *Database workloads*: Databases that benefit from direct storage access
-* *Edge computing*: Environments where external storage is not available
+* *ODF backing storage*: Local disks exposed by LSO are used as ODF backing storage
+* *Edge computing*: Environments where external storage is not available (consider LVMS for simpler management)
 * *Cost optimization*: Utilizing existing local storage resources
 
 === Installing the Local Storage Operator
@@ -155,23 +162,23 @@ EOF
 == External Storage Integration [[external]]
 
 === Supported External Storage Types
-OpenShift 4.18/4.19 supports various external storage systems:
+OpenShift 4.19/4.20/4.21 supports various external storage systems:
 
 ==== Block Storage Providers
-* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/storage/configuring-persistent-storage[iSCSI]*: Internet Small Computer Systems Interface
-* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/storage/configuring-persistent-storage[Fibre Channel]*: High-speed network technology
-* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/storage/configuring-persistent-storage[AWS EBS]*: Amazon Elastic Block Store
-* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/storage/configuring-persistent-storage[Azure Disk]*: Microsoft Azure managed disks
-* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/storage/configuring-persistent-storage[GCE Persistent Disk]*: Google Cloud persistent disks
+* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/storage/configuring-persistent-storage[iSCSI]*: Internet Small Computer Systems Interface
+* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/storage/configuring-persistent-storage[Fibre Channel]*: High-speed network technology
+* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/storage/configuring-persistent-storage[AWS EBS]*: Amazon Elastic Block Store
+* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/storage/configuring-persistent-storage[Azure Disk]*: Microsoft Azure managed disks
+* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/storage/configuring-persistent-storage[GCE Persistent Disk]*: Google Cloud persistent disks
 
 ==== File Storage Providers
-* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/storage/configuring-persistent-storage[NFS]*: Network File System
-* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/storage/configuring-persistent-storage[CephFS]*: Ceph File System
-* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/storage/configuring-persistent-storage[AWS EFS]*: Amazon Elastic File System
-* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/storage/configuring-persistent-storage[Azure Files]*: Microsoft Azure file shares
+* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/storage/configuring-persistent-storage[NFS]*: Network File System
+* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/storage/configuring-persistent-storage[CephFS]*: Ceph File System
+* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/storage/configuring-persistent-storage[AWS EFS]*: Amazon Elastic File System
+* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/storage/configuring-persistent-storage[Azure Files]*: Microsoft Azure file shares
 
 ==== Object Storage Providers
-* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/storage/understanding-persistent-storage#object-storage_understanding-persistent-storage[S3-compatible storage]*: Amazon S3 and compatible systems
+* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/storage/understanding-persistent-storage#object-storage_understanding-persistent-storage[S3-compatible storage]*: Amazon S3 and compatible systems
 * *OpenStack Swift*: OpenStack object storage
 * *Ceph RADOS Gateway*: Ceph object storage interface
 
@@ -193,9 +200,9 @@ volumeBindingMode: Immediate
 ```
 
 ==== Persistent Volume Management
-* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/storage/understanding-persistent-storage#persistent-volumes_understanding-persistent-storage[Static Provisioning]*: Manually created persistent volumes
-* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/storage/dynamic-provisioning[Dynamic Provisioning]*: Automatically created volumes via storage classes
-* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/storage/expanding-persistent-volumes[Volume Expansion]*: Expanding existing persistent volumes
+* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/storage/understanding-persistent-storage#persistent-volumes_understanding-persistent-storage[Static Provisioning]*: Manually created persistent volumes
+* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/storage/dynamic-provisioning[Dynamic Provisioning]*: Automatically created volumes via storage classes
+* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/storage/expanding-persistent-volumes[Volume Expansion]*: Expanding existing persistent volumes
 
 == Container Image Registry Configuration [[registry]]
 
@@ -226,14 +233,14 @@ spec:
 ```
 
 === Registry Security and Access Control
-* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/registry/securing-exposing-registry[Registry Security]*: Configure TLS and authentication
-* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/registry/registry-overview-1[Access Control]*: Manage registry access permissions
-* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/registry/setting-up-and-configuring-the-registry[Storage Configuration]*: Optimize storage for registry workloads
+* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/registry/securing-exposing-registry[Registry Security]*: Configure TLS and authentication
+* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/registry/registry-overview-1[Access Control]*: Manage registry access permissions
+* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/registry/setting-up-and-configuring-the-registry[Storage Configuration]*: Optimize storage for registry workloads
 
 == Volume Snapshots and Backup [[snapshots]]
 
 === Configuring Volume Snapshots
-OpenShift 4.18/4.19 provides comprehensive snapshot capabilities:
+OpenShift 4.19/4.20/4.21 provides comprehensive snapshot capabilities:
 
 ==== Install Volume Snapshot Components
 ```bash
@@ -272,8 +279,8 @@ spec:
 === Backup and Disaster Recovery
 Implement comprehensive backup strategies:
 
-* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/backup_and_restore/oadp-application-backup-and-restore[OADP (OpenShift API for Data Protection)]*: Application backup and restore
-* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/backup_and_restore/control-plane-backup-and-restore[etcd Backup]*: Control plane backup procedures
+* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/backup_and_restore/oadp-application-backup-and-restore[OADP (OpenShift API for Data Protection)]*: Application backup and restore
+* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/backup_and_restore/control-plane-backup-and-restore[etcd Backup]*: Control plane backup procedures
 * *Volume Snapshots*: Point-in-time storage snapshots
 * *Cross-Region Replication*: Disaster recovery across regions
 
@@ -289,7 +296,7 @@ Monitor storage performance and capacity:
 * *Throughput*: Data transfer rates
 
 ==== Monitoring Tools
-* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/observability_overview/observability-overview[Prometheus Monitoring]*: Built-in metrics collection
+* *link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/observability_overview/observability-overview[Prometheus Monitoring]*: Built-in metrics collection
 * *Grafana Dashboards*: Visual storage performance dashboards
 * *ODF Monitoring*: Specialized monitoring for OpenShift Data Foundation
 * *Storage Alerts*: Automated alerting for storage issues
@@ -302,10 +309,16 @@ Optimize storage performance for different workloads:
 * *Resource Limits*: Configure appropriate CPU and memory limits
 * *Network Optimization*: Optimize network configuration for storage traffic
 
-== Storage Best Practices for OpenShift 4.18/4.19 [[best-practices]]
+== Storage Best Practices for OpenShift 4.19/4.20/4.21 [[best-practices]]
+
+=== New Storage Features in OCP 4.20/4.21
+
+* **VolumeAttributesClass (GA in 4.21)**: Allows dynamic tuning of storage performance parameters (IOPS, throughput) post-provisioning on supported CSI drivers. See link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/storage/dynamic-provisioning[Dynamic provisioning] for VolumeAttributesClass examples.
+* **LVMS improvements**: Logical Volume Manager Storage now supports volume snapshots on thin-provisioned pools (4.20+).
+* **Azure File CSI snapshots (GA in 4.21)**: Volume snapshots are now GA for Azure File shares.
 
 === Design Principles
-* *Redundancy*: link:https://docs.redhat.com/en/documentation/red_hat_openshift_data_foundation/4.18/html/planning_your_deployment/infrastructure-requirements_rhodf[Implement storage redundancy] across failure domains
+* *Redundancy*: link:https://docs.redhat.com/en/documentation/red_hat_openshift_data_foundation/4.21/html/planning_your_deployment/infrastructure-requirements_rhodf[Implement storage redundancy] across failure domains
 * *Performance*: Choose appropriate storage types for workload requirements
 * *Scalability*: Plan for storage growth and expansion
 * *Security*: Implement encryption at rest and in transit
@@ -325,11 +338,12 @@ Optimize storage performance for different workloads:
 == Documentation References
 For detailed storage configuration information, refer to:
 
-* link:https://docs.redhat.com/en/documentation/red_hat_openshift_data_foundation/4.18/html/planning_your_deployment/index[OpenShift Data Foundation Planning Guide - 4.18]
-* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/storage/understanding-persistent-storage[Understanding persistent storage - OpenShift 4.18]
-* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/storage/configuring-persistent-storage[Persistent storage using local volumes - OpenShift 4.18]
-* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/storage/dynamic-provisioning[Dynamic provisioning - OpenShift 4.18]
-* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/backup_and_restore/oadp-application-backup-and-restore[OADP application backup and restore - OpenShift 4.18]
+* link:https://docs.redhat.com/en/documentation/red_hat_openshift_data_foundation/4.21/html/planning_your_deployment/index[OpenShift Data Foundation Planning Guide - 4.21]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/storage/understanding-persistent-storage[Understanding persistent storage - OpenShift 4.21]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/storage/configuring-persistent-storage[Persistent storage using local volumes - OpenShift 4.21]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/storage/dynamic-provisioning[Dynamic provisioning - OpenShift 4.21]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/backup_and_restore/oadp-application-backup-and-restore[OADP application backup and restore - OpenShift 4.21]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/storage/configuring-persistent-storage#lvms-provisioning_using-lvms[Logical Volume Manager Storage (LVMS) - OpenShift 4.21]
 
 == Next Steps
 Ready to configure advanced networking with Nmstate? Continue to xref:module-06-networking.adoc[Module 6: Network Configuration using Nmstate].

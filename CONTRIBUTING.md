@@ -1,6 +1,6 @@
-# Contributing to OpenShift 4.16+ Bare Metal Deployment Workshop
+# Contributing to OpenShift 4.19+ Bare Metal Deployment Workshop
 
-Thank you for your interest in contributing to the OpenShift 4.16+ Bare Metal Deployment Workshop! This document provides guidelines and instructions for contributing to this repository.
+Thank you for your interest in contributing to the OpenShift 4.19+ Bare Metal Deployment Workshop! This document provides guidelines and instructions for contributing to this repository.
 
 ## Table of Contents
 

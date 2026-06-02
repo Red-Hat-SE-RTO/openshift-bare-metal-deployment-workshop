@@ -1,9 +1,9 @@
 graph TD
-    %% Knowledge Graph: OpenShift 4.18/4.19 Bare Metal Deployment Workshop
+    %% Knowledge Graph: OpenShift 4.19/4.20/4.21 Bare Metal Deployment Workshop
 
     %% Core Concepts
-    OCP[OpenShift 4.18/4.19<br/>Enterprise Kubernetes Platform] --> RHCOS[Red Hat Enterprise Linux CoreOS<br/>Immutable Operating System]
-    OCP --> K8S[Kubernetes 1.31/1.32<br/>Container Orchestration]
+    OCP[OpenShift 4.19/4.20/4.21<br/>Enterprise Kubernetes Platform] --> RHCOS[Red Hat Enterprise Linux CoreOS<br/>Immutable Operating System]
+    OCP --> K8S[Kubernetes 1.32/1.33/1.34<br/>Container Orchestration]
 
     %% Module 1: Foundation Knowledge
     A[Module 1: Introduction<br/>Foundation Concepts] --> A1[Platform Architecture<br/>Components & Benefits]
@@ -46,6 +46,7 @@ graph TD
     %% Cluster Configurations
     STANDARD[Standard HA Cluster<br/>3 Control + 2+ Workers] --> C2
     COMPACT[Compact Cluster<br/>3 Nodes Control+Worker] --> C2
+    TNA[Two-Node with Arbiter<br/>Edge/Cost-optimized 4.19+] --> C2
 
     %% Post-Installation Modules
     C --> F[Module 5: Storage<br/>OpenShift Data Foundation]

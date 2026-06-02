@@ -13,12 +13,12 @@ By the end of this module, you will have completed the Agent-based Installer dep
 
 == Agent-based Installer Overview [[overview]]
 
-The link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer[Agent-based Installer] provides the flexibility to boot your on-premise servers in any way that you choose, combining the ease of use of the Assisted Installation service with the ability to run offline, including in air-gapped environments.
+The link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer[Agent-based Installer] provides the flexibility to boot your on-premise servers in any way that you choose, combining the ease of use of the Assisted Installation service with the ability to run offline, including in air-gapped environments.
 
 === Primary Documentation Resources
-* **Complete Installation Guide**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer[Preparing to install with the Agent-based Installer] - Authoritative preparation guide
-* **Installation with Customizations**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer[Installing a cluster with customizations] - Step-by-step installation guide
-* **Disconnected Installation**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/understanding-disconnected-installation-mirroring[Understanding disconnected installation mirroring] - Air-gapped deployment guide
+* **Complete Installation Guide**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer[Preparing to install with the Agent-based Installer] - Authoritative preparation guide
+* **Installation with Customizations**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer[Installing a cluster with customizations] - Step-by-step installation guide
+* **Disconnected Installation**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/understanding-disconnected-installation-mirroring[Understanding disconnected installation mirroring] - Air-gapped deployment guide
 
 === Key Advantages
 * **Offline Installation**: Complete air-gapped deployment capability for secure environments
@@ -40,12 +40,12 @@ Before starting the Agent-based Installer, ensure you have completed:
 
 == E1: install-config.yaml - Declarative Configuration [[e1-install-config]]
 
-The link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#installing-ocp-agent-inputs_installing-with-agent-based-installer[install-config.yaml file] serves as the primary configuration manifest for Agent-based installations, using the same declarative format as installer-provisioned infrastructure (IPI) and user-provisioned infrastructure (UPI) methods.
+The link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#installing-ocp-agent-inputs_installing-with-agent-based-installer[install-config.yaml file] serves as the primary configuration manifest for Agent-based installations, using the same declarative format as installer-provisioned infrastructure (IPI) and user-provisioned infrastructure (UPI) methods.
 
 === Documentation References
-* **Configuration Guide**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#installation-bare-metal-agent-installer-config-yaml_preparing-to-install-with-agent-based-installer[Sample install-config.yaml file for bare metal] - Complete configuration reference
-* **Platform Options**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#installation-requirements-platform-none_preparing-to-install-with-agent-based-installer[Requirements for platform "none" option] - Platform-specific requirements
-* **Architecture Support**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#agent-install-verifying-architectures_installing-with-agent-based-installer[Verifying supported architecture] - Multi-architecture deployment guide
+* **Configuration Guide**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#installation-bare-metal-agent-installer-config-yaml_preparing-to-install-with-agent-based-installer[Sample install-config.yaml file for bare metal] - Complete configuration reference
+* **Platform Options**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#installation-requirements-platform-none_preparing-to-install-with-agent-based-installer[Requirements for platform "none" option] - Platform-specific requirements
+* **Architecture Support**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#agent-install-verifying-architectures_installing-with-agent-based-installer[Verifying supported architecture] - Multi-architecture deployment guide
 
 === Creating the Installation Directory
 
@@ -63,44 +63,50 @@ echo "This directory will contain all installation manifests and generated artif
 
 === Basic install-config.yaml Structure
 
-Create the primary configuration file following the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#installation-bare-metal-agent-installer-config-yaml_preparing-to-install-with-agent-based-installer[official sample configuration]:
+Create the primary configuration file following the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#installation-bare-metal-agent-installer-config-yaml_preparing-to-install-with-agent-based-installer[official sample configuration]:
 
 ```yaml
-# install-config.yaml - Agent-based Installer Configuration
-# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#installation-bare-metal-agent-installer-config-yaml_preparing-to-install-with-agent-based-installer
+# install-config.yaml - Agent-based Installer Configuration (Standard HA Cluster)
+# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#installation-bare-metal-agent-installer-config-yaml_preparing-to-install-with-agent-based-installer
 apiVersion: v1
 baseDomain: example.com                    # Base domain for cluster DNS records
 compute:
 - architecture: amd64                      # Supported: amd64, arm64, ppc64le, s390x
   hyperthreading: Enabled
   name: worker
-  replicas: 0                             # Number of worker nodes (0 for single-node)
+  replicas: 2                             # Number of worker nodes (2+ for Standard HA)
 controlPlane:
   architecture: amd64
   hyperthreading: Enabled
   name: master
-  replicas: 1                             # Number of control plane nodes
+  replicas: 3                             # 3 control plane nodes for Standard HA
 metadata:
-  name: sno-cluster                       # Cluster name (must be DNS-compliant)
+  name: ocp-cluster                       # Cluster name (must be DNS-compliant)
 networking:
   clusterNetwork:
   - cidr: 10.128.0.0/14                   # Pod network CIDR block
     hostPrefix: 23                        # Subnet prefix per node
   machineNetwork:
-  - cidr: 192.168.0.0/16                  # Machine network CIDR
-  networkType: OVNKubernetes              # Only supported network plugin
+  - cidr: 192.168.1.0/24                  # Machine network CIDR
+  networkType: OVNKubernetes              # Only supported network plugin (SDN removed in 4.20)
   serviceNetwork:
   - 172.30.0.0/16                         # Service network CIDR
 platform:
-  none: {}                                # Platform type for bare metal
+  baremetal:                              # Use baremetal platform for VIP management
+    apiVIPs:
+    - 192.168.1.100                       # Kubernetes API load balancer VIP
+    ingressVIPs:
+    - 192.168.1.101                       # Application ingress load balancer VIP
 pullSecret: '<your-pull-secret>'          # Red Hat registry pull secret
 sshKey: '<your-ssh-public-key>'           # SSH public key for core user access
-fips: false                               # FIPS 140-2 compliance mode
+fips: false                               # Set to true for FIPS 140-2/140-3 compliance
 ```
+
+NOTE: For a **Compact cluster** (3 nodes, control plane + worker combined), set `compute.replicas: 0` and `controlPlane.replicas: 3`. For **Single-Node OpenShift (SNO)**, set `compute.replicas: 0`, `controlPlane.replicas: 1`, and use `platform: none: {}`. See the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/[OCP 4.21 Agent-based Installer docs] for all topology options.
 
 === Platform Configuration Options
 
-The Agent-based Installer supports multiple platform configurations as documented in the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#installation-bare-metal-agent-installer-config-yaml_preparing-to-install-with-agent-based-installer[platform configuration guide]:
+The Agent-based Installer supports multiple platform configurations as documented in the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#installation-bare-metal-agent-installer-config-yaml_preparing-to-install-with-agent-based-installer[platform configuration guide]:
 
 ```yaml
 # Platform options for different deployment scenarios
@@ -131,7 +137,7 @@ platform:
 
 === Configuration Validation
 
-Validate your install-config.yaml using the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#validations-before-agent-iso-creation_preparing-to-install-with-agent-based-installer[built-in validation checks]:
+Validate your install-config.yaml using the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#validations-before-agent-iso-creation_preparing-to-install-with-agent-based-installer[built-in validation checks]:
 
 ```bash
 # Validate install-config.yaml following Red Hat validation guidelines
@@ -172,21 +178,21 @@ echo "install-config.yaml validation complete - ready for agent-config.yaml crea
 
 == E2: agent-config.yaml - Node-specific Settings [[e2-agent-config]]
 
-The link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#agent-host-config_preparing-to-install-with-agent-based-installer[agent-config.yaml file] provides host-specific configurations including network settings, root device hints, and role assignments for each node in your cluster.
+The link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#agent-host-config_preparing-to-install-with-agent-based-installer[agent-config.yaml file] provides host-specific configurations including network settings, root device hints, and role assignments for each node in your cluster.
 
 === Documentation References
-* **Host Configuration**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#agent-host-config_preparing-to-install-with-agent-based-installer[Host configuration] - Complete host configuration guide
-* **Host Roles**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#agent-host-roles_preparing-to-install-with-agent-based-installer[Host roles] - Master and worker role assignment
-* **Root Device Hints**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#root-device-hints_preparing-to-install-with-agent-based-installer[About root device hints] - Storage device selection
-* **Networking Configuration**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#agent-install-networking_preparing-to-install-with-agent-based-installer[About networking] - Network configuration options
+* **Host Configuration**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#agent-host-config_preparing-to-install-with-agent-based-installer[Host configuration] - Complete host configuration guide
+* **Host Roles**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#agent-host-roles_preparing-to-install-with-agent-based-installer[Host roles] - Master and worker role assignment
+* **Root Device Hints**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#root-device-hints_preparing-to-install-with-agent-based-installer[About root device hints] - Storage device selection
+* **Networking Configuration**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#agent-install-networking_preparing-to-install-with-agent-based-installer[About networking] - Network configuration options
 
 === Basic agent-config.yaml Structure
 
-Create the agent configuration file following the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#agent-host-roles_preparing-to-install-with-agent-based-installer[host roles documentation]:
+Create the agent configuration file following the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#agent-host-roles_preparing-to-install-with-agent-based-installer[host roles documentation]:
 
 ```yaml
 # agent-config.yaml - Host-specific Configuration
-# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#agent-host-config_preparing-to-install-with-agent-based-installer
+# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#agent-host-config_preparing-to-install-with-agent-based-installer
 apiVersion: v1beta1
 kind: AgentConfig
 metadata:
@@ -226,15 +232,15 @@ hosts:
 
 === DHCP vs Static Network Configuration
 
-The Agent-based Installer supports both DHCP and static network configurations as documented in the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#agent-install-networking_preparing-to-install-with-agent-based-installer[networking guide]:
+The Agent-based Installer supports both DHCP and static network configurations as documented in the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#agent-install-networking_preparing-to-install-with-agent-based-installer[networking guide]:
 
 ==== DHCP Configuration
 For environments with DHCP servers, minimal configuration is required:
 
 ```yaml
 # agent-config.yaml - DHCP Configuration
-# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#agent-install-networking-DHCP_preparing-to-install-with-agent-based-installer
-apiVersion: v1alpha1
+# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#agent-install-networking-DHCP_preparing-to-install-with-agent-based-installer
+apiVersion: v1beta1
 kind: AgentConfig
 metadata:
   name: sno-cluster
@@ -247,8 +253,8 @@ For environments without DHCP, configure static networking:
 
 ```yaml
 # agent-config.yaml - Static Network Configuration
-# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#agent-install-networking-static_preparing-to-install-with-agent-based-installer
-apiVersion: v1alpha1
+# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#agent-install-networking-static_preparing-to-install-with-agent-based-installer
+apiVersion: v1beta1
 kind: AgentConfig
 metadata:
   name: sno-cluster
@@ -284,12 +290,12 @@ hosts:
 
 === Advanced Network Configurations
 
-The Agent-based Installer supports advanced networking scenarios including bonds and VLANs as documented in the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#agent-install-sample-config-bonds-vlans_preparing-to-install-with-agent-based-installer[bonds and VLAN interface configuration]:
+The Agent-based Installer supports advanced networking scenarios including bonds and VLANs as documented in the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#agent-install-sample-config-bonds-vlans_preparing-to-install-with-agent-based-installer[bonds and VLAN interface configuration]:
 
 ```yaml
 # agent-config.yaml - Advanced Networking with Bonds and VLANs
-# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#agent-install-sample-config-bonds-vlans_preparing-to-install-with-agent-based-installer
-apiVersion: v1alpha1
+# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#agent-install-sample-config-bonds-vlans_preparing-to-install-with-agent-based-installer
+apiVersion: v1beta1
 kind: AgentConfig
 rendezvousIP: 10.10.10.14
 hosts:
@@ -344,7 +350,7 @@ hosts:
 
 == E3: Mirror Registry Setup - Disconnected Image Storage [[e3-mirror-registry]]
 
-For air-gapped environments, the Agent-based Installer requires a local mirror registry containing all necessary OpenShift images. This section covers the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/understanding-disconnected-installation-mirroring[disconnected installation mirroring] process using the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/disconnected_environments/mirroring-in-disconnected-environments#installing-mirroring-creating-registry[mirror registry for Red Hat OpenShift].
+For air-gapped environments, the Agent-based Installer requires a local mirror registry containing all necessary OpenShift images. This section covers the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/understanding-disconnected-installation-mirroring[disconnected installation mirroring] process using the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/disconnected_environments/mirroring-in-disconnected-environments#installing-mirroring-creating-registry[mirror registry for Red Hat OpenShift].
 
 [NOTE]
 ====
@@ -352,15 +358,15 @@ The **mirror registry for Red Hat OpenShift** is a small-scale container registr
 ====
 
 === Documentation References
-* **Mirroring Guide**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/understanding-disconnected-installation-mirroring#agent-install-mirroring-images-disconnected_understanding-disconnected-installation-mirroring[Mirroring images for disconnected installation] - Complete mirroring process
-* **Mirror Registry Setup**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/disconnected_environments/mirroring-in-disconnected-environments#mirror-registry-localhost_installing-mirroring-creating-registry[Mirror registry for Red Hat OpenShift installation] - Official mirror registry setup guide
-* **Mirror Registry Configuration**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/understanding-disconnected-installation-mirroring#configuring-the-agent-based-installer-to-use-mirrored-images[Configuring Agent-based Installer to use mirrored images] - Configuration guide
-* **oc-mirror Plugin**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html-single/disconnected_environments/#about-installing-oc-mirror-v2[Mirroring with oc-mirror plugin v2] - Advanced mirroring tool
+* **Mirroring Guide**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/understanding-disconnected-installation-mirroring#agent-install-mirroring-images-disconnected_understanding-disconnected-installation-mirroring[Mirroring images for disconnected installation] - Complete mirroring process
+* **Mirror Registry Setup**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/disconnected_environments/mirroring-in-disconnected-environments#mirror-registry-localhost_installing-mirroring-creating-registry[Mirror registry for Red Hat OpenShift installation] - Official mirror registry setup guide
+* **Mirror Registry Configuration**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/understanding-disconnected-installation-mirroring#configuring-the-agent-based-installer-to-use-mirrored-images[Configuring Agent-based Installer to use mirrored images] - Configuration guide
+* **oc-mirror Plugin**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html-single/disconnected_environments/#about-installing-oc-mirror-v2[Mirroring with oc-mirror plugin v2] - Advanced mirroring tool
 * **Mirror Registry Downloads**: link:https://console.redhat.com/openshift/downloads#tool-mirror-registry[OpenShift Console Downloads] - Official download location for mirror-registry tool
 
 === Setting Up Mirror Registry
 
-Establish a local container registry for storing mirrored OpenShift images using the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/disconnected_environments/mirroring-in-disconnected-environments#mirror-registry-localhost_installing-mirroring-creating-registry[mirror registry for Red Hat OpenShift]:
+Establish a local container registry for storing mirrored OpenShift images using the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/disconnected_environments/mirroring-in-disconnected-environments#mirror-registry-localhost_installing-mirroring-creating-registry[mirror registry for Red Hat OpenShift]:
 
 ```bash
 # Install and configure mirror registry
@@ -368,7 +374,7 @@ echo "=== Setting Up Mirror Registry ==="
 
 # Option 1: Using mirror-registry tool (recommended)
 # Download mirror-registry from Red Hat OpenShift Console Downloads page
-# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/disconnected_environments/mirroring-in-disconnected-environments#mirror-registry-localhost_installing-mirroring-creating-registry
+# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/disconnected_environments/mirroring-in-disconnected-environments#mirror-registry-localhost_installing-mirroring-creating-registry
 echo "=== Downloading Mirror Registry for Red Hat OpenShift ==="
 echo "Primary download location: https://console.redhat.com/openshift/downloads#tool-mirror-registry"
 echo "Alternative GitHub releases: https://github.com/quay/mirror-registry/releases"
@@ -394,14 +400,14 @@ echo "Alternative: Using existing registry at mirror.example.com:5000"
 
 === Mirroring OpenShift Release Images
 
-Mirror the required OpenShift images using the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/understanding-disconnected-installation-mirroring#agent-install-about-mirroring-for-disconnected-registry_understanding-disconnected-installation-mirroring[oc adm release mirror command]:
+Mirror the required OpenShift images using the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/understanding-disconnected-installation-mirroring#agent-install-about-mirroring-for-disconnected-registry_understanding-disconnected-installation-mirroring[oc adm release mirror command]:
 
 ```bash
 # Mirror OpenShift release images
 echo "=== Mirroring OpenShift Release Images ==="
 
-# Set environment variables
-export OCP_RELEASE="4.18.0"
+# Set environment variables - update OCP_RELEASE to match your target cluster version
+export OCP_RELEASE="4.21.0"
 export LOCAL_REGISTRY="mirror.example.com:5000"
 export LOCAL_REPOSITORY="openshift/release"
 export PRODUCT_REPO="openshift-release-dev"
@@ -415,17 +421,17 @@ oc adm release mirror \
   --to=${LOCAL_REGISTRY}/${LOCAL_REPOSITORY} \
   --to-release-image=${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}:${OCP_RELEASE}-x86_64
 
-# The command will output imageContentSources configuration
+# The command will output imageDigestSources configuration (formerly imageContentSources)
 # Save this output for use in install-config.yaml
 ```
 
 === Configuring install-config.yaml for Disconnected Installation
 
-Update your install-config.yaml with mirror registry configuration following the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/understanding-disconnected-installation-mirroring#configuring-the-agent-based-installer-to-use-mirrored-images[configuration guide]:
+Update your install-config.yaml with mirror registry configuration following the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/understanding-disconnected-installation-mirroring#configuring-the-agent-based-installer-to-use-mirrored-images[configuration guide]:
 
 ```yaml
 # install-config.yaml - Disconnected Configuration
-# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/understanding-disconnected-installation-mirroring#configuring-the-agent-based-installer-to-use-mirrored-images
+# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/understanding-disconnected-installation-mirroring#configuring-the-agent-based-installer-to-use-mirrored-images
 apiVersion: v1
 baseDomain: example.com
 metadata:
@@ -454,11 +460,14 @@ platform:
 pullSecret: '<your-pull-secret-with-mirror-registry>'
 sshKey: '<your-ssh-public-key>'
 # Mirror registry configuration
-additionalTrustBundle: |                  # Mirror registry certificate
+additionalTrustBundle: |                  # Mirror registry CA certificate
   -----BEGIN CERTIFICATE-----
   <mirror-registry-certificate-content>
   -----END CERTIFICATE-----
-imageContentSources:                      # Mirror configuration from oc adm release mirror
+# NOTE: imageDigestSources replaces the deprecated imageContentSources field.
+# Use the output from 'oc adm release mirror' or 'oc mirror' to populate this section.
+# imageContentSources still works for backward compatibility but generates a deprecation warning.
+imageDigestSources:
 - mirrors:
   - mirror.example.com:5000/openshift/release
   source: quay.io/openshift-release-dev/ocp-release
@@ -469,14 +478,14 @@ imageContentSources:                      # Mirror configuration from oc adm rel
 
 === Alternative: Using oc-mirror Plugin
 
-For advanced mirroring scenarios, use the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html-single/disconnected_environments/#about-installing-oc-mirror-v2[oc-mirror plugin v2]:
+For advanced mirroring scenarios, use the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html-single/disconnected_environments/#about-installing-oc-mirror-v2[oc-mirror plugin v2]:
 
 ```bash
 # Using oc-mirror plugin for advanced mirroring
 echo "=== Using oc-mirror Plugin ==="
 
 # Install oc-mirror plugin from official OpenShift mirror
-# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html-single/disconnected_environments/#installing-oc-mirror-v2
+# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html-single/disconnected_environments/#installing-oc-mirror-v2
 curl -O https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable/oc-mirror.tar.gz
 tar -xzf oc-mirror.tar.gz
 sudo mv oc-mirror /usr/local/bin/
@@ -492,10 +501,10 @@ storageConfig:
 mirror:
   platform:
     channels:
-    - name: stable-4.18
+    - name: stable-4.21
       type: ocp
   operators:
-  - catalog: registry.redhat.io/redhat/redhat-operator-index:v4.18
+  - catalog: registry.redhat.io/redhat/redhat-operator-index:v4.21
     packages:
     - name: cluster-logging
     - name: elasticsearch-operator
@@ -507,12 +516,12 @@ oc mirror --config=imageset-config.yaml docker://mirror.example.com:5000
 
 == E4: Agent ISO Creation - Self-contained Installation [[e4-agent-iso]]
 
-The Agent-based Installer creates a self-contained bootable ISO image that includes all necessary components for offline OpenShift installation, as documented in the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#installing-ocp-agent-boot_installing-with-agent-based-installer[creating and booting agent image guide].
+The Agent-based Installer creates a self-contained bootable ISO image that includes all necessary components for offline OpenShift installation, as documented in the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#installing-ocp-agent-boot_installing-with-agent-based-installer[creating and booting agent image guide].
 
 === Documentation References
-* **ISO Creation**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#installing-ocp-agent-boot_installing-with-agent-based-installer[Creating and booting the agent image] - Complete ISO creation process
-* **IBM Z Support**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#installing-ocp-agent-ibm-z-kvm_installing-with-agent-based-installer[Adding IBM Z agents with RHEL KVM] - Platform-specific instructions
-* **Validation Checks**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#validations-before-agent-iso-creation_preparing-to-install-with-agent-based-installer[Validation checks before agent ISO creation] - Pre-creation validation
+* **ISO Creation**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#installing-ocp-agent-boot_installing-with-agent-based-installer[Creating and booting the agent image] - Complete ISO creation process
+* **IBM Z Support**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#installing-ocp-agent-ibm-z-kvm_installing-with-agent-based-installer[Adding IBM Z agents with RHEL KVM] - Platform-specific instructions
+* **Validation Checks**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#validations-before-agent-iso-creation_preparing-to-install-with-agent-based-installer[Validation checks before agent ISO creation] - Pre-creation validation
 
 === Generating the Agent ISO
 
@@ -526,7 +535,7 @@ echo "=== Generating Agent ISO ==="
 ls -la install-config.yaml agent-config.yaml
 
 # Create the agent image
-# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#installing-ocp-agent-boot_installing-with-agent-based-installer
+# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#installing-ocp-agent-boot_installing-with-agent-based-installer
 openshift-install --dir . agent create image
 
 # Verify generated artifacts
@@ -546,7 +555,7 @@ The generated agent ISO contains:
 
 === Architecture-Specific ISOs
 
-The Agent-based Installer generates architecture-specific ISO images as documented in the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#agent-install-verifying-architectures_installing-with-agent-based-installer[architecture verification guide]:
+The Agent-based Installer generates architecture-specific ISO images as documented in the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#agent-install-verifying-architectures_installing-with-agent-based-installer[architecture verification guide]:
 
 ```bash
 # Architecture-specific ISO generation
@@ -566,12 +575,12 @@ echo "ISO ready for deployment to target architecture"
 
 == E5: Offline Installation - Air-gapped Deployment [[e5-offline-installation]]
 
-The final phase involves deploying the agent ISO to target hardware and monitoring the complete air-gapped installation process, as documented in the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#installing-ocp-agent-verify_installing-with-agent-based-installer[installation tracking and verification guide].
+The final phase involves deploying the agent ISO to target hardware and monitoring the complete air-gapped installation process, as documented in the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#installing-ocp-agent-verify_installing-with-agent-based-installer[installation tracking and verification guide].
 
 === Documentation References
-* **Installation Monitoring**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#installing-ocp-agent-verify_installing-with-agent-based-installer[Tracking and verifying installation progress] - Complete monitoring guide
-* **Agent Console**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#installing-ocp-agent-tui_installing-with-agent-based-installer[Verifying installer connectivity] - Interactive console application
-* **Troubleshooting**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#installing-ocp-agent-gather-log_installing-with-agent-based-installer[Gathering log data from failed installation] - Troubleshooting guide
+* **Installation Monitoring**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#installing-ocp-agent-verify_installing-with-agent-based-installer[Tracking and verifying installation progress] - Complete monitoring guide
+* **Agent Console**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#installing-ocp-agent-tui_installing-with-agent-based-installer[Verifying installer connectivity] - Interactive console application
+* **Troubleshooting**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#installing-ocp-agent-gather-log_installing-with-agent-based-installer[Gathering log data from failed installation] - Troubleshooting guide
 
 === Deploying Agent ISO to Hardware
 
@@ -597,7 +606,7 @@ ipmitool -I lanplus -H <bmc-ip> -U <username> -P <password> \
 # Method 3: PXE boot configuration
 echo "Configuring PXE boot for agent ISO..."
 # Configure DHCP and TFTP server to serve agent ISO
-# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/prepare-pxe-assets-agent
+# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/prepare-pxe-assets-agent
 
 echo "ISO deployment method configured"
 ```
@@ -630,14 +639,14 @@ echo "Select 'Configure network' to launch NetworkManager TUI"
 
 === Installation Progress Monitoring
 
-Monitor the installation process using the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#installing-ocp-agent-verify_installing-with-agent-based-installer[official monitoring procedures]:
+Monitor the installation process using the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#installing-ocp-agent-verify_installing-with-agent-based-installer[official monitoring procedures]:
 
 ```bash
 # Monitor installation progress
 echo "=== Installation Progress Monitoring ==="
 
 # Monitor bootstrap completion
-# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#installing-ocp-agent-verify_installing-with-agent-based-installer
+# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#installing-ocp-agent-verify_installing-with-agent-based-installer
 openshift-install --dir . agent wait-for bootstrap-complete --log-level=info
 
 # Expected output:
@@ -684,7 +693,7 @@ oc get nodes
 
 # Expected output:
 # NAME       STATUS   ROLES                  AGE   VERSION
-# master-0   Ready    control-plane,master   10m   v1.31.0+...
+# master-0   Ready    control-plane,master   10m   v1.34.0+...
 
 # Check cluster operators
 echo "Verifying cluster operators..."
@@ -703,7 +712,7 @@ echo "✅ Agent-based installation completed successfully!"
 
 === Troubleshooting Failed Installations
 
-If installation fails, use the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#installing-ocp-agent-gather-log_installing-with-agent-based-installer[log gathering procedures]:
+If installation fails, use the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer#installing-ocp-agent-gather-log_installing-with-agent-based-installer[log gathering procedures]:
 
 ```bash
 # Troubleshooting failed installations
@@ -743,9 +752,9 @@ You have successfully completed Module 4: Agent-based Installer - Air-gapped Ins
 === Documentation References
 For comprehensive information about the Agent-based Installer, refer to these authoritative Red Hat resources:
 
-* **Primary Guide**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer[Preparing to install with the Agent-based Installer] - Complete preparation guide
-* **Installation Process**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer[Installing a cluster with customizations] - Step-by-step installation
-* **Disconnected Environments**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/understanding-disconnected-installation-mirroring[Understanding disconnected installation mirroring] - Air-gapped deployment guide
+* **Primary Guide**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer[Preparing to install with the Agent-based Installer] - Complete preparation guide
+* **Installation Process**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/installing-with-agent-based-installer[Installing a cluster with customizations] - Step-by-step installation
+* **Disconnected Environments**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/understanding-disconnected-installation-mirroring[Understanding disconnected installation mirroring] - Air-gapped deployment guide
 
 == Next Steps
 With your OpenShift cluster successfully deployed using the Agent-based Installer, you're ready to configure persistent storage. Continue to xref:module-05-storage.adoc[Module 5: Storage Configuration using OpenShift Data Foundation] to implement enterprise-grade storage solutions.

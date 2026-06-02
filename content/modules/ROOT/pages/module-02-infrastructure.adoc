@@ -22,10 +22,10 @@ This module reflects the **simplified infrastructure approach** enabled by Assis
 
 == C1: Red Hat Account Setup - Pull Secret & Installer Download [[account-setup]]
 
-This component ensures you have the necessary Red Hat resources for both link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on-premise_with_assisted_installer/installing-on-prem-assisted[Assisted] and link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer[Agent-based] installations.
+This component ensures you have the necessary Red Hat resources for both link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_on-premise_with_assisted_installer/installing-on-prem-assisted[Assisted] and link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer[Agent-based] installations.
 
 === Verify Red Hat Account Access
-Based on link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on_bare_metal/user-provisioned-infrastructure#installation-obtaining-installer_installing-bare-metal[official requirements]:
+Based on link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_on_bare_metal/user-provisioned-infrastructure#installation-obtaining-installer_installing-bare-metal[official requirements]:
 
 ```bash
 # Test connectivity to Red Hat services
@@ -53,7 +53,7 @@ EOF
 ```
 
 === Download Pull Secret (Critical for Both Installers)
-The link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on_bare_metal/user-provisioned-infrastructure#installation-obtaining-installer_installing-bare-metal[pull secret] provides access to Red Hat container registries:
+The link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_on_bare_metal/user-provisioned-infrastructure#installation-obtaining-installer_installing-bare-metal[pull secret] provides access to Red Hat container registries:
 
 ```bash
 # Navigate to: https://console.redhat.com/openshift/install/pull-secret
@@ -73,7 +73,7 @@ echo "✅ Pull secret downloaded and secured"
 ```
 
 === Download OpenShift Installer (For Agent-based Method)
-The link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#installing-ocp-agent-gather_preparing-to-install-with-agent-based-installer[openshift-install binary] is required for Agent-based installations:
+The link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#installing-ocp-agent-gather_preparing-to-install-with-agent-based-installer[openshift-install binary] is required for Agent-based installations:
 
 [NOTE]
 ====
@@ -81,18 +81,24 @@ The binary download URLs below point to the OpenShift mirror repository. If you 
 
 1. Browse to link:https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/[OpenShift Client Downloads] to find available versions
 2. Use the link:https://console.redhat.com/openshift/downloads[Red Hat OpenShift Console Downloads] page for the latest stable releases
-3. Check the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#installing-ocp-agent-install[official installation documentation] for alternative download methods
+3. Check the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer#installing-ocp-agent-install[official installation documentation] for alternative download methods
 ====
 
 ```bash
 # Note: Assisted Installer doesn't require local installer binary
 # Agent-based Installer requires the openshift-install binary
 
-# For OpenShift 4.18:
-wget https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable-4.18/openshift-install-linux.tar.gz
+# For OpenShift 4.21 (recommended - latest supported):
+wget https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable-4.21/openshift-install-linux.tar.gz
+
+# For OpenShift 4.20:
+wget https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable-4.20/openshift-install-linux.tar.gz
 
 # For OpenShift 4.19:
 wget https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable-4.19/openshift-install-linux.tar.gz
+
+# For OpenShift 4.18 (approaching EOL):
+# wget https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable-4.18/openshift-install-linux.tar.gz
 
 # Extract and install:
 tar -xzf openshift-install-linux.tar.gz
@@ -106,8 +112,9 @@ echo "✅ OpenShift installer ready for Agent-based deployment"
 
 === Download Additional Tools (Recommended)
 ```bash
-# Download oc CLI tool for cluster management
-wget https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/latest/openshift-client-linux.tar.gz
+# Download oc CLI tool - pin to the same minor version as your target cluster
+# Replace 4.21 with your target cluster version
+wget https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable-4.21/openshift-client-linux.tar.gz
 tar -xzf openshift-client-linux.tar.gz
 sudo mv oc kubectl /usr/local/bin/
 
@@ -120,15 +127,15 @@ echo "✅ OpenShift CLI tools installed"
 
 == C2: Hardware Inventory - Document Specs Externally [[hardware-inventory]]
 
-Since link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/architecture/architecture-rhcos[RHCOS is an immutable operating system], we document hardware specifications using external methods. This component connects to both Standard HA and Compact cluster configurations.
+Since link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/architecture/architecture-rhcos[RHCOS is an immutable operating system], we document hardware specifications using external methods. This component connects to both Standard HA and Compact cluster configurations.
 
 === Cluster Configuration Decision
-Choose your cluster configuration based on link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on_bare_metal/user-provisioned-infrastructure#minimum-resource-requirements_installing-bare-metal[official hardware requirements]:
+Choose your cluster configuration based on link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_on_bare_metal/user-provisioned-infrastructure#minimum-resource-requirements_installing-bare-metal[official hardware requirements]:
 
 ```bash
 # Document your cluster configuration choice
 cat > cluster-config.txt << 'EOF'
-# OpenShift 4.18/4.19 Cluster Configuration Choice
+# OpenShift 4.19/4.20/4.21 Cluster Configuration Choice
 
 ## Standard HA Cluster (3 Control + 2+ Workers)
 # Best for: Production environments, workload isolation
@@ -138,7 +145,7 @@ cat > cluster-config.txt << 'EOF'
 # - Minimum: 4 vCPU, 16GB RAM, 100GB storage (Red Hat minimum)
 # - Bare Metal Recommended: 16+ vCPU, 64+ GB RAM, 500+ GB SSD
 # - Production Typical: 32 vCPU, 128GB RAM, 1TB NVMe SSD
-# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on_bare_metal/user-provisioned-infrastructure#minimum-resource-requirements_installing-bare-metal
+# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_on_bare_metal/user-provisioned-infrastructure#minimum-resource-requirements_installing-bare-metal
 
 # Worker Nodes (2+ required):
 # - Minimum: 2 vCPU, 8GB RAM, 100GB storage (Red Hat minimum)
@@ -155,7 +162,7 @@ cat > cluster-config.txt << 'EOF'
 # - Bare Metal Recommended: 32+ vCPU, 128+ GB RAM, 1+ TB SSD
 # - Production Typical: 48+ vCPU, 256+ GB RAM, 2+ TB NVMe SSD
 # Note: Control plane nodes also run workloads, size accordingly
-# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on_a_single_node/preparing-to-install-sno#sno-requirements-for-installing-on-a-single-node_preparing-to-install-sno
+# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_on_a_single_node/preparing-to-install-sno#sno-requirements-for-installing-on-a-single-node_preparing-to-install-sno
 
 ## Bare Metal Sizing Considerations:
 # - CPU: Modern server CPUs (Intel Xeon, AMD EPYC)
@@ -171,12 +178,12 @@ EOF
 ```
 
 === Hardware Requirements Documentation
-Create comprehensive hardware inventory based on link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on_bare_metal/user-provisioned-infrastructure#minimum-resource-requirements_installing-bare-metal[minimum resource requirements]:
+Create comprehensive hardware inventory based on link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_on_bare_metal/user-provisioned-infrastructure#minimum-resource-requirements_installing-bare-metal[minimum resource requirements]:
 
 ```bash
 # Create detailed hardware inventory
 cat > hardware-inventory.txt << 'EOF'
-# OpenShift 4.18/4.19 Hardware Inventory
+# OpenShift 4.19/4.20/4.21 Hardware Inventory
 # Modern Installer Approach - No Bootstrap Node Required!
 
 ## Key Advantages of Assisted/Agent-based Installers:
@@ -303,7 +310,7 @@ Since RHCOS is immutable, use these external methods to verify hardware specific
 
 ```bash
 # Method 1: IPMI/BMC Hardware Query
-# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on_bare_metal/user-provisioned-infrastructure#installation-user-infra-machines-iso_installing-bare-metal
+# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_on_bare_metal/user-provisioned-infrastructure#installation-user-infra-machines-iso_installing-bare-metal
 ipmitool -I lanplus -H <bmc-ip> -U <username> -P <password> fru print
 ipmitool -I lanplus -H <bmc-ip> -U <username> -P <password> power status
 
@@ -325,16 +332,16 @@ ipmitool -I lanplus -H <bmc-ip> -U <username> -P <password> power status
 
 == C3: DNS Planning - Mandatory Network Requirements [[dns-planning]]
 
-DNS configuration is **mandatory** for OpenShift deployment. Based on link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on_bare_metal/user-provisioned-infrastructure#installation-dns-user-infra_installing-bare-metal[official DNS requirements], choose your approach:
+DNS configuration is **mandatory** for OpenShift deployment. Based on link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_on_bare_metal/user-provisioned-infrastructure#installation-dns-user-infra_installing-bare-metal[official DNS requirements], choose your approach:
 
 === Option A: External DNS (Recommended for Production)
-For production environments, configure external DNS based on link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on_bare_metal/user-provisioned-infrastructure#installation-dns-user-infra_installing-bare-metal[DNS requirements]:
+For production environments, configure external DNS based on link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_on_bare_metal/user-provisioned-infrastructure#installation-dns-user-infra_installing-bare-metal[DNS requirements]:
 
 ```bash
 # Create DNS configuration documentation
 cat > dns-config.txt << 'EOF'
 # OpenShift 4.18/4.19 DNS Configuration
-# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on_bare_metal/user-provisioned-infrastructure#installation-dns-user-infra_installing-bare-metal
+# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_on_bare_metal/user-provisioned-infrastructure#installation-dns-user-infra_installing-bare-metal
 
 ## Required DNS Records:
 
@@ -369,12 +376,12 @@ dig +noall +answer -x <api-ip-address>
 ```
 
 === Option B: Installer-Managed VIPs (Simplified)
-For lab environments, let the installers handle DNS with Virtual IPs based on link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on-premise_with_assisted_installer/installing-on-prem-assisted#assisted-installer-api-vip_installing-on-prem-assisted[VIP management]:
+For lab environments, let the installers handle DNS with Virtual IPs based on link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_on-premise_with_assisted_installer/installing-on-prem-assisted#assisted-installer-api-vip_installing-on-prem-assisted[VIP management]:
 
 ```bash
 # Plan your VIP addresses for installer management
 cat > network-config.txt << 'EOF'
-# OpenShift 4.18/4.19 Network Configuration
+# OpenShift 4.19/4.20/4.21 Network Configuration
 # VIP Management by Assisted/Agent-based Installers
 
 ## Virtual IP Planning:
@@ -419,31 +426,31 @@ nslookup <dns-server-ip>
 **✅ C3 Verification Checkpoint**: Ensure DNS configuration is planned, documented, and tested before proceeding.
 
 === Firewall Configuration Requirements
-Firewall rules are critical for OpenShift deployment. Based on link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on_bare_metal/user-provisioned-infrastructure#installation-network-user-infra_installing-bare-metal[network requirements], configure these firewall rules:
+Firewall rules are critical for OpenShift deployment. Based on link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_on_bare_metal/user-provisioned-infrastructure#installation-network-user-infra_installing-bare-metal[network requirements], configure these firewall rules:
 
 ==== Required Firewall Ports
 ```bash
 # Create firewall configuration documentation
 cat > firewall-config.txt << 'EOF'
-# OpenShift 4.18/4.19 Firewall Configuration
-# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on_bare_metal/user-provisioned-infrastructure#installation-network-user-infra_installing-bare-metal
+# OpenShift 4.19/4.20/4.21 Firewall Configuration
+# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_on_bare_metal/user-provisioned-infrastructure#installation-network-user-infra_installing-bare-metal
+#
+# Note: OpenShift SDN was removed in OCP 4.20. OVN-Kubernetes is the only
+# supported CNI plugin. The legacy VXLAN port (4789/udp) is NOT required.
 
 ## Control Plane Node Firewall Rules:
 
 ### Inbound Rules (Control Plane):
 # Kubernetes API Server
 6443/tcp    # External access to Kubernetes API
-22623/tcp   # Machine Config Server (internal)
+22623/tcp   # Machine Config Server (internal cluster use only)
 
 # etcd
 2379/tcp    # etcd client requests
 2380/tcp    # etcd peer communication
 
-# Kubelet and OpenShift SDN
+# Kubelet
 10250/tcp   # Kubelet API
-10251/tcp   # kube-scheduler
-10252/tcp   # kube-controller-manager
-10256/tcp   # kube-proxy
 
 # OpenShift Router/Ingress (if running on control plane in compact)
 80/tcp      # HTTP traffic (compact clusters only)
@@ -478,12 +485,9 @@ cat > firewall-config.txt << 'EOF'
 443/tcp     # HTTPS to Red Hat registries
 80/tcp      # HTTP (if needed)
 
-## Network Protocols:
-# VXLAN (for OpenShift SDN)
-4789/udp    # VXLAN overlay network
-
-# Geneve (for OVN-Kubernetes)
-6081/udp    # Geneve overlay network
+## Network Overlay Protocol:
+# Geneve (OVN-Kubernetes - the only supported CNI since OCP 4.20)
+6081/udp    # Geneve overlay network (OVN-Kubernetes)
 
 # ICMP
 icmp        # Network diagnostics and connectivity testing
@@ -491,8 +495,10 @@ icmp        # Network diagnostics and connectivity testing
 ## Load Balancer Health Checks:
 # Configure health check sources to access:
 6443/tcp    # API server health checks
+22623/tcp   # Machine Config Server (restrict to cluster internal network)
 80/tcp      # Ingress health checks
 443/tcp     # Ingress health checks
+1936/tcp    # Ingress router health check endpoint (/healthz/ready)
 EOF
 
 echo "✅ Firewall configuration documented: firewall-config.txt"
@@ -581,17 +587,17 @@ echo "✅ Network security considerations documented"
 
 == C4: Boot Method Setup - Discovery ISO Preparation [[boot-setup]]
 
-The Assisted and Agent-based installers use discovery ISOs to automatically detect hardware and configure nodes. Based on link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on_bare_metal/installer-provisioned-infrastructure[installer-provisioned infrastructure documentation], choose your boot method:
+The Assisted and Agent-based installers use discovery ISOs to automatically detect hardware and configure nodes. Based on link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_on_bare_metal/installer-provisioned-infrastructure[installer-provisioned infrastructure documentation], choose your boot method:
 
 === Boot Method Options
 
 ==== Option A: Virtual Media (BMC/IPMI) - Recommended
-Virtual media mounting via Baseboard Management Controllers (BMCs) based on link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on_bare_metal/installer-provisioned-infrastructure#ipi-install-firmware-requirements-for-installing-with-virtual-media_ipi-install-installation-workflow[virtual media requirements]:
+Virtual media mounting via Baseboard Management Controllers (BMCs) based on link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_on_bare_metal/installer-provisioned-infrastructure#ipi-install-firmware-requirements-for-installing-with-virtual-media_ipi-install-installation-workflow[virtual media requirements]:
 
 ```bash
 # Document your BMC addressing method
 cat > boot-config.txt << 'EOF'
-# OpenShift 4.18/4.19 Boot Method Configuration
+# OpenShift 4.19/4.20/4.21 Boot Method Configuration
 # Virtual Media BMC Addressing Options
 
 ## Supported BMC Types and Addressing:
@@ -599,20 +605,20 @@ cat > boot-config.txt << 'EOF'
 ### Dell iDRAC (Integrated Dell Remote Access Controller):
 # BMC Address Format: idrac-virtualmedia://<bmc-ip>
 # Example: idrac-virtualmedia://192.168.1.10
-# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on_bare_metal/installer-provisioned-infrastructure
+# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_on_bare_metal/installer-provisioned-infrastructure
 
 ### HPE iLO (Integrated Lights-Out):
 # BMC Address Format: ilo5-virtualmedia://<bmc-ip> (for iLO5)
 # BMC Address Format: redfish-virtualmedia://<bmc-ip> (for iLO4/iLO5 with Redfish)
 # Example: ilo5-virtualmedia://192.168.1.11
 # Example: redfish-virtualmedia://192.168.1.11
-# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on_bare_metal/installer-provisioned-infrastructure
+# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_on_bare_metal/installer-provisioned-infrastructure
 
 ### Generic Redfish BMC:
 # BMC Address Format: redfish-virtualmedia://<bmc-ip>
 # Example: redfish-virtualmedia://192.168.1.12
 # Supports: Supermicro, Lenovo, and other Redfish-compliant BMCs
-# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on_bare_metal/installer-provisioned-infrastructure
+# Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_on_bare_metal/installer-provisioned-infrastructure
 
 ### Legacy IPMI (Not recommended for new deployments):
 # BMC Address Format: ipmi://<bmc-ip>
@@ -630,7 +636,7 @@ EOF
 ```
 
 ==== Option B: PXE Boot (Network Boot)
-Network boot from PXE server based on link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/prepare-pxe-assets-agent[PXE assets preparation]:
+Network boot from PXE server based on link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/prepare-pxe-assets-agent[PXE assets preparation]:
 
 ```bash
 # Document PXE boot configuration
@@ -761,33 +767,41 @@ echo "✅ Discovery ISO boot process documented"
 == C5: BIOS Configuration - UEFI, Secure Boot, Network Boot [[bios-config]]
 
 === Required BIOS/UEFI Settings
+
+NOTE: Starting with OpenShift 4.19, Secure Boot can be **enabled** on supported hardware (Dell PowerEdge Gen13+, HPE ProLiant Gen10+) using the `bootMode: UEFISecureBoot` option in `agent-config.yaml` or via the Assisted Installer console. For most standard deployments and all other hardware, Secure Boot should remain **disabled**. See the link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_on_bare_metal/user-provisioned-infrastructure[OCP 4.21 bare metal installation guide] for Secure Boot prerequisites.
+
 ```bash
-# Configure on ALL nodes:
-# ✅ UEFI mode enabled (recommended over Legacy BIOS)
-# ✅ Secure Boot DISABLED (required for RHCOS)
+# Configure on ALL nodes (standard deployment):
+# ✅ UEFI mode enabled (required - Legacy BIOS not supported for new installs)
+# ✅ Secure Boot: DISABLED for standard installs (see note above for exceptions)
 # ✅ Network boot enabled on primary interface
 # ✅ Virtualization extensions enabled (VT-x/AMD-V)
 # ✅ Boot order: Network/USB/CD before hard drive
 
 # Create BIOS checklist:
 cat > bios-checklist.txt << 'EOF'
+# Secure Boot guidance:
+#   Standard hardware:         Disabled (default, required)
+#   Supported Dell/HPE (4.19+): Can enable via bootMode: UEFISecureBoot in agent-config.yaml
+#   Reference: https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_on_bare_metal/
+
 Node 1: [hostname]
 ☐ UEFI Mode: Enabled
-☐ Secure Boot: Disabled  
+☐ Secure Boot: Disabled (or enabled if using bootMode: UEFISecureBoot on supported HW)
 ☐ Network Boot: Enabled
 ☐ Virtualization: Enabled
 ☐ Boot Order: Network first
 
 Node 2: [hostname]
 ☐ UEFI Mode: Enabled
-☐ Secure Boot: Disabled
-☐ Network Boot: Enabled  
+☐ Secure Boot: Disabled (or enabled if using bootMode: UEFISecureBoot on supported HW)
+☐ Network Boot: Enabled
 ☐ Virtualization: Enabled
 ☐ Boot Order: Network first
 
 Node 3: [hostname]
 ☐ UEFI Mode: Enabled
-☐ Secure Boot: Disabled
+☐ Secure Boot: Disabled (or enabled if using bootMode: UEFISecureBoot on supported HW)
 ☐ Network Boot: Enabled
 ☐ Virtualization: Enabled
 ☐ Boot Order: Network first

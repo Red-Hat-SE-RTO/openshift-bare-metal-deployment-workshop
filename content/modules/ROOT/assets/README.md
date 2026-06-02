@@ -29,7 +29,7 @@ content/modules/ROOT/assets/
 Reference diagrams in workshop modules using:
 
 ```adoc
-.OpenShift 4.18 Cluster Architecture
+.OpenShift 4.21 Cluster Architecture
 image::diagrams/architecture/openshift-cluster-overview.svg[OpenShift Cluster Architecture,800,600]
 ```
 
@@ -60,14 +60,14 @@ chmod +x verify-hardware.sh
 - Include version information when relevant
 - Use descriptive names that indicate purpose
 - Examples:
-  - `openshift-4.18-cluster-architecture.svg`
+  - `openshift-4.21-cluster-architecture.svg`
   - `install-config-assisted-template.yaml`
   - `network-validation-script.sh`
 
 ### Content Standards
 - All assets should be referenced from workshop content
 - Include proper attribution and source information
-- Maintain version compatibility with OpenShift 4.18/4.19
+- Maintain version compatibility with OpenShift 4.19/4.20/4.21
 - Test all scripts and validate all templates
 
 ### Maintenance

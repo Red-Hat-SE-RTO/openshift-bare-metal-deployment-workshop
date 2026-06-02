@@ -1,32 +1,73 @@
-= Module 1: Introduction to OpenShift 4.18/4.19
+= Module 1: Introduction to OpenShift 4.19/4.20/4.21
 :page-layout: module
 
 == Learning Objectives [[objectives]]
 
 By the end of this module, you will:
 
-* Understand what OpenShift Container Platform 4.18/4.19 is and its key benefits
+* Understand what OpenShift Container Platform 4.19/4.20/4.21 is and its key benefits
 * Know the different installation methods available for bare metal deployments
 * Understand the workshop structure and learning path
 * Have a clear overview of prerequisites needed for deployment
 * Be ready to choose the appropriate installation method for your environment
+
+== Version Support Matrix [[support-matrix]]
+
+Always verify the current support status before deploying. Red Hat uses a
+link:https://access.redhat.com/support/policy/updates/openshift[Full Support → Maintenance Support → End of Life lifecycle]
+for each minor release.
+
+WARNING: OpenShift 4.18 is approaching End of Life. New deployments should target 4.19, 4.20, or 4.21.
+
+[cols="1,1,1,1", options="header"]
+|===
+|OpenShift Version |Kubernetes Version |Support Status |Release Notes
+
+|link:https://docs.openshift.com/container-platform/4.18/[4.18]
+|1.31
+|Approaching EOL — link:https://access.redhat.com/support/policy/updates/openshift[Check lifecycle]
+|link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/release_notes/ocp-4-18-release-notes[4.18 Release Notes]
+
+|link:https://docs.openshift.com/container-platform/4.19/[4.19]
+|1.32
+|Full Support
+|link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/release_notes/ocp-4-19-release-notes[4.19 Release Notes]
+
+|link:https://docs.openshift.com/container-platform/4.20/[4.20]
+|1.33
+|Full Support
+|link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.20/html/release_notes/ocp-4-20-release-notes[4.20 Release Notes]
+
+|link:https://docs.openshift.com/container-platform/4.21/[4.21]
+|1.34
+|Full Support
+|link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/release_notes/ocp-4-21-release-notes[4.21 Release Notes]
+
+|4.22 _(upcoming)_
+|1.35
+|Not yet released — link:https://access.redhat.com/support/policy/updates/openshift[Track on lifecycle page]
+|—
+|===
+
+For the authoritative support timeline, see the link:https://access.redhat.com/support/policy/updates/openshift[Red Hat OpenShift Container Platform Life Cycle Policy].
 
 == Platform Architecture: Components & Benefits [[platform-architecture]]
 
 .Platform Architecture
 image::module-01.svg[Workshop Knowledge Graph,800,600]
 
-=== OpenShift 4.18/4.19: Enterprise Kubernetes Platform
+=== OpenShift 4.19/4.20/4.21: Enterprise Kubernetes Platform
 
-link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/architecture/architecture-overview[OpenShift Container Platform 4.18/4.19] is Red Hat's enterprise Kubernetes platform that provides a complete application platform for developing, deploying, and managing containerized applications.
+link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/architecture/architecture-overview[OpenShift Container Platform 4.19/4.20/4.21] is Red Hat's enterprise Kubernetes platform that provides a complete application platform for developing, deploying, and managing containerized applications.
 
 ==== Core Platform Foundation
-* **Kubernetes 1.31/1.32**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/architecture/architecture#architecture-platform-introduction_architecture[Container orchestration foundation]
-  - OpenShift 4.18 built on Kubernetes 1.31
+* **Kubernetes 1.32/1.33/1.34**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/architecture/architecture#architecture-platform-introduction_architecture[Container orchestration foundation]
   - OpenShift 4.19 built on Kubernetes 1.32
+  - OpenShift 4.20 built on Kubernetes 1.33
+  - OpenShift 4.21 built on Kubernetes 1.34
   - Enhanced with enterprise-grade features and security
 
-* **Red Hat Enterprise Linux CoreOS (RHCOS)**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/architecture/architecture-rhcos[Immutable operating system]
+* **Red Hat Enterprise Linux CoreOS (RHCOS)**: link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/architecture/architecture-rhcos[Immutable operating system]
   - Purpose-built for containerized workloads
   - Automatic updates and self-healing capabilities
   - Optimized for OpenShift Container Platform
@@ -84,15 +125,17 @@ link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/
 
 == Installation Methods: Assisted vs Agent-based [[installation-methods]]
 
-OpenShift 4.18/4.19 provides two modern installation methods optimized for bare metal deployments, both eliminating the complexity of traditional User-Provisioned Infrastructure (UPI).
+OpenShift 4.19/4.20/4.21 provides two primary installation methods optimized for bare metal deployments covered in this workshop, both eliminating the complexity of traditional User-Provisioned Infrastructure (UPI). A third option, link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_on_bare_metal/installer-provisioned-infrastructure[Installer-Provisioned Infrastructure (IPI) with BMC automation], is available for environments with full Baseboard Management Controller (BMC) integration and is documented in the official reference guides.
 
 === Modern Installer Advantages
 Both installation methods provide significant improvements over traditional approaches:
 
-* **No Bootstrap Node Required**: Simplified architecture eliminates temporary bootstrap infrastructure
 * **Automatic Hardware Discovery**: Discovery ISOs detect and validate hardware automatically
 * **Virtual IP Management**: Built-in VIP management eliminates external load balancer requirements
 * **Real-time Validation**: Continuous validation throughout the installation process
+* **Flexible Topology**: Support for Standard HA, Compact, Two-Node with Arbiter, and Single-Node deployments
+
+NOTE: The Agent-based Installer uses a rendezvous host that acts as a temporary bootstrap node during installation. The Assisted Installer manages its bootstrap process internally through the Red Hat console service.
 
 === Assisted Installer: Cloud-guided Installation
 **Best for**: Connected environments with web-based management preference
@@ -110,8 +153,8 @@ Both installation methods provide significant improvements over traditional appr
 * **Validation**: Continuous pre-flight and installation checks
 
 ==== Documentation Reference
-* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on-premise_with_assisted_installer/installing-on-prem-assisted[OpenShift 4.18 Assisted Installer Guide]
-* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/installing_on-premise_with_assisted_installer/installing-on-prem-assisted[OpenShift 4.19 Assisted Installer Guide]
+* link:https://docs.redhat.com/en/documentation/assisted_installer_for_openshift_container_platform/2026/html/installing_openshift_container_platform_with_the_assisted_installer/index[Assisted Installer 2026 Guide]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_on-premise_with_assisted_installer/installing-on-prem-assisted[OpenShift 4.21 Assisted Installer On-Premise Guide]
 
 === Agent-based Installer: Air-gapped Installation
 **Best for**: Disconnected environments, custom configurations, and automation
@@ -129,8 +172,8 @@ Both installation methods provide significant improvements over traditional appr
 * **Offline Operation**: Complete installation without internet connectivity
 
 ==== Documentation Reference
-* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer[OpenShift 4.18 Agent-based Installer Guide]
-* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer[OpenShift 4.19 Agent-based Installer Guide]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer[OpenShift 4.21 Agent-based Installer Guide]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.20/html/installing_an_on-premise_cluster_with_the_agent-based_installer/preparing-to-install-with-agent-based-installer[OpenShift 4.20 Agent-based Installer Guide]
 
 === Installation Method Decision Framework
 Choose your installation method based on these key factors:
@@ -172,7 +215,7 @@ This workshop follows a knowledge-driven learning path designed around modern Op
 
 ==== Foundation Phase
 * **Module 1 (Current)**: Platform architecture, installation methods, and workshop structure
-* **Module 2**: Simplified infrastructure preparation (no bootstrap node required)
+* **Module 2**: Simplified infrastructure preparation
 
 ==== Installation Phase (Choose Your Path)
 * **Module 3**: Assisted Installer deployment (connected environments)
@@ -197,7 +240,7 @@ The workshop is structured as a knowledge graph where concepts build upon each o
 Rather than covering all possible scenarios, the workshop guides you through decision points:
 
 1. **Installation Method Decision**: Based on your environment (connected vs disconnected)
-2. **Cluster Configuration**: Standard HA vs Compact cluster options
+2. **Cluster Configuration**: Standard HA vs Compact vs Two-Node with Arbiter options
 3. **Infrastructure Approach**: VIPs vs external load balancers
 4. **Advanced Features**: Optional components based on your requirements
 
@@ -213,7 +256,7 @@ The workshop emphasizes current OpenShift deployment best practices:
 === Workshop Outcomes
 By completing this workshop, you will:
 
-* **Understand** OpenShift 4.18/4.19 architecture and benefits for bare metal
+* **Understand** OpenShift 4.19/4.20/4.21 architecture and benefits for bare metal
 * **Choose** the appropriate installation method for your environment
 * **Deploy** a production-ready OpenShift cluster using modern installers
 * **Configure** enterprise-grade storage and networking
@@ -229,7 +272,7 @@ Before beginning the hands-on modules, you'll need:
 * Access to link:https://console.redhat.com/[Red Hat Hybrid Cloud Console]
 
 === Infrastructure Requirements
-* Bare metal servers meeting link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/installing_on_bare_metal/user-provisioned-infrastructure#minimum-resource-requirements_installing-bare-metal[minimum specifications]
+* Bare metal servers meeting link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/installing_on_bare_metal/user-provisioned-infrastructure#minimum-resource-requirements_installing-bare-metal[minimum specifications]
 * Network infrastructure (DNS, load balancers)
 * Proper BIOS/UEFI configuration
 
@@ -242,7 +285,7 @@ Before beginning the hands-on modules, you'll need:
 
 == Next Steps [[next-steps]]
 
-Now that you understand OpenShift 4.18/4.19 and the workshop structure, you're ready to begin the hands-on preparation.
+Now that you understand OpenShift 4.19/4.20/4.21 and the workshop structure, you're ready to begin the hands-on preparation.
 
 === Your Learning Path
 1. **Complete Module 2**: Infrastructure preparation and prerequisites verification
@@ -253,10 +296,11 @@ Now that you understand OpenShift 4.18/4.19 and the workshop structure, you're r
 4. **Explore optional features** in Module 7
 
 === Documentation References
-For additional information about OpenShift 4.18/4.19:
+For additional information about OpenShift 4.19/4.20/4.21:
 
-* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/release_notes/ocp-4-18-release-notes[OpenShift Container Platform 4.18 Release Notes]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/release_notes/ocp-4-21-release-notes[OpenShift Container Platform 4.21 Release Notes]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.20/html/release_notes/ocp-4-20-release-notes[OpenShift Container Platform 4.20 Release Notes]
 * link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/release_notes/ocp-4-19-release-notes[OpenShift Container Platform 4.19 Release Notes]
-* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/architecture/architecture-overview[OpenShift Architecture Overview]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/architecture/architecture-overview[OpenShift Architecture Overview]
 
-Continue to xref:module-02-infrastructure.adoc[Module 2: Prerequisites and Infrastructure for OpenShift 4.18/4.19].
+Continue to xref:module-02-infrastructure.adoc[Module 2: Prerequisites and Infrastructure for OpenShift 4.19/4.20/4.21].
